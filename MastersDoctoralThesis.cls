@@ -327,9 +327,9 @@ KOMA-script documentation for details.}]{fancyhdr}
 	\bigskip
 	%{\normalsize \facname \par} % Faculty name % #yj.modified.del
 	%{\normalsize \deptname \par} % Department name % #yj.modified.del
-	\bigskip
-	{\normalsize \degreename\par} % Degree name
-	\bigskip
+	%\bigskip % #yj.modified.del
+	{\normalsize \degreename\par} % Degree name % #yj.modified.del
+	\bigskip % #yj.modified.del
 	{\normalsize\bfseries \@title \par} % Thesis title
 	\medskip
 	{\normalsize \byname{} \authorname \par} % Author name
