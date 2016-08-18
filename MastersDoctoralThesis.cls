@@ -337,7 +337,9 @@ KOMA-script documentation for details.}]{fancyhdr}
 	\end{center}
 }
 {
-  \vfil\vfil\vfil\null
+  %\vfil\vfil\vfil\null %#yj.modified.del
+  {\bf Keywords:} \keywordnames % #yj.modified.add
+  \vfil\null % #yj.modified.add
 }
 
 %----------------------------------------------------------------------------------------
