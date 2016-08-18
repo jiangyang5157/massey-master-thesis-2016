@@ -1,3 +1,8 @@
+%################################################################
+% Modifications by Yang Jiang
+% Search for keyword: % #yj.modified
+% The original Header as follow:
+%################################################################
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Masters/Doctoral Thesis 
 % Class File
@@ -271,6 +276,8 @@ KOMA-script documentation for details.}]{fancyhdr}
 \newcommand*{\faculty}[1]{\def\facname{#1}}
 \newcommand*{\subject}[1]{\def\subjectname{#1}}
 \newcommand*{\keywords}[1]{\def\keywordnames{#1}}
+\newcommand*{\major}[1]{\def\majorname{#1}} % #yj.modified.add
+\newcommand*{\paper}[1]{\def\papername{#1}} % #yj.modified.add
 
 %----------------------------------------------------------------------------------------
 %	DECLARATION PAGE DESIGN
@@ -318,8 +325,8 @@ KOMA-script documentation for details.}]{fancyhdr}
 	\bigskip
 	{\huge\textit{\abstractname} \par}
 	\bigskip
-	{\normalsize \facname \par} % Faculty name
-	{\normalsize \deptname \par} % Department name
+	%{\normalsize \facname \par} % Faculty name % #yj.modified.del
+	%{\normalsize \deptname \par} % Department name % #yj.modified.del
 	\bigskip
 	{\normalsize \degreename\par} % Degree name
 	\bigskip
