@@ -318,28 +318,27 @@ KOMA-script documentation for details.}]{fancyhdr}
 \newenvironment{abstract}{
 	\checktoopen
 	\tttypeout{\abstractname}
-	\null\vfil
+	%\null\vfil % #yj.modified.del
 	\thispagestyle{plain}
 	\begin{center}
-	{\normalsize \MakeUppercase{\univname} \par} % University name in capitals
-	\bigskip
+	%{\normalsize \MakeUppercase{\univname} \par} % University name in capitals % #yj.modified.del
+	%\bigskip % #yj.modified.del
 	{\huge\textit{\abstractname} \par}
 	\bigskip
 	%{\normalsize \facname \par} % Faculty name % #yj.modified.del
 	%{\normalsize \deptname \par} % Department name % #yj.modified.del
 	%\bigskip % #yj.modified.del
-	{\normalsize \degreename\par} % Degree name % #yj.modified.del
-	\bigskip % #yj.modified.del
-	{\normalsize\bfseries \@title \par} % Thesis title
-	\medskip
-	{\normalsize \byname{} \authorname \par} % Author name
-	\bigskip
+	%{\normalsize \degreename\par} % Degree name % #yj.modified.del
+	%\bigskip % #yj.modified.del
+	%{\normalsize\bfseries \@title \par} % Thesis title % #yj.modified.del
+	%\medskip % #yj.modified.del
+	%{\normalsize \byname{} \authorname \par} % Author name % #yj.modified.del
+	%\bigskip % #yj.modified.del
 	\end{center}
 }
 {
   %\vfil\vfil\vfil\null %#yj.modified.del
   {\bf Keywords:} \keywordnames % #yj.modified.add
-  \vfil\null % #yj.modified.add
 }
 
 %----------------------------------------------------------------------------------------
