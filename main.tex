@@ -1,4 +1,4 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%****************************************************************
 % Masters Thesis
 % Created by 18/8/16
 %
@@ -12,13 +12,11 @@
 %
 % Template license:
 % CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%****************************************************************
 
-%----------------------------------------------------------------------------------------
-%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
-%----------------------------------------------------------------------------------------
-
+%****************************************************************
+% Configurations
+%****************************************************************
 \documentclass[
 10pt, % The default document font size, options: 10pt, 12pt
 oneside, % Two side (alternating margins) for binding by default, uncomment to switch to one side
@@ -36,20 +34,13 @@ headsepline, % Uncomment to get a line under the header
 
 \usepackage[utf8]{inputenc} % Required for inputting international characters
 \usepackage[T1]{fontenc} % Output font encoding for international characters
-
 \usepackage{palatino} % Use the Palatino font by default
-
 \usepackage[backend=bibtex,style=authoryear,natbib=true]{biblatex} % Use the bibtex backend with the authoryear citation style (which resembles APA)
+\usepackage[autostyle=true]{csquotes} % Required to generate language-dependent quotes in the bibliography
 
 \addbibresource{bibliography.bib} % The filename of the bibliography
 
-\usepackage[autostyle=true]{csquotes} % Required to generate language-dependent quotes in the bibliography
-
-%----------------------------------------------------------------------------------------
-%	MARGIN SETTINGS
-%----------------------------------------------------------------------------------------
-
-\geometry{
+\geometry{ % Margins
 	paper=a4paper, % Change to letterpaper for US letter
 	inner=2.5cm, % Inner margin
 	outer=3.8cm, % Outer margin
@@ -59,11 +50,12 @@ headsepline, % Uncomment to get a line under the header
 	%showframe,% show how the type block is set on the page
 }
 
-%----------------------------------------------------------------------------------------
-%	THESIS INFORMATION
-%----------------------------------------------------------------------------------------
-
+%****************************************************************
+% Informations
+%****************************************************************
 \thesistitle{Geographic Data Visualization} % Your thesis title, print it elsewhere with \ttitle
+\keywords{Keywords, for, your, thesis} % Keywords for your thesis, this is not currently used anywhere in the template, print it elsewhere with \keywordnames
+
 \author{Yang \textsc{Jiang}} % Your name, print it elsewhere with \authorname
 \supervisor{Dr Arno \textsc{Leist}} % Your supervisor's name, print it elsewhere with \supname
 
@@ -72,25 +64,23 @@ headsepline, % Uncomment to get a line under the header
 \major{\href{http://www.massey.ac.nz/massey/learning/programme-course-paper/programme.cfm?study_year=2016&prog_id=93070&major_code=2363}{Software Engineering}} % \majorname
 \paper{\href{http://www.massey.ac.nz/massey/learning/programme-course-paper/paper.cfm?study_year=2016&paper_code=159888}{159.888 Computer Science Professional Project}} % \papername
 
-\keywords{Keywords, for, your, thesis} % Keywords for your thesis, this is not currently used anywhere in the template, print it elsewhere with \keywordnames
-
 \hypersetup{pdftitle=\ttitle} % Set the PDF's title to your title
 \hypersetup{pdfauthor=\authorname} % Set the PDF's author to your name
 \hypersetup{pdfkeywords=\keywordnames} % Set the PDF's keywords to your keywords
 
+%****************************************************************
+% Begin document
+%****************************************************************
 \begin{document}
 
+%****************************************************************
+% First Page
+%****************************************************************
 \frontmatter % Use roman page numbering style (i, ii, iii, iv...) for the pre-content pages
-
 \pagestyle{plain} % Default to the plain heading style until the thesis style is called for the body content
-
-%----------------------------------------------------------------------------------------
-%	TITLE PAGE
-%----------------------------------------------------------------------------------------
 
 \begin{titlepage}
 \begin{center}
-
 {\scshape\LARGE \univname\par}\vspace{1.5cm} % University name
 
 \HRule \\[0.4cm] % Horizontal line
@@ -103,6 +93,7 @@ headsepline, % Uncomment to get a line under the header
 {\authorname} % Author name - remove the \href bracket to remove the link
 \end{flushleft}
 \end{minipage}
+
 \begin{minipage}[t]{0.4\textwidth}
 \begin{flushright} \large
 \emph{Supervisor:} \\
@@ -121,10 +112,9 @@ headsepline, % Uncomment to get a line under the header
 \end{center}
 \end{titlepage}
 
-%----------------------------------------------------------------------------------------
-%	ABSTRACT PAGE
-%----------------------------------------------------------------------------------------
-
+%****************************************************************
+% Abstract Page
+%****************************************************************
 \begin{abstract}
 \addchaptertocentry{\abstractname} % Add the abstract to the table of contents
 
@@ -132,10 +122,9 @@ The Thesis Abstract is written here (and usually kept to just this page). The pa
 
 \end{abstract}
 
-%----------------------------------------------------------------------------------------
-%	ACKNOWLEDGEMENTS
-%----------------------------------------------------------------------------------------
-
+%****************************************************************
+% Acknowledgements Page
+%****************************************************************
 \begin{acknowledgements}
 \addchaptertocentry{\acknowledgementname} % Add the acknowledgements to the table of contents
 
@@ -143,74 +132,61 @@ The acknowledgments and the people to thank go here, don't forget to include you
 
 \end{acknowledgements}
 
-%----------------------------------------------------------------------------------------
-%	LIST OF CONTENTS
-%----------------------------------------------------------------------------------------
-
+%****************************************************************
+% List of Contents
+%****************************************************************
 \tableofcontents % Prints the main table of contents
 
-%----------------------------------------------------------------------------------------
-%	LIST OF ABBREVIATIONS
-%----------------------------------------------------------------------------------------
-
+%****************************************************************
+% List of Abbreviations
+%****************************************************************
 \begin{abbreviations}{ll} % Include a list of abbreviations (a table of two columns)
-
 \textbf{LAH} & \textbf{L}ist \textbf{A}bbreviations \textbf{H}ere\\
 \textbf{WSF} & \textbf{W}hat (it) \textbf{S}tands \textbf{F}or\\
-
 \end{abbreviations}
 
-
-%----------------------------------------------------------------------------------------
-%	LIST OF SYMBOLS
-%----------------------------------------------------------------------------------------
-
+%****************************************************************
+% List of Symbols
+%****************************************************************
 \begin{symbols}{lll} % Include a list of Symbols (a three column table)
-
 $a$ & distance & \si{\meter} \\
 $P$ & power & \si{\watt} (\si{\joule\per\second}) \\
 %Symbol & Name & Unit \\
-
 \addlinespace % Gap to separate the Roman symbols from the Greek
-
 $\omega$ & angular frequency & \si{\radian} \\
-
 \end{symbols}
 
-%----------------------------------------------------------------------------------------
-%	LIST OF FIGURES
-%----------------------------------------------------------------------------------------
-
+%****************************************************************
+% List of Figures
+%****************************************************************
 \listoffigures % Prints the list of figures
 
-%----------------------------------------------------------------------------------------
-%	LIST OF TABLES
-%----------------------------------------------------------------------------------------
-
+%****************************************************************
+% List of Tables
+%****************************************************************
 \listoftables % Prints the list of tables
 
-%----------------------------------------------------------------------------------------
-%	THESIS CONTENT - CHAPTERS
-%----------------------------------------------------------------------------------------
-
+%****************************************************************
+% Chapters
+%****************************************************************
 \mainmatter % Begin numeric (1,2,3...) page numbering
-
 \pagestyle{thesis} % Return the page headers back to the "thesis" style
 
-% Include the chapters of the thesis as separate files from the Chapters folder
-% Uncomment the lines as you write the chapters
+% Define some commands to keep the formatting separated from the content
+\newcommand{\keyword}[1]{\textbf{#1}}
+\newcommand{\tabhead}[1]{\textbf{#1}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\file}[1]{\texttt{\bfseries#1}}
+\newcommand{\option}[1]{\texttt{\itshape#1}}
 
+\include{Chapters/Chapter0}
 \include{Chapters/ChapterX}
 %\include{Chapters/Chapter1}
-%\include{Chapters/Chapter2} 
-%\include{Chapters/Chapter3}
-%\include{Chapters/Chapter4} 
-%\include{Chapters/Chapter5} 
+%\include{Chapters/Chapter2}
 
-%----------------------------------------------------------------------------------------
-%	THESIS CONTENT - APPENDICES
-%----------------------------------------------------------------------------------------
-
+%****************************************************************
+% Appendices
+%****************************************************************
 \appendix % Cue to tell LaTeX that the following "chapters" are Appendices
 
 % Include the appendices of the thesis as separate files from the Appendices folder
@@ -218,14 +194,13 @@ $\omega$ & angular frequency & \si{\radian} \\
 
 \include{Appendices/AppendixA}
 %\include{Appendices/AppendixB}
-%\include{Appendices/AppendixC}
 
-%----------------------------------------------------------------------------------------
-%	BIBLIOGRAPHY
-%----------------------------------------------------------------------------------------
-
+%****************************************************************
+% Bibliography
+%****************************************************************
 \printbibliography[heading=bibintoc]
 
-%----------------------------------------------------------------------------------------
-
+%****************************************************************
+% End document
+%****************************************************************
 \end{document}  

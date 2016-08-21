@@ -1,20 +1,10 @@
-% Chapter 1
+%****************************************************************
+% Chapter
+%****************************************************************
+\label{Chapter0} % For referencing the chapter elsewhere, use \ref{Chapter0} 
+\chapter{Chapter Title Here}
 
-\chapter{Chapter Title Here} % Main chapter title
-
-\label{Chapter1} % For referencing the chapter elsewhere, use \ref{Chapter1} 
-
-%----------------------------------------------------------------------------------------
-
-% Define some commands to keep the formatting separated from the content 
-\newcommand{\keyword}[1]{\textbf{#1}}
-\newcommand{\tabhead}[1]{\textbf{#1}}
-\newcommand{\code}[1]{\texttt{#1}}
-\newcommand{\file}[1]{\texttt{\bfseries#1}}
-\newcommand{\option}[1]{\texttt{\itshape#1}}
-
-%----------------------------------------------------------------------------------------
-
+%****************************************************************
 \section{Welcome and Thank You}
 Welcome to this \LaTeX{} Thesis Template, a beautiful and easy to use template for writing a thesis using the \LaTeX{} typesetting system.
 
@@ -22,8 +12,7 @@ If you are writing a thesis (or will be in the future) and its subject is techni
 
 \LaTeX{} is easily able to professionally typeset documents that run to hundreds or thousands of pages long. With simple mark-up commands, it automatically sets out the table of contents, margins, page headers and footers and keeps the formatting consistent and beautiful. One of its main strengths is the way it can easily typeset mathematics, even \emph{heavy} mathematics. Even if those equations are the most horribly twisted and most difficult mathematical problems that can only be solved on a super-computer, you can at least count on \LaTeX{} to make them look stunning.
 
-%----------------------------------------------------------------------------------------
-
+%****************************************************************
 \section{Learning \LaTeX{}}
 
 \LaTeX{} is not a \textsc{wysiwyg} (What You See is What You Get) program, unlike word processors such as Microsoft Word or Apple's Pages. Instead, a document written for \LaTeX{} is actually a simple, plain text file that contains \emph{no formatting}. You tell \LaTeX{} how you want the formatting in the finished document by writing in simple commands amongst the text, for example, if I want to use \emph{italic text for emphasis}, I write the \verb|\emph{text}| command and put the text I want in italics in between the curly braces. This means that \LaTeX{} is a \enquote{mark-up} language, very much like HTML.
@@ -57,8 +46,7 @@ The \LaTeX{} distribution is available for many systems including Windows, Linux
  
 MacTeX includes a custom dedicated \LaTeX{} editor called TeXShop for writing your `\file{.tex}' files and BibDesk: a program to manage your references and create your bibliography section just as easily as managing songs and creating playlists in iTunes.
 
-%----------------------------------------------------------------------------------------
-
+%****************************************************************
 \section{Getting Started with this Template}
 
 If you are familiar with \LaTeX{}, then you should explore the directory structure of the template and then proceed to place your own information into the \emph{THESIS INFORMATION} block of the \file{main.tex} file. You can then modify the rest of this file to your unique specifications based on your degree/university. Section \ref{FillingFile} on page \pageref{FillingFile} will help you do this. Make sure you also read section \ref{ThesisConventions} about thesis conventions to get the most out of this template.
@@ -77,8 +65,7 @@ Steve's \file{ecsthesis.cls} was then taken by Sunil Patel who modified it by cr
 
 Sunil's template was made available through \url{http://www.LaTeXTemplates.com} where it was modified many times based on user requests and questions. Version 2.0 and onwards of this template represents a major modification to Sunil's template and is, in fact, hardly recognisable. The work to make version 2.0 possible was carried out by \href{mailto:vel@latextemplates.com}{Vel} and Johannes Böttcher.
 
-%----------------------------------------------------------------------------------------
-
+%****************************************************************
 \section{What this Template Includes}
 
 \subsection{Folders}
@@ -131,8 +118,7 @@ Files that are \emph{not} included, but are created by \LaTeX{} as auxiliary fil
 
 So from this long list, only the files with the \file{.bib}, \file{.cls} and \file{.tex} extensions are the most important ones. The other auxiliary files can be ignored or deleted as \LaTeX{} and BibTeX will regenerate them.
 
-%----------------------------------------------------------------------------------------
-
+%****************************************************************
 \section{Filling in Your Information in the \file{main.tex} File}\label{FillingFile}
 
 You will need to personalise the thesis template and make it your own by filling in your own information. This is done by editing the \file{main.tex} file in a text editor or your favourite LaTeX environment.
@@ -143,8 +129,7 @@ Fill out the information about yourself, your group and institution. You can als
 
 When you have done this, save the file and recompile \code{main.tex}. All the information you filled in should now be in the PDF, complete with web links. You can now begin your thesis proper!
 
-%----------------------------------------------------------------------------------------
-
+%****************************************************************
 \section{The \code{main.tex} File Explained}
 
 The \file{main.tex} file contains the structure of the thesis. There are plenty of written comments that explain what pages, sections and formatting the \LaTeX{} code is creating. Each major document element is divided into commented blocks with titles in all capitals to make it obvious what the following bit of code is doing. Initially there seems to be a lot of \LaTeX{} code, but this is all formatting, and it has all been taken care of so you don't have to do it.
@@ -167,8 +152,7 @@ Finally, there is the block where the chapters are included. Uncomment the lines
 
 After the preamble, chapters and appendices finally comes the bibliography. The bibliography style (called \option{authoryear}) is used for the bibliography and is a fully featured style that will even include links to where the referenced paper can be found online. Do not underestimate how grateful your reader will be to find that a reference to a paper is just a click away. Of course, this relies on you putting the URL information into the BibTeX file in the first place.
 
-%----------------------------------------------------------------------------------------
-
+%****************************************************************
 \section{Thesis Features and Conventions}\label{ThesisConventions}
 
 To get the best out of this template, there are a few conventions that you may want to follow.
@@ -301,16 +285,14 @@ All equations you write (which are not in the middle of paragraph text) are auto
 \[ a^{2}=4 \]
 \end{verbatim}
 
-%----------------------------------------------------------------------------------------
-
+%****************************************************************
 \section{Sectioning and Subsectioning}
 
 You should break your thesis up into nice, bite-sized sections and subsections. \LaTeX{} automatically builds a table of Contents by looking at all the \verb|\chapter{}|, \verb|\section{}|  and \verb|\subsection{}| commands you write in the source.
 
 The Table of Contents should only list the sections to three (3) levels. A \verb|chapter{}| is level zero (0). A \verb|\section{}| is level one (1) and so a \verb|\subsection{}| is level two (2). In your thesis it is likely that you will even use a \verb|subsubsection{}|, which is level three (3). The depth to which the Table of Contents is formatted is set within \file{MastersDoctoralThesis.cls}. If you need this changed, you can do it in \file{main.tex}.
 
-%----------------------------------------------------------------------------------------
-
+%****************************************************************
 \section{In Closing}
 
 You have reached the end of this mini-guide. You can now rename or overwrite this pdf file and begin writing your own \file{Chapter1.tex} and the rest of your thesis. The easy work of setting up the structure and framework has been taken care of for you. It's now your job to fill it out!
