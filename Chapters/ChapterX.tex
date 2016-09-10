@@ -102,8 +102,8 @@ $\because$
 \[
 \begin{array}{lr}
 \frac{-b \pm \sqrt{b^2 - 4ac}}{2a} = -(\frac{b}{2a}) \pm \sqrt{(\frac{b}{2a})^2 - \frac{4ac}{4a^2}} = -0.5b \pm \sqrt{(0.5b)^2 - c} \\
-B = 0.5b\\
-F = B^2 - c
+\alpha = 0.5b \\
+\beta = \alpha^2 - c
 \end{array}
 \]
 
@@ -111,16 +111,16 @@ $\therefore$
 \[
 t =
 \begin{cases}
- -B \pm \sqrt{F} & \text{if } F > 0 \\
--B & \text{if } F = 0 \\
-\varnothing & \text{if } F < 0
+ -\alpha \pm \sqrt{\beta} & \text{if } \beta > 0 \\
+-\alpha & \text{if } \beta = 0 \\
+\varnothing & \text{if } \beta < 0
 \end{cases}
 \]
 
 And the match collision position for each \emph{t} is:
 
 \begin{equation}\label{equ:ray-sphere-intersection}
-\overrightarrow{P} = \overrightarrow{R_{0}} + \overrightarrow{R_{d}} \cdot t
+\overrightarrow{P(t)} = \overrightarrow{R(t)} = \overrightarrow{R_{0}} + \overrightarrow{R_{d}} \cdot t
 \end{equation}
 
 
