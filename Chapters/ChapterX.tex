@@ -18,7 +18,7 @@ A ray can be describe in a equation with known ray start position \emph{$\overri
 %****************************************************************
 \subsection{Ray-Sphere}
 
-\begin{figure}[h!]\label{fig:ray-sphere}
+\begin{figure}[H]\label{fig:ray-sphere}
 \centering
 \includegraphics[width=\linewidth]{Figures/ray-sphere-intersection.png}
 \decoRule
@@ -38,8 +38,8 @@ If the ray intersects with the sphere at any position\emph{P} must match the equ
 (x_{R_0} + x_{R_d} \cdot t - x_c)^2 + (y_{R_0} + y_{R_d} \cdot t - y_c)^2 + (z_{R_0} + z_{R_d} \cdot t - z_c)^2 &= r^2 \\
 &\vdots \\
 x_{R_d}^2 \cdot t^2 + (2 \cdot x_{R_d} \cdot (x_{R_0} - x_c)) \cdot t + (x_{R_0}^2 - 2 \cdot x_{R_0}\cdot x_c + x_c^2) & \\
-+\ y_{R_d}^2 \cdot t^2 + (2 \cdot y_{R_d} \cdot (y_{R_0} - y_c)) \cdot t + (y_{R_0}^2 - 2 \cdot y_{R_0}\cdot y_c + y_c^2) & \\
-+\ z_{R_d}^2 \cdot t^2 + (2 \cdot z_{R_d} \cdot (z_{R_0} - z_c)) \cdot t + (z_{R_0}^2 - 2 \cdot z_{R_0}\cdot z_c + z_c^2) &= r^2
++\,y_{R_d}^2 \cdot t^2 + (2 \cdot y_{R_d} \cdot (y_{R_0} - y_c)) \cdot t + (y_{R_0}^2 - 2 \cdot y_{R_0}\cdot y_c + y_c^2) & \\
++\,z_{R_d}^2 \cdot t^2 + (2 \cdot z_{R_d} \cdot (z_{R_0} - z_c)) \cdot t + (z_{R_0}^2 - 2 \cdot z_{R_0}\cdot z_c + z_c^2) &= r^2
 \end{aligned}
 \]
 
@@ -75,14 +75,12 @@ c = (x_{R_0} - x_c)^2 + (y_{R_0} - y_c)^2 + (z_{R_0} - z_c)^2 - r^2
 
 $\And$
 \[
-\left\{
 \begin{array}{lr}
 \begin{aligned}
 \norm{\overrightarrow{R_d}} &= \sqrt{x_{R_d}^2 + y_{R_d}^2 + z_{R_d}^2} = 1 \\
-\overrightarrow{V_{c\_R_0}} &= \overrightarrow{R_0} - \overrightarrow{C} = \overrightarrow{(x_{R_0} - x_c, y_{R_0} - y_c, z_{R_0} - z_c)}
+\overrightarrow{V_{c\_R_0}} &= \overrightarrow{R_0} - \overrightarrow{C} = \overrightarrow{(x_{R_0} - x_c,\,y_{R_0} - y_c,\,z_{R_0} - z_c)}
 \end{aligned}
 \end{array}
-\right.
 \]
 
 $\therefore$
@@ -126,7 +124,7 @@ And the collision position for each \emph{t} is:
 %****************************************************************
 \subsection{Ray-Plane}
 
-\begin{figure}[h!]\label{fig:ray-plane}
+\begin{figure}[H]\label{fig:ray-plane}
 \centering
 \includegraphics[width=\linewidth]{Figures/ray-plane-intersection.png}
 \decoRule
@@ -153,8 +151,14 @@ t =
 \end{cases}
 \]
 
-Then, we have to verify if the collision is inside of the quadrangle by putting \emph{t} back to \ref{equ:ray-plane-intersection}, and:
+Then, we have to verify if the collision is inside of the quadrangle by putting \emph{t} back to \ref{equ:ray-plane-intersection}, and the \emph{t} is valid only if:
 
+\[
+\begin{array}{lr}
+\mu = \sqrt{(\overrightarrow{P} - \overrightarrow{S1}) \cdot (\overrightarrow{S2} - \overrightarrow{S1}))} \in [\,0,\,\norm{\overrightarrow{S2} - \overrightarrow{S1}}\,] \\
+\nu = \sqrt{(\overrightarrow{P} - \overrightarrow{S1}) \cdot (\overrightarrow{S3} - \overrightarrow{S1}))} \in [\,0,\,\norm{\overrightarrow{S3} - \overrightarrow{S1}}\,] 
+\end{array}
+\]
 
 
 %****************************************************************
