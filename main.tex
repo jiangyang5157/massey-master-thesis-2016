@@ -38,6 +38,7 @@ headsepline, % Uncomment to get a line under the header
 \usepackage[backend=bibtex,style=authoryear,natbib=true]{biblatex} % Use the bibtex backend with the authoryear citation style (which resembles APA)
 \usepackage[autostyle=true]{csquotes} % Required to generate language-dependent quotes in the bibliography
 \usepackage{amsmath} %
+\usepackage{amssymb} %
 
 \addbibresource{bibliography.bib} % The filename of the bibliography
 
@@ -179,6 +180,7 @@ $\omega$ & angular frequency & \si{\radian} \\
 \newcommand{\code}[1]{\texttt{#1}}
 \newcommand{\file}[1]{\texttt{\bfseries#1}}
 \newcommand{\option}[1]{\texttt{\itshape#1}}
+\newcommand{\norm}[1]{\lvert #1 \rvert} % Length of vector
 
 \include{Chapters/Chapter0}
 \include{Chapters/ChapterX}

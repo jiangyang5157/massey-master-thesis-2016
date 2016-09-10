@@ -29,10 +29,10 @@ A ray can be describe in a equation with known ray start position \emph{$\overri
 With known radius and center position, any point on the surface of sphere should match the equation:
 
 \begin{equation}\label{equ:sphere-surface}
-(x_{s} - x_{c})^2 + (y_{s} - y_{c})^2 + (z_{s} - z_{c})^2 = r^2
+(x_{p} - x_{c})^2 + (y_{p} - y_{c})^2 + (z_{p} - z_{c})^2 = r^2
 \end{equation}
 
-If the ray intersects with the sphere, the intersection position must match the equation  \ref{equ:ray-t} and \ref{equ:sphere-surface}. Therefor the solution of \emph{t} in the cointegrate equation implies whether or not the ray will intersect with the sphere:
+If the ray intersects with the sphere at any position\emph{P} must match the equation \ref{equ:ray-t} and \ref{equ:sphere-surface}. Therefor the solution of \emph{t} in the cointegrate equation implies whether or not the ray will intersect with the sphere:
 
 \begin{equation}\label{equ:ray-sphere}
 \begin{aligned}
@@ -44,21 +44,59 @@ x_{R_{d}}^2 \cdot t^2 + (2 \cdot x_{R_{d}} \cdot (x_{R_{0}} - x_{c})) \cdot t + 
 \end{aligned}
 \end{equation}
 
-It can be seen as the quadratic formula:
+It can be seen as a quadratic formula:
+
 \begin{equation}\label{equ:sphere-surface-quadratic-formula}
-A \cdot t^2 + B \cdot t + C = 0
+a \cdot t^2 + b \cdot t + c = 0
 \end{equation}
 
+So far, we are already able to solved the \emph{t}:
+
+\[
+t =
+\begin{cases}
+\frac{-b \pm \sqrt{b^2 - 4ac}}{2a} & \text{if } b^2 - 4ac > 0 \\
+\frac{-b}{2a} & \text{if } b^2 - 4ac = 0 \\
+\varnothing & \text{if } b^2 - 4ac < 0
+\end{cases}
+\]
+
+There are too many calculations  in it, but few things can be done for a better understanding and also a better performance when we are altually dealing with Euclidean vectors.
 
 
-%\begin{equation}\label{equ:sphere-surface-quadratic-formula}
-%\begin{aligned}
-%& A \cdot t^2 + B \cdot t + C = 0 \\
-%& A = x_{R_{d}}^2 + y_{R_{d}}^2 + z_{R_{d}}^2 \\
-%& B = 2 \cdot (x_{R_{d}} \cdot (x_{R_{0}} - x_{c}) + y_{R_{d}} \cdot (y_{R_{0}} - y_{c}) + z_{R_{d}} \cdot (z_{R_{0}} - z_{c})) \\
-%& C = (x_{R_{0}} - x_{c})^2 + (y_{R_{0}} - y_{c})^2 + (z_{R_{0}} - z_{c})^2 - r^2
-%\end{aligned}
-%\end{equation}
+$\because$
+\[
+\left\{
+\begin{array}{lr}
+a = x_{R_{d}}^2 + y_{R_{d}}^2 + z_{R_{d}}^2 \\
+b = 2 \cdot (x_{R_{d}} \cdot (x_{R_{0}} - x_{c}) + y_{R_{d}} \cdot (y_{R_{0}} - y_{c}) + z_{R_{d}} \cdot (z_{R_{0}} - z_{c})) \\
+c = (x_{R_{0}} - x_{c})^2 + (y_{R_{0}} - y_{c})^2 + (z_{R_{0}} - z_{c})^2 - r^2
+\end{array}
+\right.
+\]
+
+$\And$
+\[
+\left\{
+\begin{array}{lr}
+\begin{aligned}
+\norm{\overrightarrow{R_{d}}} &= \sqrt{x_{R_{d}}^2 + y_{R_{d}}^2 + z_{R_{d}}^2} = 1 \\
+\overrightarrow{V_{c\_R_{0}}} &= \overrightarrow{R_{0}} - \overrightarrow{C} = \overrightarrow{(x_{R_{0}} - x_{c}, y_{R_{0}} - y_{c}, z_{R_{0}} - z_{c})}
+\end{aligned}
+\end{array}
+\right.
+\]
+
+$\therefore$
+\[
+\left\{
+\begin{array}{lr}
+a =1 \\
+b = 2 \cdot \overrightarrow{R_{d}} \cdot \overrightarrow{V_{c\_R_{0}}} \\
+c = \overrightarrow{V_{c\_R_{0}}} \cdot \overrightarrow{V_{c\_R_{0}}} \cdot r^2
+\end{array}
+\right.
+\]
 
 
 
