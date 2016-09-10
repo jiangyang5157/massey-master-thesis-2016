@@ -9,10 +9,10 @@
 
 Detect collisions between ray and models is the key to allow user selecting objects in the VR would, which is one of the importent experience for user interaction.
 
-A ray can be describe in a equation with known ray start position \emph{$\overrightarrow{R_{0}}$} and ray direction \emph{$\overrightarrow{R_{d}}$}.
+A ray can be describe in a equation with known ray start position \emph{$\overrightarrow{R_0}$} and ray direction \emph{$\overrightarrow{R_d}$}.
 
 \begin{equation}\label{equ:ray-t}
-\overrightarrow{R(t)} = \overrightarrow{R_{0}} + \overrightarrow{R_{d}} \cdot t
+\overrightarrow{R(t)} = \overrightarrow{R_0} + \overrightarrow{R_d} \cdot t
 \end{equation}
 
 %****************************************************************
@@ -25,21 +25,21 @@ A ray can be describe in a equation with known ray start position \emph{$\overri
 \caption[ray-sphere-intersection]{Ray-Sphere intersection}
 \end{figure}
 
-With known radius and center position, any point on the surface of sphere should match the equation:
+A point \emph{P} on the surface of sphere should match the equation:
 
 \begin{equation}\label{equ:sphere-surface}
-(x_{p} - x_{c})^2 + (y_{p} - y_{c})^2 + (z_{p} - z_{c})^2 = r^2
+(x_p - x_c)^2 + (y_p - y_c)^2 + (z_p - z_c)^2 = r^2
 \end{equation}
 
 If the ray intersects with the sphere at any position\emph{P} must match the equation \ref{equ:ray-t} and \ref{equ:sphere-surface}. Therefor the solution of \emph{t} in the cointegrate equation implies whether or not the ray will intersect with the sphere:
 
 \[
 \begin{aligned}
-(x_{R_{0}} + x_{R_{d}} \cdot t - x_{c})^2 + (y_{R_{0}} + y_{R_{d}} \cdot t - y_{c})^2 + (z_{R_{0}} + z_{R_{d}} \cdot t - z_{c})^2 &= r^2 \\
+(x_{R_0} + x_{R_d} \cdot t - x_c)^2 + (y_{R_0} + y_{R_d} \cdot t - y_c)^2 + (z_{R_0} + z_{R_d} \cdot t - z_c)^2 &= r^2 \\
 &\vdots \\
-x_{R_{d}}^2 \cdot t^2 + (2 \cdot x_{R_{d}} \cdot (x_{R_{0}} - x_{c})) \cdot t + (x_{R_{0}}^2 - 2 \cdot x_{R_{0}}\cdot x_{c} + x_{c}^2) & \\
-+\ y_{R_{d}}^2 \cdot t^2 + (2 \cdot y_{R_{d}} \cdot (y_{R_{0}} - y_{c})) \cdot t + (y_{R_{0}}^2 - 2 \cdot y_{R_{0}}\cdot y_{c} + y_{c}^2) & \\
-+\ z_{R_{d}}^2 \cdot t^2 + (2 \cdot z_{R_{d}} \cdot (z_{R_{0}} - z_{c})) \cdot t + (z_{R_{0}}^2 - 2 \cdot z_{R_{0}}\cdot z_{c} + z_{c}^2) &= r^2
+x_{R_d}^2 \cdot t^2 + (2 \cdot x_{R_d} \cdot (x_{R_0} - x_c)) \cdot t + (x_{R_0}^2 - 2 \cdot x_{R_0}\cdot x_c + x_c^2) & \\
++\ y_{R_d}^2 \cdot t^2 + (2 \cdot y_{R_d} \cdot (y_{R_0} - y_c)) \cdot t + (y_{R_0}^2 - 2 \cdot y_{R_0}\cdot y_c + y_c^2) & \\
++\ z_{R_d}^2 \cdot t^2 + (2 \cdot z_{R_d} \cdot (z_{R_0} - z_c)) \cdot t + (z_{R_0}^2 - 2 \cdot z_{R_0}\cdot z_c + z_c^2) &= r^2
 \end{aligned}
 \]
 
@@ -66,9 +66,9 @@ $\because$
 \[
 \left\{
 \begin{array}{lr}
-a = x_{R_{d}}^2 + y_{R_{d}}^2 + z_{R_{d}}^2 \\
-b = 2 \cdot (x_{R_{d}} \cdot (x_{R_{0}} - x_{c}) + y_{R_{d}} \cdot (y_{R_{0}} - y_{c}) + z_{R_{d}} \cdot (z_{R_{0}} - z_{c})) \\
-c = (x_{R_{0}} - x_{c})^2 + (y_{R_{0}} - y_{c})^2 + (z_{R_{0}} - z_{c})^2 - r^2
+a = x_{R_d}^2 + y_{R_d}^2 + z_{R_d}^2 \\
+b = 2 \cdot (x_{R_d} \cdot (x_{R_0} - x_c) + y_{R_d} \cdot (y_{R_0} - y_c) + z_{R_d} \cdot (z_{R_0} - z_c)) \\
+c = (x_{R_0} - x_c)^2 + (y_{R_0} - y_c)^2 + (z_{R_0} - z_c)^2 - r^2
 \end{array}
 \right.
 \]
@@ -78,8 +78,8 @@ $\And$
 \left\{
 \begin{array}{lr}
 \begin{aligned}
-\norm{\overrightarrow{R_{d}}} &= \sqrt{x_{R_{d}}^2 + y_{R_{d}}^2 + z_{R_{d}}^2} = 1 \\
-\overrightarrow{V_{c\_R_{0}}} &= \overrightarrow{R_{0}} - \overrightarrow{C} = \overrightarrow{(x_{R_{0}} - x_{c}, y_{R_{0}} - y_{c}, z_{R_{0}} - z_{c})}
+\norm{\overrightarrow{R_d}} &= \sqrt{x_{R_d}^2 + y_{R_d}^2 + z_{R_d}^2} = 1 \\
+\overrightarrow{V_{c\_R_0}} &= \overrightarrow{R_0} - \overrightarrow{C} = \overrightarrow{(x_{R_0} - x_c, y_{R_0} - y_c, z_{R_0} - z_c)}
 \end{aligned}
 \end{array}
 \right.
@@ -90,8 +90,8 @@ $\therefore$
 \left\{
 \begin{array}{lr}
 a =1 \\
-b = 2 \cdot \overrightarrow{R_{d}} \cdot \overrightarrow{V_{c\_R_{0}}} \\
-c = \overrightarrow{V_{c\_R_{0}}} \cdot \overrightarrow{V_{c\_R_{0}}} \cdot r^2
+b = 2 \cdot \overrightarrow{R_d} \cdot \overrightarrow{V_{c\_R_0}} \\
+c = \overrightarrow{V_{c\_R_0}} \cdot \overrightarrow{V_{c\_R_0}} \cdot r^2
 \end{array}
 \right.
 \]
@@ -117,11 +117,11 @@ t =
 \end{cases}
 \]
 
-And the match collision position for each \emph{t} is:
+And the collision position for each \emph{t} is:
 
-\begin{equation}\label{equ:ray-sphere-intersection}
-\overrightarrow{P(t)} = \overrightarrow{R(t)} = \overrightarrow{R_{0}} + \overrightarrow{R_{d}} \cdot t
-\end{equation}
+\[
+\overrightarrow{P} = \overrightarrow{R_0} + \overrightarrow{R_d} \cdot t
+\]
 
 %****************************************************************
 \subsection{Ray-Plane}
@@ -133,15 +133,27 @@ And the match collision position for each \emph{t} is:
 \caption[ray-plane-intersection]{Ray-Plane intersection}
 \end{figure}
 
-asdasd\\
-asdsad\\
-asdasdsa
-d
-asd
-as
-dasd\\
-asd
+If a point \emph{P} on the plane and also belongs to the ray, we have quadric equation:
 
+\begin{equation}\label{equ:ray-plane-intersection}
+\left\{
+\begin{array}{lr}
+(\overrightarrow{P} - \overrightarrow{S1}) \cdot \overrightarrow{N} = 0 \\
+\overrightarrow{P} = \overrightarrow{R_0} + \overrightarrow{R_d} \cdot t
+\end{array}
+\right.
+\end{equation}
+
+$\therefore$
+\[
+t =
+\begin{cases}
+\frac{-\overrightarrow{N} \cdot (\overrightarrow{R_0} - \overrightarrow{S_1})}{\overrightarrow{N} \cdot \overrightarrow{R_d}} & \text{if } \overrightarrow{N} \cdot \overrightarrow{R_d} \nsim 0 \\
+\varnothing & \text{if } \overrightarrow{N} \cdot \overrightarrow{R_d} \sim 0
+\end{cases}
+\]
+
+Then, we have to verify if the collision is inside of the quadrangle by putting \emph{t} back to \ref{equ:ray-plane-intersection}, and:
 
 
 
