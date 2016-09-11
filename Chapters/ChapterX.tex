@@ -2,7 +2,7 @@
 % Chapter X
 %****************************************************************
 \label{ChapterX}
-\chapter{Chapter To Be Removed}
+\chapter{Chapter X}
 
 %****************************************************************
 \section{Ray Intersection}
@@ -62,7 +62,7 @@ t =
 
 Then, I take a further step to get rid of formula complexity.
 
-$\because$
+$\because$ Equation \ref{equ:sphere-surface},\,\ref{equ:sphere-surface-quadratic-formula}
 \[
 \left\{
 \begin{array}{lr}
@@ -94,18 +94,18 @@ c = \overrightarrow{V_{c\_R_0}} \cdot \overrightarrow{V_{c\_R_0}} \cdot r^2
 \right.
 \]
 
-And the solution for \emph{t} can also be optimized:
-
-$\because$
+$\because$ The formula for \emph{t} can also be optimized
 \[
+\left\{
 \begin{array}{lr}
-\frac{-b \pm \sqrt{b^2 - 4ac}}{2a} = -(\frac{b}{2a}) \pm \sqrt{(\frac{b}{2a})^2 - \frac{4ac}{4a^2}} = -0.5b \pm \sqrt{(0.5b)^2 - c} \\
+\frac{-b \pm \sqrt{b^2 - 4ac}}{2a} = -\alpha \pm \sqrt{\beta} \\
 \alpha = 0.5b \\
 \beta = \alpha^2 - c
 \end{array}
+\right.
 \]
 
-$\therefore$
+$\therefore$ This is the final solution for \emph{t}
 \[
 t =
 \begin{cases}
@@ -136,13 +136,14 @@ If a point \emph{P} on the plane and also belongs to the ray, we have quadric eq
 \begin{equation}\label{equ:ray-plane-intersection}
 \left\{
 \begin{array}{lr}
-(\overrightarrow{P} - \overrightarrow{S1}) \cdot \overrightarrow{N} = 0 \\
+(\overrightarrow{P} - \overrightarrow{S_1}) \cdot \overrightarrow{N} = 0 \\
 \overrightarrow{P} = \overrightarrow{R_0} + \overrightarrow{R_d} \cdot t
 \end{array}
 \right.
 \end{equation}
 
-$\therefore$
+Solution for the \emph{t} is:
+
 \[
 t =
 \begin{cases}
@@ -151,14 +152,105 @@ t =
 \end{cases}
 \]
 
-Then, we have to verify if the collision is inside of the quadrangle by putting \emph{t} back to \ref{equ:ray-plane-intersection}, and the \emph{t} is valid only if:
+At last, we have to verify if the collision is inside of the quadrangle by putting \emph{t} back to \ref{equ:ray-plane-intersection}, and the \emph{t} is valid only if:
 
 \[
 \begin{array}{lr}
-\mu = \sqrt{(\overrightarrow{P} - \overrightarrow{S1}) \cdot (\overrightarrow{S2} - \overrightarrow{S1}))} \in [\,0,\,\norm{\overrightarrow{S2} - \overrightarrow{S1}}\,] \\
-\nu = \sqrt{(\overrightarrow{P} - \overrightarrow{S1}) \cdot (\overrightarrow{S3} - \overrightarrow{S1}))} \in [\,0,\,\norm{\overrightarrow{S3} - \overrightarrow{S1}}\,] 
+\mu = \sqrt{(\overrightarrow{P} - \overrightarrow{S_1}) \cdot (\overrightarrow{S_2} - \overrightarrow{S_1}))} \in [\,0,\,\norm{\overrightarrow{S_2} - \overrightarrow{S_1}}\,] \\
+\nu = \sqrt{(\overrightarrow{P} - \overrightarrow{S_1}) \cdot (\overrightarrow{S_3} - \overrightarrow{S_1}))} \in [\,0,\,\norm{\overrightarrow{S_3} - \overrightarrow{S_1}}\,] 
 \end{array}
 \]
+
+%****************************************************************
+\subsection{Ray-Box}
+
+There is a octree implementation in the VR 3D world that separate the 3D world to 3D boxes to avoid unnecessary ray-object collision detection. In this section, I am going to first explain Ray-Box-2D collision detection, then derive out Ray-Box-3D intersection.
+
+%****************************************************************
+\subsubsection{Ray-Box-2D}
+
+\begin{figure}[H]\label{fig:ray-box-2d}
+\centering
+\includegraphics[width=\linewidth]{Figures/ray-box-2d-intersection.png}
+\decoRule
+\caption[ray-box-2d-intersection]{Ray-Box-2D intersection}
+\end{figure}
+
+$\because$ Known $R_0$,\,$R_d$,\,$S_1$,\,$S_2$
+\begin{multicols}{2}
+\noindent
+\[
+X_1 =
+\begin{cases}
+x_{S_1} - x_{R_0} & \text{if } x_{R_d} > 0 \\
+x_{S_2} - x_{R_0} & \text{if } x_{R_d} < 0
+\end{cases}
+\]
+\[
+X_2 =
+\begin{cases}
+x_{S_2} - x_{R_0} & \text{if } x_{R_d} > 0 \\
+x_{S_1} - x_{R_0} & \text{if } x_{R_d} < 0
+\end{cases}
+\]
+\[
+\begin{array}{lr}
+t_{X_1} = \frac{X_1}{x_{R_d}} \\
+t_{X_2} = \frac{X_2}{x_{R_d}}
+\end{array}
+\]
+\columnbreak
+\[
+Y_1 =
+\begin{cases}
+y_{S_1} - y_{R_0} & \text{if } y_{R_d} > 0 \\
+y_{S_2} - y_{R_0} & \text{if } y_{R_d} < 0
+\end{cases}
+\]
+\[
+Y_2 =
+\begin{cases}
+y_{S_2} - y_{R_0} & \text{if } y_{R_d} > 0 \\
+y_{S_1} - y_{R_0} & \text{if } y_{R_d} < 0
+\end{cases}
+\]
+\[
+\begin{array}{lr}
+t_{Y_1} = \frac{Y_1}{y_{R_d}} \\
+t_{Y_2} = \frac{Y_2}{y_{R_d}}
+\end{array}
+\]
+\end{multicols}
+
+$\And$ When collision happens,  we have formula
+\[
+\left\{
+\begin{array}{lr}
+\begin{aligned}
+t_{X_1} &< t_{X_2} \\
+t_{Y_1} &< t_{Y_2}
+\end{aligned}
+\end{array}
+\right.
+\]
+
+$\therefore$ Which is
+\begin{equation}\label{equ:ray-box-2d-intersection}
+max(t_{X_1},\,t_{Y_1}) < min(t_{X_2},\,t_{Y_2})
+\end{equation}
+
+%****************************************************************
+\subsubsection{Ray-Box-3D}
+
+\begin{figure}[H]\label{fig:ray-box-3d}
+\centering
+\includegraphics[width=\linewidth]{Figures/ray-box-3d-intersection.png}
+\decoRule
+\caption[ray-box-3d-intersection]{Ray-Box-3D intersection}
+\end{figure}
+
+asdasd
+
 
 
 %****************************************************************
