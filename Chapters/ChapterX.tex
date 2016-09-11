@@ -123,6 +123,7 @@ And the collision position for each \emph{t} is:
 
 %****************************************************************
 \subsection{Ray-Plane}
+\parencite{stackoverflow.ray-plane.2014} \\
 
 \begin{figure}[H]\label{fig:ray-plane}
 \centering
@@ -163,6 +164,9 @@ At last, we have to verify if the collision is inside of the quadrangle by putti
 
 %****************************************************************
 \subsection{Ray-Box}
+\parencite{Williams.ray-box.2005} \\
+\parencite{Tavian.ray-box-2d.2011} \\
+\parencite{scratchapixel.ray-plane-3d} \\
 
 There is a octree implementation in the VR 3D world that separate the 3D world to 3D boxes to avoid unnecessary ray-object collision detection. In this section, I am going to first explain Ray-Box-2D collision detection, then derive out Ray-Box-3D intersection.
 
@@ -335,7 +339,7 @@ t_{Z_1} &< t_{Z_2}
 \]
 
 $\therefore$ Which is
-\begin{equation}\label{equ:ray-box-2d-intersection}
+\begin{equation}\label{equ:ray-box-3d-intersection}
 max(t_{X_1},\,t_{Y_1},\,t_{Z_1}) < min(t_{X_2},\,t_{Y_2},\,t_{Z_2})
 \end{equation}
 

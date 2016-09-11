@@ -36,6 +36,9 @@ headsepline, % Uncomment to get a line under the header
 \usepackage[T1]{fontenc} % Output font encoding for international characters
 \usepackage{palatino} % Use the Palatino font by default
 \usepackage[backend=bibtex,style=authoryear,natbib=true]{biblatex} % Use the bibtex backend with the authoryear citation style (which resembles APA)
+\makeatletter
+\def\blx@maxline{77}
+\makeatother
 \usepackage[autostyle=true]{csquotes} % Required to generate language-dependent quotes in the bibliography
 
 %\usepackage[fleqn]{amsmath}
@@ -187,6 +190,7 @@ $\omega$ & angular frequency & \si{\radian} \\
 \newcommand{\option}[1]{\texttt{\itshape#1}}
 \newcommand{\norm}[1]{\lvert #1 \rvert} % Length of vector
 
+\include{Chapters/Chapter0}
 \include{Chapters/ChapterX}
 %\include{Chapters/Chapter1}
 %\include{Chapters/Chapter2}
