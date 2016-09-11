@@ -105,7 +105,7 @@ $\because$ The formula for \emph{t} can also be optimized
 \right.
 \]
 
-$\therefore$ This is the final solution for \emph{t}
+$\therefore$ The final solution for \emph{t}
 \[
 t =
 \begin{cases}
@@ -136,7 +136,7 @@ If a point \emph{P} on the plane and also belongs to the ray, we have quadric eq
 \begin{equation}\label{equ:ray-plane-intersection}
 \left\{
 \begin{array}{lr}
-(\overrightarrow{P} - \overrightarrow{S_1}) \cdot \overrightarrow{N} = 0 \\
+(\overrightarrow{P} - \overrightarrow{P_1}) \cdot \overrightarrow{N} = 0 \\
 \overrightarrow{P} = \overrightarrow{R_0} + \overrightarrow{R_d} \cdot t
 \end{array}
 \right.
@@ -147,7 +147,7 @@ Solution for the \emph{t} is:
 \[
 t =
 \begin{cases}
-\frac{-\overrightarrow{N} \cdot (\overrightarrow{R_0} - \overrightarrow{S_1})}{\overrightarrow{N} \cdot \overrightarrow{R_d}} & \text{if } \overrightarrow{N} \cdot \overrightarrow{R_d} \nsim 0 \\
+\frac{-\overrightarrow{N} \cdot (\overrightarrow{R_0} - \overrightarrow{P_1})}{\overrightarrow{N} \cdot \overrightarrow{R_d}} & \text{if } \overrightarrow{N} \cdot \overrightarrow{R_d} \nsim 0 \\
 \varnothing & \text{if } \overrightarrow{N} \cdot \overrightarrow{R_d} \sim 0
 \end{cases}
 \]
@@ -156,8 +156,8 @@ At last, we have to verify if the collision is inside of the quadrangle by putti
 
 \[
 \begin{array}{lr}
-\mu = \sqrt{(\overrightarrow{P} - \overrightarrow{S_1}) \cdot (\overrightarrow{S_2} - \overrightarrow{S_1}))} \in [\,0,\,\norm{\overrightarrow{S_2} - \overrightarrow{S_1}}\,] \\
-\nu = \sqrt{(\overrightarrow{P} - \overrightarrow{S_1}) \cdot (\overrightarrow{S_3} - \overrightarrow{S_1}))} \in [\,0,\,\norm{\overrightarrow{S_3} - \overrightarrow{S_1}}\,] 
+\mu = \sqrt{(\overrightarrow{P} - \overrightarrow{P_1}) \cdot (\overrightarrow{P_2} - \overrightarrow{P_1}))} \in [\,0,\,\norm{\overrightarrow{P_2} - \overrightarrow{P_1}}\,] \\
+\nu = \sqrt{(\overrightarrow{P} - \overrightarrow{P_1}) \cdot (\overrightarrow{P_3} - \overrightarrow{P_1}))} \in [\,0,\,\norm{\overrightarrow{P_3} - \overrightarrow{P_1}}\,] 
 \end{array}
 \]
 
@@ -176,21 +176,21 @@ There is a octree implementation in the VR 3D world that separate the 3D world t
 \caption[ray-box-2d-intersection]{Ray-Box-2D intersection}
 \end{figure}
 
-$\because$ Known $R_0$,\,$R_d$,\,$S_1$,\,$S_2$
+$\because$ Known $R_0$,\,$R_d$,\,$P_1$,\,$P_2$
 \begin{multicols}{2}
 \noindent
 \[
 X_1 =
 \begin{cases}
-x_{S_1} - x_{R_0} & \text{if } x_{R_d} > 0 \\
-x_{S_2} - x_{R_0} & \text{if } x_{R_d} < 0
+x_{P_1} - x_{R_0} & \text{if } x_{R_d} > 0 \\
+x_{P_2} - x_{R_0} & \text{if } x_{R_d} < 0
 \end{cases}
 \]
 \[
 X_2 =
 \begin{cases}
-x_{S_2} - x_{R_0} & \text{if } x_{R_d} > 0 \\
-x_{S_1} - x_{R_0} & \text{if } x_{R_d} < 0
+x_{P_2} - x_{R_0} & \text{if } x_{R_d} > 0 \\
+x_{P_1} - x_{R_0} & \text{if } x_{R_d} < 0
 \end{cases}
 \]
 \[
@@ -203,15 +203,15 @@ t_{X_2} = \frac{X_2}{x_{R_d}}
 \[
 Y_1 =
 \begin{cases}
-y_{S_1} - y_{R_0} & \text{if } y_{R_d} > 0 \\
-y_{S_2} - y_{R_0} & \text{if } y_{R_d} < 0
+y_{P_1} - y_{R_0} & \text{if } y_{R_d} > 0 \\
+y_{P_2} - y_{R_0} & \text{if } y_{R_d} < 0
 \end{cases}
 \]
 \[
 Y_2 =
 \begin{cases}
-y_{S_2} - y_{R_0} & \text{if } y_{R_d} > 0 \\
-y_{S_1} - y_{R_0} & \text{if } y_{R_d} < 0
+y_{P_2} - y_{R_0} & \text{if } y_{R_d} > 0 \\
+y_{P_1} - y_{R_0} & \text{if } y_{R_d} < 0
 \end{cases}
 \]
 \[
@@ -249,9 +249,95 @@ max(t_{X_1},\,t_{Y_1}) < min(t_{X_2},\,t_{Y_2})
 \caption[ray-box-3d-intersection]{Ray-Box-3D intersection}
 \end{figure}
 
-asdasd
+$\because$ Known $R_0$,\,$R_d$,\,$P_1$,\,$P_2$
+\begin{multicols}{2}
+\noindent
+\[
+X_1 =
+\begin{cases}
+x_{P_1} - x_{R_0} & \text{if } x_{R_d} > 0 \\
+x_{P_2} - x_{R_0} & \text{if } x_{R_d} < 0
+\end{cases}
+\]
+\[
+X_2 =
+\begin{cases}
+x_{P_2} - x_{R_0} & \text{if } x_{R_d} > 0 \\
+x_{P_1} - x_{R_0} & \text{if } x_{R_d} < 0
+\end{cases}
+\]
+\[
+\begin{array}{lr}
+t_{X_1} = \frac{X_1}{x_{R_d}} \\
+t_{X_2} = \frac{X_2}{x_{R_d}}
+\end{array}
+\]
+\columnbreak
+\[
+Y_1 =
+\begin{cases}
+y_{P_1} - y_{R_0} & \text{if } y_{R_d} > 0 \\
+y_{P_2} - y_{R_0} & \text{if } y_{R_d} < 0
+\end{cases}
+\]
+\[
+Y_2 =
+\begin{cases}
+y_{P_2} - y_{R_0} & \text{if } y_{R_d} > 0 \\
+y_{P_1} - y_{R_0} & \text{if } y_{R_d} < 0
+\end{cases}
+\]
+\[
+\begin{array}{lr}
+t_{Y_1} = \frac{Y_1}{y_{R_d}} \\
+t_{Y_2} = \frac{Y_2}{y_{R_d}}
+\end{array}
+\]
+\end{multicols}
+\begin{multicols}{2}
+\noindent
+\[
+Z_1 =
+\begin{cases}
+z_{P_1} - z_{R_0} & \text{if } z_{R_d} > 0 \\
+z_{P_2} - z_{R_0} & \text{if } z_{R_d} < 0
+\end{cases}
+\]
+\[
+Z_2 =
+\begin{cases}
+z_{P_2} - z_{R_0} & \text{if } z_{R_d} > 0 \\
+z_{P_1} - z_{R_0} & \text{if } z_{R_d} < 0
+\end{cases}
+\]
+\[
+\begin{array}{lr}
+t_{Z_1} = \frac{Z_1}{z_{R_d}} \\
+t_{Z_2} = \frac{Z_2}{z_{R_d}}
+\end{array}
+\]
+\columnbreak
+\[
+\]
+\end{multicols}
 
+$\And$ When collision happens,  we have formula
+\[
+\left\{
+\begin{array}{lr}
+\begin{aligned}
+t_{X_1} &< t_{X_2} \\
+t_{Y_1} &< t_{Y_2} \\
+t_{Z_1} &< t_{Z_2}
+\end{aligned}
+\end{array}
+\right.
+\]
 
+$\therefore$ Which is
+\begin{equation}\label{equ:ray-box-2d-intersection}
+max(t_{X_1},\,t_{Y_1},\,t_{Z_1}) < min(t_{X_2},\,t_{Y_2},\,t_{Z_2})
+\end{equation}
 
 %****************************************************************
 \section{Section 2}
