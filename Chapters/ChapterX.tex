@@ -5,6 +5,29 @@
 \chapter{Chapter X}
 
 %****************************************************************
+\section{Camera Movement}
+
+In general, there are two sensors can be useful to manager camera movement: ACCELEROMETER (API level 3), LINEAR\_ACCELERATION (API level 9) and STEP\_DETECTOR (API level 19). 
+
+LINEAR\_ACCELERATION is same as ACCELERATION which measures the acceleration force in meter per second repeatedly, except linear acceleration sensor is a synthetic sensor with gravity filtered out. 
+
+\[
+\begin{array}{lr}
+Linear Acceleration = Accelerometer Data - Gravity \\
+v = \int a\,dt \\
+x = \int v\,dt
+\end{array}
+\]
+
+First of all, we take the acclerometer data and remove gravity that is called gravity compensation, whatever is left is linear movement. Then we have to integrate it one to get velocity, integrated again to get position, which is called double integral. Now if the first integral creates drift, double integrals are really nasty that they create horrible drift. Because of these noise, using acceleration data it isn't so accurate, it is really hard to do any kind of linear movement \parencite{GoogleTechTalks.sensor-fusion.2010}.
+
+On the other hand, use step counter from STEP\_DETECTOR, and pedometer algorithm for pedestrian navigation, that works very well in this project.
+
+
+
+
+
+%****************************************************************
 \section{Ray Intersection}
 
 Detect collisions between ray and models is the key to allow user selecting objects in the VR would, which is one of the importent experience for user interaction.
@@ -35,18 +58,18 @@ If the ray intersects with the sphere at any position\emph{P} must match the equ
 
 \[
 \begin{aligned}
-(x_{R_0} + x_{R_d} \cdot t - x_c)^2 + (y_{R_0} + y_{R_d} \cdot t - y_c)^2 + (z_{R_0} + z_{R_d} \cdot t - z_c)^2 &= r^2 \\
+(x_{R_0} + x_{R_d} \cdot t - x_c)^2 &+ (y_{R_0} + y_{R_d} \cdot t - y_c)^2 + (z_{R_0} + z_{R_d} \cdot t - z_c)^2 = r^2 \\
 &\vdots \\
-x_{R_d}^2 \cdot t^2 + (2 \cdot x_{R_d} \cdot (x_{R_0} - x_c)) \cdot t + (x_{R_0}^2 - 2 \cdot x_{R_0}\cdot x_c + x_c^2) & \\
-+\,y_{R_d}^2 \cdot t^2 + (2 \cdot y_{R_d} \cdot (y_{R_0} - y_c)) \cdot t + (y_{R_0}^2 - 2 \cdot y_{R_0}\cdot y_c + y_c^2) & \\
-+\,z_{R_d}^2 \cdot t^2 + (2 \cdot z_{R_d} \cdot (z_{R_0} - z_c)) \cdot t + (z_{R_0}^2 - 2 \cdot z_{R_0}\cdot z_c + z_c^2) &= r^2
+x_{R_d}^2\,t^2 &+ (2\,x_{R_d}\,(x_{R_0} - x_c))\,t + (x_{R_0}^2 - 2\,x_{R_0}\,x_c + x_c^2) \\
++\;y_{R_d}^2\,t^2 &+ (2\,y_{R_d}\,(y_{R_0} - y_c))\,t + (y_{R_0}^2 - 2\,y_{R_0}\,y_c + y_c^2) \\
++\;z_{R_d}^2\,t^2 &+ (2\,z_{R_d}\,(z_{R_0} - z_c))\,t + (z_{R_0}^2 - 2\,z_{R_0}\,z_c + z_c^2) = r^2
 \end{aligned}
 \]
 
 It can be seen as a quadratic formula:
 
 \begin{equation}\label{equ:sphere-surface-quadratic-formula}
-a \cdot t^2 + b \cdot t + c = 0
+a\,t^2 + b\,t + c = 0
 \end{equation}
 
 At this point, we are able to solved the \emph{t}:
@@ -54,9 +77,9 @@ At this point, we are able to solved the \emph{t}:
 \[
 t =
 \begin{cases}
-\frac{-b \pm \sqrt{b^2 - 4ac}}{2a} & \text{if } b^2 - 4ac > 0 \\
-\frac{-b}{2a} & \text{if } b^2 - 4ac = 0 \\
-\varnothing & \text{if } b^2 - 4ac < 0
+\frac{-b \pm \sqrt{b^2 - 4\,a\,c}}{2\,a} & \text{if }\;b^2 - 4\,a\,c > 0 \\
+\frac{-b}{2\,a} & \text{if }\; b^2 - 4\,a\,c = 0 \\
+\varnothing & \text{if }\; b^2 - 4\,a\,c < 0
 \end{cases}
 \]
 
@@ -67,7 +90,7 @@ $\because$ Equation \ref{equ:sphere-surface},\,\ref{equ:sphere-surface-quadratic
 \left\{
 \begin{array}{lr}
 a = x_{R_d}^2 + y_{R_d}^2 + z_{R_d}^2 \\
-b = 2 \cdot (x_{R_d} \cdot (x_{R_0} - x_c) + y_{R_d} \cdot (y_{R_0} - y_c) + z_{R_d} \cdot (z_{R_0} - z_c)) \\
+b = 2\,(x_{R_d}\,(x_{R_0} - x_c) + y_{R_d}\,(y_{R_0} - y_c) + z_{R_d}\,(z_{R_0} - z_c)) \\
 c = (x_{R_0} - x_c)^2 + (y_{R_0} - y_c)^2 + (z_{R_0} - z_c)^2 - r^2
 \end{array}
 \right.
@@ -78,7 +101,7 @@ $\And$
 \begin{array}{lr}
 \begin{aligned}
 \norm{\overrightarrow{R_d}} &= \sqrt{x_{R_d}^2 + y_{R_d}^2 + z_{R_d}^2} = 1 \\
-\overrightarrow{V_{c\_R_0}} &= \overrightarrow{R_0} - \overrightarrow{C} = \overrightarrow{(x_{R_0} - x_c,\,y_{R_0} - y_c,\,z_{R_0} - z_c)}
+\overrightarrow{V_{c\_R_0}} &= \overrightarrow{R_0} - \overrightarrow{C} = \overrightarrow{(x_{R_0} - x_c,\enspace y_{R_0} - y_c,\enspace z_{R_0} - z_c)}
 \end{aligned}
 \end{array}
 \]
@@ -98,8 +121,8 @@ $\because$ The formula for \emph{t} can also be optimized
 \[
 \left\{
 \begin{array}{lr}
-\frac{-b \pm \sqrt{b^2 - 4ac}}{2a} = -\alpha \pm \sqrt{\beta} \\
-\alpha = 0.5b \\
+\frac{-b \pm \sqrt{b^2 - 4\,a\,c}}{2\,a} = -\alpha \pm \sqrt{\beta} \\
+\alpha = 0.5\,b \\
 \beta = \alpha^2 - c
 \end{array}
 \right.
@@ -109,9 +132,9 @@ $\therefore$ The final solution for \emph{t}
 \[
 t =
 \begin{cases}
- -\alpha \pm \sqrt{\beta} & \text{if } \beta > 0 \\
--\alpha & \text{if } \beta = 0 \\
-\varnothing & \text{if } \beta < 0
+ -\alpha \pm \sqrt{\beta} & \text{if }\;\beta > 0 \\
+-\alpha & \text{if }\;\beta = 0 \\
+\varnothing & \text{if }\;\beta < 0
 \end{cases}
 \]
 
@@ -148,8 +171,8 @@ Solution for the \emph{t} is:
 \[
 t =
 \begin{cases}
-\frac{-\overrightarrow{N} \cdot (\overrightarrow{R_0} - \overrightarrow{P_1})}{\overrightarrow{N} \cdot \overrightarrow{R_d}} & \text{if } \overrightarrow{N} \cdot \overrightarrow{R_d} \nsim 0 \\
-\varnothing & \text{if } \overrightarrow{N} \cdot \overrightarrow{R_d} \sim 0
+\frac{-\overrightarrow{N} \cdot (\overrightarrow{R_0} - \overrightarrow{P_1})}{\overrightarrow{N} \cdot \overrightarrow{R_d}} & \text{if }\;\overrightarrow{N} \cdot \overrightarrow{R_d} \nsim 0 \\
+\varnothing & \text{if }\;\overrightarrow{N} \cdot \overrightarrow{R_d} \sim 0
 \end{cases}
 \]
 
@@ -157,8 +180,8 @@ At last, we have to verify if the collision is inside of the quadrangle by putti
 
 \[
 \begin{array}{lr}
-\mu = \sqrt{(\overrightarrow{P} - \overrightarrow{P_1}) \cdot (\overrightarrow{P_2} - \overrightarrow{P_1}))} \in [\,0,\,\norm{\overrightarrow{P_2} - \overrightarrow{P_1}}\,] \\
-\nu = \sqrt{(\overrightarrow{P} - \overrightarrow{P_1}) \cdot (\overrightarrow{P_3} - \overrightarrow{P_1}))} \in [\,0,\,\norm{\overrightarrow{P_3} - \overrightarrow{P_1}}\,] 
+\mu = \sqrt{(\overrightarrow{P} - \overrightarrow{P_1}) \cdot (\overrightarrow{P_2} - \overrightarrow{P_1}))} \in [0,\enspace\norm{\overrightarrow{P_2} - \overrightarrow{P_1}}] \\
+\nu = \sqrt{(\overrightarrow{P} - \overrightarrow{P_1}) \cdot (\overrightarrow{P_3} - \overrightarrow{P_1}))} \in [0,\enspace\norm{\overrightarrow{P_3} - \overrightarrow{P_1}}] 
 \end{array}
 \]
 
@@ -180,21 +203,21 @@ There is a octree implementation in the VR 3D world that separate the 3D world t
 \caption[ray-box-2d-intersection]{Ray-Box-2D intersection}
 \end{figure}
 
-$\because$ Known $R_0$,\,$R_d$,\,$P_1$,\,$P_2$
+$\because$ Known $R_0$,\enspace$R_d$,\enspace$P_1$,\enspace$P_2$
 \begin{multicols}{2}
 \noindent
 \[
 X_1 =
 \begin{cases}
-x_{P_1} - x_{R_0} & \text{if } x_{R_d} > 0 \\
-x_{P_2} - x_{R_0} & \text{if } x_{R_d} < 0
+x_{P_1} - x_{R_0} & \text{if }\;x_{R_d} > 0 \\
+x_{P_2} - x_{R_0} & \text{if }\;x_{R_d} < 0
 \end{cases}
 \]
 \[
 X_2 =
 \begin{cases}
-x_{P_2} - x_{R_0} & \text{if } x_{R_d} > 0 \\
-x_{P_1} - x_{R_0} & \text{if } x_{R_d} < 0
+x_{P_2} - x_{R_0} & \text{if }\;x_{R_d} > 0 \\
+x_{P_1} - x_{R_0} & \text{if }\;x_{R_d} < 0
 \end{cases}
 \]
 \[
@@ -207,15 +230,15 @@ t_{X_2} = \frac{X_2}{x_{R_d}}
 \[
 Y_1 =
 \begin{cases}
-y_{P_1} - y_{R_0} & \text{if } y_{R_d} > 0 \\
-y_{P_2} - y_{R_0} & \text{if } y_{R_d} < 0
+y_{P_1} - y_{R_0} & \text{if }\;y_{R_d} > 0 \\
+y_{P_2} - y_{R_0} & \text{if }\;y_{R_d} < 0
 \end{cases}
 \]
 \[
 Y_2 =
 \begin{cases}
-y_{P_2} - y_{R_0} & \text{if } y_{R_d} > 0 \\
-y_{P_1} - y_{R_0} & \text{if } y_{R_d} < 0
+y_{P_2} - y_{R_0} & \text{if }\;y_{R_d} > 0 \\
+y_{P_1} - y_{R_0} & \text{if }\;y_{R_d} < 0
 \end{cases}
 \]
 \[
@@ -240,7 +263,7 @@ t_{Y_1} &< t_{Y_2}
 
 $\therefore$ Which is
 \begin{equation}\label{equ:ray-box-2d-intersection}
-max(t_{X_1},\,t_{Y_1}) < min(t_{X_2},\,t_{Y_2})
+max(t_{X_1},\enspace t_{Y_1}) < min(t_{X_2},\enspace t_{Y_2})
 \end{equation}
 
 %****************************************************************
@@ -253,21 +276,21 @@ max(t_{X_1},\,t_{Y_1}) < min(t_{X_2},\,t_{Y_2})
 \caption[ray-box-3d-intersection]{Ray-Box-3D intersection}
 \end{figure}
 
-$\because$ Known $R_0$,\,$R_d$,\,$P_1$,\,$P_2$
+$\because$ Known $R_0$,\enspace$R_d$,\enspace$P_1$,\enspace$P_2$
 \begin{multicols}{2}
 \noindent
 \[
 X_1 =
 \begin{cases}
-x_{P_1} - x_{R_0} & \text{if } x_{R_d} > 0 \\
-x_{P_2} - x_{R_0} & \text{if } x_{R_d} < 0
+x_{P_1} - x_{R_0} & \text{if }\;x_{R_d} > 0 \\
+x_{P_2} - x_{R_0} & \text{if }\;x_{R_d} < 0
 \end{cases}
 \]
 \[
 X_2 =
 \begin{cases}
-x_{P_2} - x_{R_0} & \text{if } x_{R_d} > 0 \\
-x_{P_1} - x_{R_0} & \text{if } x_{R_d} < 0
+x_{P_2} - x_{R_0} & \text{if }\;x_{R_d} > 0 \\
+x_{P_1} - x_{R_0} & \text{if }\;x_{R_d} < 0
 \end{cases}
 \]
 \[
@@ -280,15 +303,15 @@ t_{X_2} = \frac{X_2}{x_{R_d}}
 \[
 Y_1 =
 \begin{cases}
-y_{P_1} - y_{R_0} & \text{if } y_{R_d} > 0 \\
-y_{P_2} - y_{R_0} & \text{if } y_{R_d} < 0
+y_{P_1} - y_{R_0} & \text{if }\;y_{R_d} > 0 \\
+y_{P_2} - y_{R_0} & \text{if }\;y_{R_d} < 0
 \end{cases}
 \]
 \[
 Y_2 =
 \begin{cases}
-y_{P_2} - y_{R_0} & \text{if } y_{R_d} > 0 \\
-y_{P_1} - y_{R_0} & \text{if } y_{R_d} < 0
+y_{P_2} - y_{R_0} & \text{if }\;y_{R_d} > 0 \\
+y_{P_1} - y_{R_0} & \text{if }\;y_{R_d} < 0
 \end{cases}
 \]
 \[
@@ -303,15 +326,15 @@ t_{Y_2} = \frac{Y_2}{y_{R_d}}
 \[
 Z_1 =
 \begin{cases}
-z_{P_1} - z_{R_0} & \text{if } z_{R_d} > 0 \\
-z_{P_2} - z_{R_0} & \text{if } z_{R_d} < 0
+z_{P_1} - z_{R_0} & \text{if }\;z_{R_d} > 0 \\
+z_{P_2} - z_{R_0} & \text{if }\;z_{R_d} < 0
 \end{cases}
 \]
 \[
 Z_2 =
 \begin{cases}
-z_{P_2} - z_{R_0} & \text{if } z_{R_d} > 0 \\
-z_{P_1} - z_{R_0} & \text{if } z_{R_d} < 0
+z_{P_2} - z_{R_0} & \text{if }\;z_{R_d} > 0 \\
+z_{P_1} - z_{R_0} & \text{if }\;z_{R_d} < 0
 \end{cases}
 \]
 \[
@@ -340,13 +363,7 @@ t_{Z_1} &< t_{Z_2}
 
 $\therefore$ Which is
 \begin{equation}\label{equ:ray-box-3d-intersection}
-max(t_{X_1},\,t_{Y_1},\,t_{Z_1}) < min(t_{X_2},\,t_{Y_2},\,t_{Z_2})
+max(t_{X_1},\enspace t_{Y_1},\enspace t_{Z_1}) < min(t_{X_2},\enspace t_{Y_2},\enspace t_{Z_2})
 \end{equation}
-
-%****************************************************************
-\section{Camera Movement}
-
-
-
 
 %****************************************************************
