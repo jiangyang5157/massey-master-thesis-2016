@@ -5,6 +5,101 @@
 \chapter{Chapter X}
 
 %****************************************************************
+\section{Sphere}
+
+Introduce UV sphere and Icosphere generation.
+
+\subsection{UV Sphere}
+
+The UV sphere, somewhat like latitude and longitude lines of the earth, uses rings and segments. Near the poles (both on the Z-axis with the default orientation) the vertical segments converge on the poles. UV spheres are best used in situations where you require a very smooth, symmetrical surface.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{Figures/uv-sphere-mapping.png}
+\decoRule
+\caption[uv-sphere-mapping]{UV sphere mapping}\label{fig:uv-sphere-mapping}
+\end{figure}
+
+As we can see the mapping from \ref{flg:uv-sphere-mapping}. Vertex $A0,\;A1,\;A2,\;A3,\;A4$ and $E0,\;E1,\;E2,\;E3,\;E4$ are duplicated, and $A0,\;B0,\;C0,\;D0,\;E0$ converge together as well as $A4,\;B4,\;C4,\;D4,\;E4$. So we can simply define it as a UV sphere has 5 rings and 4 segments. Also be noticed that each ring spans $2\,\pi$ radians, but each segment spans $\pi$ radians in the sphere mapping.
+
+The total vertex number is:
+
+\begin{equation}\label{equ:uv-sphere-vertices}
+Vertices = Rings \times Segments
+\end{equation}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{Figures/uv-sphere-vertex.png}
+\decoRule
+\caption[uv-sphere-vertex]{UV sphere vertex}\label{fig:uv-sphere-vertex}
+\end{figure}
+
+For each vertex $P$ on sphere from ring $r$ and segment $s$, we have:
+
+\[
+\begin{array}{lr}
+v = r \times  \frac{1}{rings - 1} \\
+u = s \times  \frac{1}{segments - 1} \\
+\measuredangle \alpha = v \times \pi \\
+\measuredangle \beta = u \times 2\,\pi \\
+\end{array}
+\]
+
+$\therefore$ P (x,\;y,\;z)
+\[
+\begin{array}{lr}
+x = (\sin(\alpha) \times radius) \times \cos(\beta) \\
+y = \cos(\alpha) \times radius \\
+z =  (\sin(\alpha) \times radius) \times \sin(\beta)
+\end{array}
+\]
+
+When raduis equals 1:
+
+\[
+\begin{array}{lr}
+x = \sin(\alpha) \times \cos(\beta) \\
+y = \cos(\alpha) \\
+z =  \sin(\alpha) \times \sin(\beta)
+\end{array}
+\]
+
+
+\subsection{Icosphere}
+
+Figure \ref{fig:icosahedron-rectangles} shows that the initial vertices of an icosahedron are the corners of three orthogonal rectangles:
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{Figures/icosahedron-rectangles.png}
+\decoRule
+\caption[icosahedron-rectangles]{Icosahedron rectangles \parencite{wiki.icosahedron-rectangles.2006}}\label{fig:icosahedron-rectangles}
+\end{figure}
+
+Rounding icosphere by subdividing a face to an arbitrary level of resolution. One face can be subdivided into four by connecting each edge's midpoint.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{Figures/icosphere-subdivide.png}
+\decoRule
+\caption[icosphere-subdivide]{Icosphere subdivide}
+\end{figure}
+
+Push edge's midpoints to surface of the sphere.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{Figures/icosphere-refinement.png}
+\decoRule
+\caption[icosphere-refinement]{Icosphere refinement}
+\end{figure}
+
+
+
+
+
+%****************************************************************
 \section{Camera Movement}
 
 In general, there are two sensors can be useful to manager camera movement: ACCELEROMETER (API level 3), LINEAR\_ACCELERATION (API level 9) and STEP\_DETECTOR (API level 19). 
@@ -224,7 +319,7 @@ At last, we have to verify if the collision is inside of the quadrangle by putti
 \parencite{Tavian.ray-box-2d.2011} \\
 \parencite{scratchapixel.ray-plane-3d} \\
 
-There is a octree implementation in the VR 3D world that separate the 3D world to 3D boxes to avoid unnecessary ray-object collision detection. In this section, I am going to first explain Ray-Box-2D collision detection, then derive out Ray-Box-3D intersection.
+There is a octree implementation in the VR 3D world that separate the 3D world to invisible 3D boxes that each box contains a certain number of other models. It is to avoid unnecessary ray-object collision detection. In this section, I am going to first explain Ray-Box-2D collision detection, then derive out Ray-Box-3D intersection.
 
 %****************************************************************
 \subsubsection{Ray-Box-2D}
