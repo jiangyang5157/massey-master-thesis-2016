@@ -95,7 +95,27 @@ Push edge's midpoints to surface of the sphere.
 \caption[icosphere-refinement]{Icosphere refinement}
 \end{figure}
 
+%****************************************************************
+\section{Geodetic datum}
 
+Placemark
+The Geodetic (Latitude / Longitude /  Altitude) coordinate system
+The Earth-Centered, Earth-Fixed (ECEF) coordinate system
+%https://en.wikipedia.org/wiki/Geodetic_datum
+
+ECEF Datum
+ECEF (earth-centered, earth-fixed), also known as ECR (earth-centered rotational), is a geographic coordinate system.
+%https://en.wikipedia.org/wiki/ECEF
+%http://www.satsleuth.com/GPS_ECEF_Datum_transformation.aspx
+%http://www.navipedia.net/index.php/Transformations_between_ECEF_and_ENU_coordinates
+%http://www.nalresearch.com/files/Standard%20Modems/A3LA-XG/A3LA-XG%20SW%20Version%201.0.0/GPS%20Technical%20Documents/GPS.G1-X-00006%20(Datum%20Transformations).pdf
+
+Lla2ecef
+Need reverse longitude
+We put camera inside the earth, and flipped the texture of the earth in the shader.
+Need reversal x, and use z as y for ecef
+Ecef coord system is [y-east z-north(up)], and x points to the 0,0
+Our coord system is [x-east, y-north(up)], and x points to the 0,180
 
 
 
