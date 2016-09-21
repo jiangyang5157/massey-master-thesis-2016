@@ -75,7 +75,7 @@ Rounding icosphere by subdividing a face to an arbitrary level of resolution. On
 \caption[icosphere-subdivide]{Icosphere subdivide}
 \end{figure}
 
-Push edge's midpoints to surface of the sphere.
+Then, push edge's midpoints to surface of the sphere.
 
 \begin{figure}[H]
 \centering
@@ -84,29 +84,98 @@ Push edge's midpoints to surface of the sphere.
 \caption[icosphere-refinement]{Icosphere refinement}
 \end{figure}
 
+\begin{table}[H]
+\caption{Rounding Icosphere}
+\label{tab:rounding-icosphere}
+\centering
+\begin{tabular}{l l l l}
+\toprule
+\tabhead{Recursion Level} & \tabhead{Vertex Count} & \tabhead{Face Count} & \tabhead{Edge Count} \\
+\midrule
+0 & 12 & 20 & 30 \\
+1 & 42 & 80 & 120 \\
+2 & 162 & 320 & 480 \\
+3 & 642 & 1280 & 1920 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 %****************************************************************
-\section{Geodetic datum}
+\section{Geographic Coordinate System}
 
-Placemark
-The Geodetic (Latitude / Longitude /  Altitude) coordinate system
-The Earth-Centered, Earth-Fixed (ECEF) coordinate system
-%https://en.wikipedia.org/wiki/Geodetic_datum
+A geographic coordinate system is a coordinate system that enables every location on the Earth to be specified by a set of numbers or letters, or symbols \parencite{wiki.geographic-coordinate-system.2016}. A common geodetic-mapping coordinates is latitude, longitude and altitude (LLA), which also is the raw location data read from KML.
 
-ECEF Datum
-ECEF (earth-centered, earth-fixed), also known as ECR (earth-centered rotational), is a geographic coordinate system.
-%https://en.wikipedia.org/wiki/ECEF
-%http://www.satsleuth.com/GPS_ECEF_Datum_transformation.aspx
-%http://www.navipedia.net/index.php/Transformations_between_ECEF_and_ENU_coordinates
-%http://www.nalresearch.com/files/Standard%20Modems/A3LA-XG/A3LA-XG%20SW%20Version%201.0.0/GPS%20Technical%20Documents/GPS.G1-X-00006%20(Datum%20Transformations).pdf
+We introduce ECEF ("earth-centered, earth-fixed") coordinate system for converting  LLA coordinates to position coordinates. According to, the z-axis is pointing towards the north but it does not coincide exactly with the instantaneous earth rotational axis. The x-axis intersects the sphere of the earth at $0$ latitude and $0$ longitude \parencite{wiki.ecef.2016}.
 
-Lla2ecef
-Need reverse longitude
-We put camera inside the earth, and flipped the texture of the earth in the shader.
-Need reversal x, and use z as y for ecef
-Ecef coord system is [y-east z-north(up)], and x points to the 0,0
-Our coord system is [x-east, y-north(up)], and x points to the 0,180
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{Figures/ecef.png}
+\decoRule
+\caption[ecef]{earth-centered, earth-fixed \parencite{wiki.ecef.2016}}
+\end{figure}
 
+The ECEF coordinates are expressed in a reference system that is related to mapping representations. Because the earth has a complex shape, a simple, yet accurate, method to approximate the earth’s shape is required. The use of a reference ellipsoid allows for the conversion between ECEF and LLA \parencite{u-blox.datum.1999}.
 
+A reference ellipsoid can be described by a series of parameters that define its shape and which include a semi-major axis ($a$), a semi-minor axis ($b$), its first eccentricity ($e_1$) and its second eccentricity ($e_2$) as shown in Table \ref{tab:WGS-84-parameters}.
+
+\begin{table}[H]
+\caption{WGS 84 parameters}
+\label{tab:WGS-84-parameters}
+\centering
+\begin{tabular}{l l l}
+\toprule
+\tabhead{Parameter} & \tabhead{Notation} & \tabhead{Value} \\
+\midrule
+Reciprocal of flattening & $1 / f$ & 298.257\,223\,563 \\
+Semi-major axis & $a$ & 6\,378\,137\,m \\
+Semi-minor axis & $b$ & $a\,(1 - f)$ \\
+First eccentricity squared & $e_1^2$ & $1 - b^2 / a^2 = 2\,f - f^2$ \\
+Second eccentricity squared & $e_2^2$ & $a^2 / b^2 - 1 = f\,(2 - f) / (1 - f)^2$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{Figures/ellipsoid-parameters.png}
+\decoRule
+\caption[ellipsoid-parameters]{Ellipsoid Parameters}
+\end{figure}
+
+The conversion from LLA to ECEF is shown below.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{Figures/lla2ecef.png}
+\decoRule
+\caption[lla2ecef]{LLA to ECEF}
+\end{figure}
+
+\[
+\begin{array}{lr}
+\begin{aligned}
+x &= (N + h)\,\cos(\varphi)\,\cos(\lambda) \\
+y &= (N + h)\,\cos(\varphi)\,\sin(\lambda) \\
+z &= (\frac{b^2}{a^2}\,N + h)\,\sin(\varphi)
+\end{aligned}
+\end{array}
+\]
+
+Where
+
+\[
+\begin{array}{lr}
+\begin{aligned}
+\varphi &= \text{latitude} \\
+\lambda &= \text{longitude} \\
+h &= \text{height above ellipsoid (meters)} \\
+N &= \text{Radius of Curvature (meters), defined as:} \\
+&= \frac{a}{\sqrt{1 - e^2\,\sin(\varphi)^2}}
+\end{aligned}
+\end{array}
+\]
+
+At last, for this project usage, where high accuracy is not required, $a$ equals to $b$. And also the ECEF coordinate system is y-east, z-north (up), and x points to $0$ latitude and $0$ longitude, but for project specific, we still need to convert ECEF to x-east, y-north (up), and x points to $0$ latitude and $180$ longitude.
 
 %****************************************************************
 \section{Camera Movement}
