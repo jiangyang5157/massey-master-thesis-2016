@@ -5,34 +5,33 @@
 \chapter{Chapter X}
 
 %****************************************************************
-\section{Sphere}
+\section{Earth}
 
-Introduce UV sphere and Icosphere generation.
-
-\subsection{UV Sphere}
-
-The UV sphere, somewhat like latitude and longitude lines of the earth, uses rings and segments. Near the poles (both on the Z-axis with the default orientation) the vertical segments converge on the poles. UV spheres are best used in situations where you require a very smooth, symmetrical surface.
+The Earth is created as a UV Sphere, which somewhat like latitude and longitude lines of the earth, uses rings and segments. Near the poles (both on the Z-axis with the default orientation) the vertical segments converge on the poles. UV spheres are best used in situations where you require a very smooth, symmetrical surface.
 
 \begin{figure}[H]
+\caption[uv-sphere-mapping]{UV sphere mapping}
+\label{fig:uv-sphere-mapping}
 \centering
 \includegraphics[width=\linewidth]{Figures/uv-sphere-mapping.png}
 \decoRule
-\caption[uv-sphere-mapping]{UV sphere mapping}\label{fig:uv-sphere-mapping}
 \end{figure}
 
-As we can see the mapping from \ref{flg:uv-sphere-mapping}. Vertex $A0,\;A1,\;A2,\;A3,\;A4$ and $E0,\;E1,\;E2,\;E3,\;E4$ are duplicated, and $A0,\;B0,\;C0,\;D0,\;E0$ converge together as well as $A4,\;B4,\;C4,\;D4,\;E4$. So we can simply define it as a UV sphere has 5 rings and 4 segments. Also be noticed that each ring spans $2\,\pi$ radians, but each segment spans $\pi$ radians in the sphere mapping.
+As we can see the mapping from \ref{fig:uv-sphere-mapping}. Vertex $A0,\;A1,\;A2,\;A3,\;A4$ and $E0,\;E1,\;E2,\;E3,\;E4$ are duplicated, and $A0,\;B0,\;C0,\;D0,\;E0$ converge together as well as $A4,\;B4,\;C4,\;D4,\;E4$. So we can simply define it as a UV sphere has 5 rings and 4 segments. Also be noticed that each ring spans $2\,\pi$ radians, but each segment spans $\pi$ radians in the sphere mapping.
 
 The total vertex number is:
 
-\begin{equation}\label{equ:uv-sphere-vertices}
+\begin{equation}
+\label{equ:uv-sphere-vertices}
 Vertices = Rings \times Segments
 \end{equation}
 
 \begin{figure}[H]
+\caption[uv-sphere-vertex]{UV sphere vertex}
+\label{fig:uv-sphere-vertex}
 \centering
 \includegraphics[width=\linewidth]{Figures/uv-sphere-vertex.png}
 \decoRule
-\caption[uv-sphere-vertex]{UV sphere vertex}\label{fig:uv-sphere-vertex}
 \end{figure}
 
 For each vertex $P$ on sphere from ring $r$ and segment $s$, we have:
@@ -55,15 +54,28 @@ z =  (\sin(\alpha) \times radius) \times \sin(\beta)
 \end{array}
 \]
 
+$\And$ 2D Texture (x,\;y) mapping for vertex $P$ is:
+\[
+\begin{array}{lr}
+x = u \\
+y = v \\
+\end{array}
+\]
+
+%****************************************************************
+\section{Placemarker}
+
+%****************************************************************
 \subsection{Icosphere}
 
-Figure \ref{fig:icosahedron-rectangles} shows that the initial vertices of an icosahedron are the corners of three orthogonal rectangles:
+Generation of vertices for placemarker is a recursion process of subdividing icosphere. Figure \ref{fig:icosahedron-rectangles} shows that the initial vertices of an icosahedron are the corners of three orthogonal rectangles.
 
 \begin{figure}[H]
+\caption[icosahedron-rectangles]{Icosahedron rectangles \parencite{wiki.icosahedron-rectangles.2006}}
+\label{fig:icosahedron-rectangles}
 \centering
 \includegraphics[width=\linewidth]{Figures/icosahedron-rectangles.png}
 \decoRule
-\caption[icosahedron-rectangles]{Icosahedron rectangles \parencite{wiki.icosahedron-rectangles.2006}}\label{fig:icosahedron-rectangles}
 \end{figure}
 
 Rounding icosphere by subdividing a face to an arbitrary level of resolution. One face can be subdivided into four by connecting each edge's midpoint.
@@ -101,7 +113,7 @@ Then, push edge's midpoints to surface of the sphere.
 \end{table}
 
 %****************************************************************
-\section{Geographic Coordinate System}
+\subsection{Geographic Coordinate System}
 
 A geographic coordinate system is a coordinate system that enables every location on the Earth to be specified by a set of numbers or letters, or symbols \parencite{wiki.geographic-coordinate-system.2016}. A common geodetic-mapping coordinates is latitude, longitude and altitude (LLA), which also is the raw location data read from KML.
 
@@ -212,11 +224,12 @@ First of all, damping is required. I reduce velocity by a percentage. It is simp
 
 Secondly, a constant value in head forwarding direction is been used as a pulse for each step. Because a step is happening instantaneously which implies $a\,dt$ made by each step is actually can be replace by a constant value.
 
-\begin{figure}[H]\label{fig:camera-movement}
+\begin{figure}[H]
+\caption[camera-movement]{Camera movement}
+\label{fig:camera-movement}
 \centering
 \includegraphics[width=\linewidth]{Figures/camera-movement.png}
 \decoRule
-\caption[camera-movement]{Camera movement}
 \end{figure}
 
 For each new frame:
@@ -240,23 +253,26 @@ Detect collisions between ray and models is the key to allow user selecting obje
 
 A ray can be describe in a equation with known ray start position \emph{$\overrightarrow{R_0}$} and ray direction \emph{$\overrightarrow{R_d}$}.
 
-\begin{equation}\label{equ:ray-t}
+\begin{equation}
+\label{equ:ray-t}
 \overrightarrow{R(t)} = \overrightarrow{R_0} + \overrightarrow{R_d} \cdot t
 \end{equation}
 
 %****************************************************************
 \subsection{Ray-Sphere}
 
-\begin{figure}[H]\label{fig:ray-sphere}
+\begin{figure}[H]
+\caption[ray-sphere-intersection]{Ray-Sphere intersection}
+\label{fig:ray-sphere}
 \centering
 \includegraphics[width=\linewidth]{Figures/ray-sphere-intersection.png}
 \decoRule
-\caption[ray-sphere-intersection]{Ray-Sphere intersection}
 \end{figure}
 
 A point \emph{P} on the surface of sphere should match the equation:
 
-\begin{equation}\label{equ:sphere-surface}
+\begin{equation}
+\label{equ:sphere-surface}
 (x_p - x_c)^2 + (y_p - y_c)^2 + (z_p - z_c)^2 = r^2
 \end{equation}
 
@@ -274,7 +290,8 @@ x_{R_d}^2\,t^2 &+ (2\,x_{R_d}\,(x_{R_0} - x_c))\,t + (x_{R_0}^2 - 2\,x_{R_0}\,x_
 
 It can be seen as a quadratic formula:
 
-\begin{equation}\label{equ:sphere-surface-quadratic-formula}
+\begin{equation}
+\label{equ:sphere-surface-quadratic-formula}
 a\,t^2 + b\,t + c = 0
 \end{equation}
 
@@ -354,16 +371,18 @@ And the collision position for each \emph{t} is:
 \subsection{Ray-Plane}
 \parencite{stackoverflow.ray-plane.2014} \\
 
-\begin{figure}[H]\label{fig:ray-plane}
+\begin{figure}[H]
+\caption[ray-plane-intersection]{Ray-Plane intersection}
+\label{fig:ray-plane}
 \centering
 \includegraphics[width=\linewidth]{Figures/ray-plane-intersection.png}
 \decoRule
-\caption[ray-plane-intersection]{Ray-Plane intersection}
 \end{figure}
 
 If a point \emph{P} on the plane and also belongs to the ray, we have quadric equation:
 
-\begin{equation}\label{equ:ray-plane-intersection}
+\begin{equation}
+\label{equ:ray-plane-intersection}
 \left\{
 \begin{array}{lr}
 (\overrightarrow{P} - \overrightarrow{P_1}) \cdot \overrightarrow{N} = 0 \\
@@ -402,11 +421,12 @@ There is a octree implementation in the VR 3D world that separate the 3D world t
 %****************************************************************
 \subsubsection{Ray-Box-2D}
 
-\begin{figure}[H]\label{fig:ray-box-2d}
+\begin{figure}[H]
+\caption[ray-box-2d-intersection]{Ray-Box-2D intersection}
+\label{fig:ray-box-2d}
 \centering
 \includegraphics[width=\linewidth]{Figures/ray-box-2d-intersection.png}
 \decoRule
-\caption[ray-box-2d-intersection]{Ray-Box-2D intersection}
 \end{figure}
 
 $\because$ Known $R_0$,\enspace$R_d$,\enspace$P_1$,\enspace$P_2$
@@ -468,18 +488,20 @@ t_{Y_1} &< t_{Y_2}
 \]
 
 $\therefore$ Which is
-\begin{equation}\label{equ:ray-box-2d-intersection}
+\begin{equation}
+\label{equ:ray-box-2d-intersection}
 max(t_{X_1},\enspace t_{Y_1}) < min(t_{X_2},\enspace t_{Y_2})
 \end{equation}
 
 %****************************************************************
 \subsubsection{Ray-Box-3D}
 
-\begin{figure}[H]\label{fig:ray-box-3d}
+\begin{figure}[H]
+\caption[ray-box-3d-intersection]{Ray-Box-3D intersection}
+\label{fig:ray-box-3d}
 \centering
 \includegraphics[width=\linewidth]{Figures/ray-box-3d-intersection.png}
 \decoRule
-\caption[ray-box-3d-intersection]{Ray-Box-3D intersection}
 \end{figure}
 
 $\because$ Known $R_0$,\enspace$R_d$,\enspace$P_1$,\enspace$P_2$
@@ -568,8 +590,21 @@ t_{Z_1} &< t_{Z_2}
 \]
 
 $\therefore$ Which is
-\begin{equation}\label{equ:ray-box-3d-intersection}
+\begin{equation}
+\label{equ:ray-box-3d-intersection}
 max(t_{X_1},\enspace t_{Y_1},\enspace t_{Z_1}) < min(t_{X_2},\enspace t_{Y_2},\enspace t_{Z_2})
 \end{equation}
+
+%****************************************************************
+\section{Description Text Analysing}
+
+Description of placemarker requires an appropriate analysis for display. The raw data of description string could be a normal text, an image URL, an URL returns different type of content, or maybe just some meaningless string.
+
+The implementation of analysis in this project did not cover every situation, but it has a flexible and extendable functionality.
+
+
+
+
+
 
 %****************************************************************
