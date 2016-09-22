@@ -61,6 +61,8 @@ headsepline, % Uncomment to get a line under the header
 	%showframe,% show how the type block is set on the page
 }
 
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
 %****************************************************************
 % Informations
 %****************************************************************
@@ -97,27 +99,22 @@ headsepline, % Uncomment to get a line under the header
 \HRule \\[0.4cm] % Horizontal line
 {\huge \bfseries \ttitle\par}\vspace{0.4cm} % Thesis title
 \HRule \\[1.5cm] % Horizontal line
- 
-\begin{minipage}[t]{0.4\textwidth}
-\begin{flushleft} \large
-\emph{Author:}\\
-{\authorname} % Author name - remove the \href bracket to remove the link
-\end{flushleft}
-\end{minipage}
 
-\begin{minipage}[t]{0.4\textwidth}
-\begin{flushright} \large
-\emph{Supervisor:} \\
-\href{http://www.massey.ac.nz/massey/expertise/profile.cfm?stref=359402}{\supname} % Supervisor name - remove the \href bracket to remove the link  
-\end{flushright}
-\end{minipage}\\[3cm]
+\begin{table}[H]
+\centering
+\large
+\begin{tabular}{|  C{5cm} |  C{5cm} |}
+\emph{Author} & \emph{Supervisor} \\
+ {\authorname} & \href{http://www.massey.ac.nz/massey/expertise/profile.cfm?stref=359402}{\supname} \\
+\end{tabular}\\[5cm]
+\end{table}
  
-\large \textit{A thesis submitted in fulfillment of the requirements\\ for the degree of \degreename}\\[0.3cm] % University requirement text
+\large \textit{A thesis submitted in fulfillment of the requirements\\ for the degree of \degreename}\\[0.2cm]
 \textit{in the}\\[0.4cm]
 \majorname\\\papername\\[2cm]
  
 {\large \today}\\[4cm] % Date
-%\includegraphics{masseyUniversityLogo} % University/department logo - uncomment to place it
+%\includegraphics{massey-logo}
  
 \vfill
 \end{center}
@@ -134,37 +131,9 @@ The Thesis Abstract is written here (and usually kept to just this page). The pa
 \end{abstract}
 
 %****************************************************************
-% Acknowledgements Page
-%****************************************************************
-\begin{acknowledgements}
-\addchaptertocentry{\acknowledgementname} % Add the acknowledgements to the table of contents
-
-The acknowledgments and the people to thank go here, don't forget to include your project advisor\ldots
-
-\end{acknowledgements}
-
-%****************************************************************
 % List of Contents
 %****************************************************************
 \tableofcontents % Prints the main table of contents
-
-%****************************************************************
-% List of Abbreviations
-%****************************************************************
-\begin{abbreviations}{ll} % Include a list of abbreviations (a table of two columns)
-\textbf{WSF} & \textbf{W}hat (it) \textbf{S}tands \textbf{F}or\\
-\end{abbreviations}
-
-%****************************************************************
-% List of Symbols
-%****************************************************************
-\begin{symbols}{lll} % Include a list of Symbols (a three column table)
-$a$ & distance & \si{\meter} \\
-$P$ & power & \si{\watt} (\si{\joule\per\second}) \\
-%Symbol & Name & Unit \\
-\addlinespace % Gap to separate the Roman symbols from the Greek
-$\omega$ & angular frequency & \si{\radian} \\
-\end{symbols}
 
 %****************************************************************
 % List of Figures
@@ -190,21 +159,19 @@ $\omega$ & angular frequency & \si{\radian} \\
 \newcommand{\option}[1]{\texttt{\itshape#1}}
 \newcommand{\norm}[1]{\lvert #1 \rvert} % Length of vector
 
-\include{Chapters/Chapter0}
-\include{Chapters/ChapterX}
-%\include{Chapters/Chapter1}
-%\include{Chapters/Chapter2}
+%\include{Chapters/chapter-0}
+\include{Chapters/chapter-introduction}
+\include{Chapters/chapter-technology}
+\include{Chapters/chapter-implementation}
+\include{Chapters/chapter-discussion}
+\include{Chapters/chapter-conclusion}
 
 %****************************************************************
 % Appendices
 %****************************************************************
 \appendix % Cue to tell LaTeX that the following "chapters" are Appendices
 
-% Include the appendices of the thesis as separate files from the Appendices folder
-% Uncomment the lines as you write the Appendices
-
-\include{Appendices/AppendixA}
-%\include{Appendices/AppendixB}
+\include{Appendices/appendix-a}
 
 %****************************************************************
 % Bibliography
