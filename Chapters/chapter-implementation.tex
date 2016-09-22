@@ -673,3 +673,17 @@ For $html$ parser, we introduced jsoup (it is a Java library for working with re
 \subsection{Patch}
 
 %****************************************************************
+\subsection{Port Forwarding}
+
+%****************************************************************
+\section{OpenGL ES}
+
+****************\\
+Pass Perspective matrix, View matrix, and Model matrix to shader to avoid calculate MV or MVP in cpu\\
+Perspective: eye.getPerspective(float zNear, float zFar)\\
+View: eye.getEyeView() * camera.matrix\\
+camera.matrix: build by position, lookAt, up\\
+Model: translation * scale * rotation * mat(1)\\
+****************\\
+
+%****************************************************************
