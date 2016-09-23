@@ -8,6 +8,16 @@
 \section{Google VR SDK}
 
 %****************************************************************
+\section{OpenGL ES}
+
+****************\\
+Pass Perspective matrix, View matrix, and Model matrix to shader to avoid calculate MV or MVP in cpu\\
+Perspective: eye.getPerspective(float zNear, float zFar)\\
+View: eye.getEyeView() * camera.matrix\\
+camera.matrix: build by position, lookAt, up\\
+Model: translation * scale * rotation * mat(1)\\
+
+%****************************************************************
 \section{Scene}
 
 %****************************************************************
@@ -214,6 +224,9 @@ A textfield is a a rectangle vertices based renderable component to display text
 A menu contains multi-textfield can be seen as an empty textfield based which texture is fill full a pure background color, and several  textfields are laid out on the top of it with a certain vertical dimension.
 
 A head rotation matrix (quaternion matrix \parencite{jvv.quaternions.2013}) is required for locating object in front of camera \parencite{mathworks.quaternion-rotation.2016} .
+
+****************\\
+quaternions
 
 %****************************************************************
 \section{Camera Movement}
@@ -670,20 +683,12 @@ For $html$ parser, we introduced jsoup (it is a Java library for working with re
 \subsection{Golang}
 
 %****************************************************************
+\subsection{Volley}
+
+%****************************************************************
 \subsection{Patch}
 
 %****************************************************************
 \subsection{Port Forwarding}
-
-%****************************************************************
-\section{OpenGL ES}
-
-****************\\
-Pass Perspective matrix, View matrix, and Model matrix to shader to avoid calculate MV or MVP in cpu\\
-Perspective: eye.getPerspective(float zNear, float zFar)\\
-View: eye.getEyeView() * camera.matrix\\
-camera.matrix: build by position, lookAt, up\\
-Model: translation * scale * rotation * mat(1)\\
-****************\\
 
 %****************************************************************
