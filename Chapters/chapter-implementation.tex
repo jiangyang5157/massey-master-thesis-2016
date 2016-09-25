@@ -24,7 +24,7 @@ Model: translation * scale * rotation * mat(1)\\
 \subsection{KML}
 
 %****************************************************************
-\subsection{Orctree}
+\subsection{Octree}
 
 %****************************************************************
 \section{Earth}
@@ -212,12 +212,12 @@ N &= \text{Radius of Curvature (meters), defined as:} \\
 At last, for this project usage, where high accuracy is not required, $a$ equals to $b$. And also the ECEF coordinate system is y-east, z-north (up), and x points to $0$ latitude and $0$ longitude, but for project specific, we still need to convert ECEF to x-east, y-north (up), and x points to $0$ latitude and $180$ longitude.
 
 %****************************************************************
-\subsection{Extra Model}
+\subsection{OBJ Model}
 
 A simple and common OBJ format model can be loaded as an extra model for the placemarker.
 
 %****************************************************************
-\section{Textfield}
+\section{Information Display}
 
 A textfield is a a rectangle vertices based renderable component to display text on a flat plane. Since it is a GL scene, the actual text will be drawn as a texture. By a constant width and native \code{android.text.StaticLayout} support, the height of the texture can be calculated. 
 
