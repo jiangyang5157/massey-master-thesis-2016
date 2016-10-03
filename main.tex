@@ -128,7 +128,12 @@ headsepline, % Uncomment to get a line under the header
 \begin{abstract}
 \addchaptertocentry{\abstractname} % Add the abstract to the table of contents
 
-****************\
+Visualization has proven effective for not only presenting essential information in vast amounts of data but also driving complex analyses.\\
+
+
+
+
+****************\\
 overview\\
 propose\\
 What was done? \\
@@ -136,52 +141,6 @@ Why was it done?\\
 How was it done?\\
 What was found?\\
 What is the significance of the findings in short?\\
-
-Visualization has proven effective for not only presenting essential information in vast amounts of data but also driving complex analyses.\\
-
-\parencite{tuttle.virtual-globes.2008}\\
-Three-dimensional (3D) representations of objects and spaces are frequently used to improve human understanding.\\
-The pseudo-3D nature of virtual globes allows people to interact in an environment that they naturally comprehend and that makes the data and information presented easier to understand.\\
-Transportability relates to the fact that virtual globes are based on digital data and, therefore, can be transported as easily as any other digital information.\\
-Scalability is a powerful aspect of virtual globes.\\
-Interactivity is a crucial part of the power of virtual globes. Users are in control of the experience and can adjust the view, scale, data layers, and more.\\
-Choice of topics is an important difference from traditional representations of geospatial data. Virtual globes have the power of combining multiple topics in one media.\\
-Currency is the ability to easily adjust the data available to any given time period. The data can be static or have an update time ranging from years to real time.\\
-\\
-The rapid development of virtual globes and their supporting infrastructure of imagery and servers represent a convergence of mainstream information technology and geography. Geography is increasingly becoming a central organizing principal for managing, analyzing, and visualizing the world’s information.\\
-
-
-\parencite{mazuryk.virtual-reality.1996}\\
-Virtual Reality (VR), sometimes called Virtual Environments (VE) has drawn much attention in the last few years.\\
-people always want more. They want to step into this world and interact with it – instead of just watching a picture on the monitor. This technology which becomes overwhelmingly popular and fashionable in current decade is called Virtual Reality (VR).\\
-At the beginning of 1990s the development in the field of virtual reality became much more stormy and the term Virtual Reality itself became extremely popular.\\
-
-Undoubtedly VR has attracted a lot of interest of people in last few years. Being a new paradigm of user interface it offers great benefits in many application areas. It provides an easy, powerful, intuitive way of human-computer interaction. The user can watch and manipulate the simulated environment in the same way we act in the real world, without any need to learn how the complicated (and often clumsy) user interface works. Therefore many applications like flight simulators, architectural walkthrough or data visualization systems were developed relatively fast.\\
-The navigation through the huge amount of data visualized in three-dimensional space is almost as easy as walking.\\
-Three-dimensional objects have six degrees of freedom (DOF): position coordinates (x, y and z offsets) and orientation (yaw, pitch and roll angles for example).\\
-
-\parencite{blower.sharing-visualizing.2007}
-Virtual globe technology holds many exciting possibilities for environmental science. These easyto-use, intuitive systems provide means for simultaneously visualizing four-dimensional environmental data from many different sources, enabling the generation of new hypotheses and driving greater understanding of the Earth system. Through the use of simple markup languages, scientists can publish and consume data in interoperable formats without the need for technical assistance. In this paper we give, with examples from our own work, a number of scientific uses for virtual globes, demonstrating their particular advantages. We explain how we have used Web Services to connect virtual globes with diverse data sources and enable more sophisticated usage such as data analysis and collaborative visualization. We also discuss the current limitations of the technology, with particular regard to the visualization of subsurface data and vertical sections.\\
-Recently there have been great advances in the development of “virtual globes”: software applications that display a three-dimensional representation of the entire Earth, usually based on satellite imagery, upon which new information can be superimposed.\\
-Google Earth is perhaps the most wellknown VG application currently available. It is a free but closed-source application that is available for Windows, Linux and Mac OSX.
-The primary method for visualizing data in Google Earth is to create KML files, although there is limited support for other methods. It is aimed at the general public, primarily as a search tool, but has attracted a very large community of people who have used the application for a very wide range of purposes.\\
-NASA World Wind [14] is an open-source VG application that is written in .NET and is therefore only supports Windows operating systems. Future releases will be Java-based and hence cross-platform. World Wind provides access to a wide range of NASA satellite imagery. Data can be imported through tile servers, OGC Web Services and there is limited support for KML. Its focus is toward scientific users, so World Wind has a more specialist community than that of Google Earth.\\
-ArcGIS Explorer [1] can be used as a standalone (free, Windows-only) VG but it is best seen as a lightweight client to the (nonfree) ArcGIS Server. It can import data in a
-very wide range of GIS formats (including KML) and can perform data analysis on the client (using plug-ins and the associated .NET SDK) or the server (through the interface to ArcWeb Services). At the time of writing this is a very new product and so has not had time to build a large community.\\
-This is because (1) Google Earth is the only VG of the above shortlist that currently works across platforms and thus has the widest potential scientific audience, (2) Google Earth currently possesses the largest community, and (3) Google Earth supports the latest features of KML, many of which are particularly relevant for scientific data.\\
-\\
-KML is a simple XML language that is supported by many virtual globes.\\
-Although historically tightly connected with Google Earth, discussions are underway to standardize KML the Open Geospatial Consortium (OGC) [19]. KML is supported by a number of virtual globes and other GIS systems and is therefore already becoming a de facto standard. (Note that KML files can be combined with other supporting files such as imagery in a zip archive, producing a KMZ file. In this paper we intend “KML” to represent both KML and KMZ for clarity.)\\
-From an environmental science point of view, KML is a somewhat limited language. It describes only simple geometric shapes on the globe (points, lines and polygons) and is not extensible. It is, in many respects, analogous to Geography Markup Language 2.0 [7]. GML 3.x is much more sophisticated and allows the rich description of geospatial features such as weather fronts and radiosonde profiles [22].\\
-Annotations of KML features are intended to be human-readable plain text or simple HTML, not machine-readable XML.\\
-For the above reasons, KML is currently not suitable as a fully-featured, general-purpose environmental data exchange format. Its rapidly-growing adoption by scientists, however, shows that it is finding an important niche. It is important to remember that virtual globes (and KML) do not attempt to replace more sophisticated systems. They make it easy for non-technical scientists to share and visualize simple geospatial information, which can then be manipulated in other applications if required. The objections raised in the previous two paragraphs can actually be seen as advantages from the point of view of usability because they make it easier for users to visualize their data quickly using a single, simple data file. KML is useful because it spans a gap between very simple (e.g. GeoRSS [8]) and more complex (GML 3.x) formats. It is a much more useful interchange format than imagery alone since it holds georeferencing information and allows for the inclusion of links to related information (e.g. the full data archive).\\
-\\
-Simultaneous visualization of data from different sources\\
-A key strength of virtual globes is that it is very easy to download data over the Web from a number of different providers and visualize them simultaneously to look for relationships that can be investigated later in a more quantitative fashion.\\
-Real-time data are very important in the environmental sciences.\\
-(Near) real-time data can be displayed in Google Earth using the NetworkLink facility in KML. This facility allows all or part of a KML dataset to be refreshed at a fixed rate or based on the expiration time given in the HTTP header. A user can therefore download a fixed KML file containing the NetworkLink and Google Earth will automatically refresh the link, ensuring that the user always sees the latest information.\\
-The key strengths of virtual globe applications are their easy-to-use, intuitive nature and the ability to incorporate new data very easily.\\
-A key requirement for environmental scientists is to be able to visualize four dimensional data (i.e. time-dependent three-dimensional data).\\
 
 \end{abstract}
 
@@ -237,4 +196,64 @@ A key requirement for environmental scientists is to be able to visualize four d
 %****************************************************************
 \end{document}  
 %****************************************************************
+
+
+
+
+\parencite{mazuryk.virtual-reality.1996}
+\\
+Virtual Reality (VR), sometimes called Virtual Environments (VE) has drawn much attention in the last few years.
+\\
+people always want more. They want to step into this world and interact with it – instead of just watching a picture on the monitor. This technology which becomes overwhelmingly popular and fashionable in current decade is called Virtual Reality (VR).
+\\
+At the beginning of 1990s the development in the field of virtual reality became much more stormy and the term Virtual Reality itself became extremely popular.
+\\
+Undoubtedly VR has attracted a lot of interest of people in last few years. Being a new paradigm of user interface it offers great benefits in many application areas. It provides an easy, powerful, intuitive way of human-computer interaction. The user can watch and manipulate the simulated environment in the same way we act in the real world, without any need to learn how the complicated (and often clumsy) user interface works. Therefore many applications like flight simulators, architectural walkthrough or data visualization systems were developed relatively fast.
+\\
+The navigation through the huge amount of data visualized in three-dimensional space is almost as easy as walking.
+\\
+Three-dimensional objects have six degrees of freedom (DOF): position coordinates (x, y and z offsets) and orientation (yaw, pitch and roll angles for example).
+\\
+
+
+\parencite{blower.sharing-visualizing.2007}
+\\
+We explain how we have used Web Services to connect virtual globes with diverse data sources and enable more sophisticated usage such as data analysis and collaborative visualization. We also discuss the current limitations of the technology, with particular regard to the visualization of subsurface data and vertical sections.
+\\
+Recently there have been great advances in the development of “virtual globes”: software applications that display a three-dimensional representation of the entire Earth, usually based on satellite imagery, upon which new information can be superimposed.
+\\
+A key strength of virtual globes is that it is very easy to download data
+\\
+Real-time data are very important in the environmental sciences.
+\\
+(Near) real-time data can be displayed in Google Earth using the NetworkLink facility in KML. This facility allows all or part of a KML dataset to be refreshed at a fixed rate or based on the expiration time given in the HTTP header. A user can therefore download a fixed KML file containing the NetworkLink and Google Earth will automatically refresh the link, ensuring that the user always sees the latest information.
+\\
+The key strengths of virtual globe applications are their easy-to-use, intuitive nature and the ability to incorporate new data very easily.
+\\
+A key requirement for environmental scientists is to be able to visualize four dimensional data (i.e. time-dependent three-dimensional data).
+
+
+\parencite{tuttle.virtual-globes.2008}
+\\
+Three-dimensional (3D) representations of objects and spaces are frequently used to improve human understanding.
+\\
+The pseudo-3D nature of virtual globes allows people to interact in an environment that they naturally comprehend and that makes the data and information presented easier to understand.
+\\
+Transportability relates to the fact that virtual globes are based on digital data and, therefore, can be transported as easily as any other digital information.
+\\
+Scalability is a powerful aspect of virtual globes.
+\\
+Interactivity is a crucial part of the power of virtual globes. Users are in control of the experience and can adjust the view, scale, data layers, and more.
+\\
+Choice of topics is an important difference from traditional representations of geospatial data. Virtual globes have the power of combining multiple topics in one media.
+\\
+Currency is the ability to easily adjust the data available to any given time period. The data can be static or have an update time ranging from years to real time.
+\\
+The rapid development of virtual globes and their supporting infrastructure of imagery and servers represent a convergence of mainstream information technology and geography. Geography is increasingly becoming a central organizing principal for managing, analyzing, and visualizing the world’s information.
+\\
+
+
+
+
+
 

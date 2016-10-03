@@ -21,11 +21,11 @@ Model: translation * scale * rotation * mat(1)\\
 \section{Scene}
 
 %****************************************************************
-\subsection{KML}
+\subsection{Keyhole Markup Language}
 
-****************\\
-kml parser\\
-graph and extended or chanegs\\
+In this project, we only take use of few feature of KML \ref{fig:kml-schema}: Container, Style, Placemark,  and NetworkLink. The KML parser we are using is based on the open-source library \code{android-maps-utils} \parencite{Google.code-kml.2016} (NetworkLink is one of the unsupported feature in the library). Main modifications are getting rid of \code{com.google.android.gms.maps.GoogleMap} dependency, and extending feature support for \code{NetworkLink} in accordance with the current design pattern.
+
+
 
 %****************************************************************
 \subsection{Octree}
@@ -698,10 +698,7 @@ https://developer.android.com/training/volley/index.html\\
 static, layer, kml, resource,model\\
 
 %****************************************************************
-\subsection{}
-
-****************\\
-Patch\\
+\subsection{Patch}
 
 %****************************************************************
 \subsection{Port Forwarding}
