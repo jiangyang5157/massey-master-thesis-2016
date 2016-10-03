@@ -18,6 +18,26 @@ camera.matrix: build by position, lookAt, up\\
 Model: translation * scale * rotation * mat(1)\\
 
 %****************************************************************
+\section{File Server}
+
+****************\\
+Web server - golang - https://golang.org/pkg/net/http/\\
+http.FileServer\\
+https://github.com/ant0ine/go-json-rest\\
+Go-Json-Rest is a thin layer ("Keep it simple, stupid") on top of net/http that helps building RESTful JSON APIs easily.\\
+Volley - an HTTP library that makes networking for Android apps easier and most importantly, faster.\\
+https://developer.android.com/training/volley/index.html\\
+
+%****************************************************************
+\subsection{Assets}
+
+****************\\
+static, layer, kml, resource,model\\
+
+%****************************************************************
+\subsection{Patch}
+
+%****************************************************************
 \section{Scene}
 
 %****************************************************************
@@ -35,6 +55,18 @@ In this project, we only take use of few feature of KML \ref{fig:kml-schema}: Co
 
 %****************************************************************
 \subsection{Octree}
+
+\begin{figure}[H]
+\caption[octree-split]{Octree split}
+\label{fig:octree-split}
+\centering
+\includegraphics[width=\linewidth]{Figures/octree-split.png}
+\decoRule
+\end{figure}
+
+
+
+
 
 %****************************************************************
 \section{Earth}
@@ -96,9 +128,6 @@ y = v \\
 
 %****************************************************************
 \section{Placemarker}
-
-%****************************************************************
-\subsection{Icosphere}
 
 Generation of vertices for placemarker is a recursion process of subdividing icosphere. Figure \ref{fig:icosahedron-rectangles} shows that the initial vertices of an icosahedron are the corners of three orthogonal rectangles.
 
@@ -222,9 +251,55 @@ N &= \text{Radius of Curvature (meters), defined as:} \\
 At last, for this project usage, where high accuracy is not required, $a$ equals to $b$. And also the ECEF coordinate system is y-east, z-north (up), and x points to $0$ latitude and $0$ longitude, but for project specific, we still need to convert ECEF to x-east, y-north (up), and x points to $0$ latitude and $180$ longitude.
 
 %****************************************************************
+\subsection{Description}
+
+Description of placemarker requires an appropriate analysis for display. The raw data of description is a set of characters that could be a normal text, an image URL, an URL returns different type of content, or maybe just some meaningless characters.
+
+Althrough the implementation of analysis in this project did not cover every situation, but it is flexible and extendable for more functionality.
+
+\begin{figure}[H]
+\caption[description-analysis]{Description Analysis}
+\label{fig:description-analysis}
+\centering
+\includegraphics[width=\linewidth]{Figures/description-analysis.png}
+\decoRule
+\end{figure}
+
+In order to get an extracted content from a wikipedia page, we can transform the URL to a Wiki-API based open-search url \parencite{wiki.api.2016}, which will returns a json format raw data that we can easily get what we need from different json tags.
+
+\[
+\begin{array}{lr}
+\begin{aligned}
+\text{Replace}\;&\code{.wikipedia.org/wiki/} \\
+\text{To}\;&\code{.wikipedia.org/w/api.php?}APIs\\
+\end{aligned}
+\end{array}
+\]
+
+Where $APIs$ is:
+
+\[
+\begin{array}{lr}
+\code{format=json} \\
+\code{\&action=query} \\
+\code{\&redirects=1} \\
+\code{\&prop=extracts} \\
+\code{\&exintro=} \\
+\code{\&explaintext=} \\
+\code{\&indexpageids=} \\
+\code{\&titles=}
+\end{array}
+\]
+
+For $html$ parser, we introduced jsoup (it is a Java library for working with real-world HTML \parencite{joup.2016}), to get the basic information we need, such as $title$, and some other metadata. In this project, I am also use $og:description$ (one of the open graph meta tags \parencite{ogp.2014}) from the html source if it exist.
+
+%****************************************************************
 \subsection{OBJ Model}
 
 A simple and common OBJ format model can be loaded as an extra model for the placemarker.
+
+****************\\
+vfn\\
 
 %****************************************************************
 \section{Information Display}
@@ -236,7 +311,7 @@ A menu contains multi-textfield can be seen as an empty textfield based which te
 A head rotation matrix (quaternion matrix \parencite{jvv.quaternions.2013}) is required for locating object in front of camera \parencite{mathworks.quaternion-rotation.2016} .
 
 ****************\\
-quaternions
+quaternions\\
 
 %****************************************************************
 \section{Camera Movement}
@@ -643,70 +718,5 @@ $\therefore$ Which is
 \label{equ:ray-box-3d-intersection}
 max(t_{X_1},\enspace t_{Y_1},\enspace t_{Z_1}) < min(t_{X_2},\enspace t_{Y_2},\enspace t_{Z_2})
 \end{equation}
-
-%****************************************************************
-\section{Description Analysis}
-
-Description of placemarker requires an appropriate analysis for display. The raw data of description is a set of characters that could be a normal text, an image URL, an URL returns different type of content, or maybe just some meaningless characters.
-
-Althrough the implementation of analysis in this project did not cover every situation, but it is flexible and extendable for more functionality.
-
-\begin{figure}[H]
-\caption[description-analysis]{Description Analysis}
-\label{fig:description-analysis}
-\centering
-\includegraphics[width=\linewidth]{Figures/description-analysis.png}
-\decoRule
-\end{figure}
-
-In order to get an extracted content from a wikipedia page, we can transform the URL to a Wiki-API based open-search url \parencite{wiki.api.2016}, which will returns a json format raw data that we can easily get what we need from different json tags.
-
-\[
-\begin{array}{lr}
-\begin{aligned}
-\text{Replace}\;&\code{.wikipedia.org/wiki/} \\
-\text{To}\;&\code{.wikipedia.org/w/api.php?}APIs\\
-\end{aligned}
-\end{array}
-\]
-
-Where $APIs$ is:
-
-\[
-\begin{array}{lr}
-\code{format=json} \\
-\code{\&action=query} \\
-\code{\&redirects=1} \\
-\code{\&prop=extracts} \\
-\code{\&exintro=} \\
-\code{\&explaintext=} \\
-\code{\&indexpageids=} \\
-\code{\&titles=}
-\end{array}
-\]
-
-For $html$ parser, we introduced jsoup (it is a Java library for working with real-world HTML \parencite{joup.2016}), to get the basic information we need, such as $title$, and some other metadata. In this project, I am also use $og:description$ (one of the open graph meta tags \parencite{ogp.2014}) from the html source if it exist.
-%****************************************************************
-\section{File Server}
-
-****************\\
-Web server - golang - https://golang.org/pkg/net/http/\\
-http.FileServer\\
-https://github.com/ant0ine/go-json-rest\\
-Go-Json-Rest is a thin layer ("Keep it simple, stupid") on top of net/http that helps building RESTful JSON APIs easily.\\
-Volley - an HTTP library that makes networking for Android apps easier and most importantly, faster.\\
-https://developer.android.com/training/volley/index.html\\
-
-%****************************************************************
-\subsection{Assets}
-
-****************\\
-static, layer, kml, resource,model\\
-
-%****************************************************************
-\subsection{Patch}
-
-%****************************************************************
-\subsection{Port Forwarding}
 
 %****************************************************************
