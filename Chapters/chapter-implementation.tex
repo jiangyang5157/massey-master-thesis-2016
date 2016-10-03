@@ -23,9 +23,15 @@ Model: translation * scale * rotation * mat(1)\\
 %****************************************************************
 \subsection{Keyhole Markup Language}
 
-In this project, we only take use of few feature of KML \ref{fig:kml-schema}: Container, Style, Placemark,  and NetworkLink. The KML parser we are using is based on the open-source library \code{android-maps-utils} \parencite{Google.code-kml.2016} (NetworkLink is one of the unsupported feature in the library). Main modifications are getting rid of \code{com.google.android.gms.maps.GoogleMap} dependency, and extending feature support for \code{NetworkLink} in accordance with the current design pattern.
+In this project, we only take use of few feature of KML \ref{fig:kml-schema}: Container, Style, Placemark,  and NetworkLink. The KML parser we are using is based on the open-source library \code{android-maps-utils} \parencite{Google.code-kml.2016} (NetworkLink is one of the unsupported feature in the library). Main modifications are getting rid of \code{com.google.android.gms.maps.GoogleMap} dependency, and extending \code{NetworkLink} feature support in accordance with the current design pattern.
 
-
+\begin{figure}[H]
+\caption[kml-parser-simple]{kML parser simple}
+\label{fig:kml-parser-simple}
+\centering
+\includegraphics[width=\linewidth]{Figures/kml-parser-simple.png}
+\decoRule
+\end{figure}
 
 %****************************************************************
 \subsection{Octree}
