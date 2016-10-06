@@ -1,0 +1,42 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (MiKTeX 2.9) (preloaded format=pdftex 2016.8.18)  6 OCT 2016 13:05
+entering extended mode
+**C:/Users/Yang/Documents/workspace/latex/massey-master-thesis-2016/bibliograph
+y.bib
+
+(C:/Users/Yang/Documents/workspace/latex/massey-master-thesis-2016/bibliography
+.bib
+Overfull \hbox (24.30148pt too wide) in paragraph at lines 51--57
+\tenrm url = http://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ra
+y-tracer-rendering-simple-shapes/ray-|
+
+\hbox(7.5+2.5)x469.75499, glue set - 1.0
+.\tenrm u
+.\tenrm r
+.\tenrm l
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\tenrm =
+.etc.
+
+
+Overfull \hbox (111.3851pt too wide) in paragraph at lines 58--63
+[]\tenrm @onlinestackoverflow.ray-plane.2014, au-thor = user3146587, year = 201
+4, url = http://stackoverflow.com/questions/21114796/3d-|
+
+\hbox(7.5+2.5)x469.75499, glue set - 1.0
+.\hbox(0.0+0.0)x20.0
+.\tenrm @
+.\tenrm o
+.\tenrm n
+.\tenrm l
+.etc.
+
+! Misplaced alignment tab character &.
+l.68 ...tps://www.youtube.com/watch?v=C7JQ7Rpwn2k&
+                                                  feature=youtu.be&t=23m21s}
+? 
+! Emergency stop.
+l.68 ...tps://www.youtube.com/watch?v=C7JQ7Rpwn2k&
+                                                  feature=youtu.be&t=23m21s}
+End of file on the terminal!
+
+!  ==> Fatal error occurred, no output PDF file produced!

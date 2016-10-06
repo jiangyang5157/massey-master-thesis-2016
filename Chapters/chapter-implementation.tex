@@ -7,10 +7,12 @@
 %****************************************************************
 \section{Google VR SDK}
 
+****************************************************************\\%####
+
 %****************************************************************
 \section{OpenGL ES}
 
-****************\\
+****************************************************************\\%####
 Pass Perspective matrix, View matrix, and Model matrix to shader to avoid calculate MV or MVP in cpu\\
 Perspective: eye.getPerspective(float zNear, float zFar)\\
 View: eye.getEyeView() * camera.matrix\\
@@ -20,7 +22,7 @@ Model: translation * scale * rotation * mat(1)\\
 %****************************************************************
 \section{File Server}
 
-****************\\
+****************************************************************\\%####
 Web server - golang - https://golang.org/pkg/net/http/\\
 http.FileServer\\
 https://github.com/ant0ine/go-json-rest\\
@@ -31,7 +33,7 @@ https://developer.android.com/training/volley/index.html\\
 %****************************************************************
 \subsection{Assets}
 
-****************\\
+****************************************************************\\%####
 static, layer, kml, resource,model\\
 
 %****************************************************************
@@ -39,6 +41,8 @@ static, layer, kml, resource,model\\
 
 %****************************************************************
 \section{Scene}
+
+****************************************************************\\%####
 
 %****************************************************************
 \subsection{Keyhole Markup Language}
@@ -54,7 +58,10 @@ In this project, we only take use of few feature of KML \ref{fig:kml-schema}: Co
 \end{figure}
 
 %****************************************************************
-\subsection{Octree}
+\subsection{Octree} 
+\label{section:octree}
+
+To reduce the ray-object intersection tests,  space partitioning is needed. The main requirement is not to use a spatial data structure for an ray intersect with irregular geometry, but to determine what objects are in the same cell to avoid doing an $n^2$ check on all objects. In this case, it is spherical placemark. Therefore, we don't need overlapped volumes, and contained objects don't need to be cut on volume boundaries. It is actually 3D space partitioning process with a predefined restricted maximum number of objects in the same cell. A simple axis-aligned Octree is fully satisfy in here \ref{fig:octree-split}.
 
 \begin{figure}[H]
 \caption[octree-split]{Octree split}
@@ -64,9 +71,57 @@ In this project, we only take use of few feature of KML \ref{fig:kml-schema}: Co
 \decoRule
 \end{figure}
 
+For each box splitting process, we also generate eight indexes to indicate the relative position inside the box. These indexes are importent for the next partition, where we might need to relink contained objects to the new corresponding box. To insert a object into
+the box only if the existed contained number of objects is less then the predefined constant value, otherwise splitting the box then relink existed object and insert the new object again.
 
+Integer indexes of box is defined by three boolean valuse that indicates three axis-relative value:
 
+Any position\;\emph{P} in the box with known center\emph{O}:
 
+\[
+\begin{array}{lr}
+\begin{aligned}
+dx &= P_x - O_x\\
+dy &= P_y - O_y\\
+dz &= P_z - O_z\\
+\end{aligned}
+\end{array}
+\]
+
+\begin{table}[H]
+\caption{Octree Octant}
+\label{tab:octree-octant}
+\centering
+\begin{tabular}{l l l l}
+\toprule
+\tabhead{Index} & \tabhead{Octant} & \tabhead{Geometric Meaning}\\
+\midrule
+0x00000000 & T,\;T,\;T & dx > 0, dy > 0, dz > 0\\
+0x00000001 & F,\;T,\;T & dx < 0, dy > 0, dz > 0\\
+0x00000010 & T,\;F,\;T & dx > 0, dy < 0, dz > 0\\
+0x00000011 & F,\;F,\;T & dx < 0, dy < 0, dz > 0\\
+0x00000100 & T,\;T,\;F & dx > 0, dy > 0, dz < 0\\
+0x00000101 & F,\;T,\;F & dx < 0, dy > 0, dz < 0\\
+0x00000110 & T,\;F,\;F & dx > 0, dy < 0, dz > 0\\
+0x00000111 & F,\;F,\;F & dx < 0, dy < 0, dz < 0\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Octant solution:
+\[
+\code{octant[] = (index \& 1, index \& 2, index \& 4)}
+\]
+
+Index solution:
+\[
+\begin{array}{lr}
+\begin{aligned}
+\code{For Each oction[i]:}&\\
+&\code{index |= (1 < < i)}\\
+\end{aligned}
+\end{array}
+\]
 
 %****************************************************************
 \section{Earth}
@@ -102,27 +157,27 @@ For each vertex $P$ on sphere from ring $r$ and segment $s$, we have:
 
 \[
 \begin{array}{lr}
-v = r \times  \frac{1}{rings - 1} \\
-u = s \times  \frac{1}{segments - 1} \\
-\measuredangle \alpha = v \times \pi \\
-\measuredangle \beta = u \times 2\,\pi \\
+v = r \times  \frac{1}{rings - 1}\\
+u = s \times  \frac{1}{segments - 1}\\
+\measuredangle \alpha = v \times \pi\\
+\measuredangle \beta = u \times 2\,\pi\\
 \end{array}
 \]
 
 $\therefore$ P (x,\;y,\;z)
 \[
 \begin{array}{lr}
-x = (\sin(\alpha) \times radius) \times \cos(\beta) \\
-y = \cos(\alpha) \times radius \\
-z =  (\sin(\alpha) \times radius) \times \sin(\beta)
+x = (\sin(\alpha) \times radius) \times \cos(\beta)\\
+y = \cos(\alpha) \times radius\\
+z =  (\sin(\alpha) \times radius) \times \sin(\beta)\\
 \end{array}
 \]
 
 $\And$ 2D Texture (x,\;y) mapping for vertex $P$ is:
 \[
 \begin{array}{lr}
-x = u \\
-y = v \\
+x = u\\
+y = v\\
 \end{array}
 \]
 
@@ -163,12 +218,12 @@ Then, push edge's midpoints to surface of the sphere.
 \centering
 \begin{tabular}{l l l l}
 \toprule
-\tabhead{Recursion Level} & \tabhead{Vertex Count} & \tabhead{Face Count} & \tabhead{Edge Count} \\
+\tabhead{Recursion Level} & \tabhead{Vertex Count} & \tabhead{Face Count} & \tabhead{Edge Count}\\
 \midrule
-0 & 12 & 20 & 30 \\
-1 & 42 & 80 & 120 \\
-2 & 162 & 320 & 480 \\
-3 & 642 & 1280 & 1920 \\
+0 & 12 & 20 & 30\\
+1 & 42 & 80 & 120\\
+2 & 162 & 320 & 480\\
+3 & 642 & 1280 & 1920\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -197,13 +252,13 @@ A reference ellipsoid can be described by a series of parameters that define its
 \centering
 \begin{tabular}{l l l}
 \toprule
-\tabhead{Parameter} & \tabhead{Notation} & \tabhead{Value} \\
+\tabhead{Parameter} & \tabhead{Notation} & \tabhead{Value}\\
 \midrule
-Reciprocal of flattening & $1 / f$ & 298.257\,223\,563 \\
-Semi-major axis & $a$ & 6\,378\,137\,m \\
-Semi-minor axis & $b$ & $a\,(1 - f)$ \\
-First eccentricity squared & $e_1^2$ & $1 - b^2 / a^2 = 2\,f - f^2$ \\
-Second eccentricity squared & $e_2^2$ & $a^2 / b^2 - 1 = f\,(2 - f) / (1 - f)^2$ \\
+Reciprocal of flattening & $1 / f$ & 298.257\,223\,563\\
+Semi-major axis & $a$ & 6\,378\,137\,m\\
+Semi-minor axis & $b$ & $a\,(1 - f)$\\
+First eccentricity squared & $e_1^2$ & $1 - b^2 / a^2 = 2\,f - f^2$\\
+Second eccentricity squared & $e_2^2$ & $a^2 / b^2 - 1 = f\,(2 - f) / (1 - f)^2$\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -227,9 +282,9 @@ The conversion from LLA to ECEF is shown below.
 \[
 \begin{array}{lr}
 \begin{aligned}
-x &= (N + h)\,\cos(\varphi)\,\cos(\lambda) \\
-y &= (N + h)\,\cos(\varphi)\,\sin(\lambda) \\
-z &= (\frac{b^2}{a^2}\,N + h)\,\sin(\varphi)
+x &= (N + h)\,\cos(\varphi)\,\cos(\lambda)\\
+y &= (N + h)\,\cos(\varphi)\,\sin(\lambda)\\
+z &= (\frac{b^2}{a^2}\,N + h)\,\sin(\varphi)\\
 \end{aligned}
 \end{array}
 \]
@@ -239,11 +294,11 @@ Where
 \[
 \begin{array}{lr}
 \begin{aligned}
-\varphi &= \text{latitude} \\
-\lambda &= \text{longitude} \\
-h &= \text{height above ellipsoid (meters)} \\
-N &= \text{Radius of Curvature (meters), defined as:} \\
-&= \frac{a}{\sqrt{1 - e^2\,\sin(\varphi)^2}}
+\varphi &= \text{latitude}\\
+\lambda &= \text{longitude}\\
+h &= \text{height above ellipsoid (meters)}\\
+N &= \text{Radius of Curvature (meters), defined as:}\\
+&= \frac{a}{\sqrt{1 - e^2\,\sin(\varphi)^2}}\\
 \end{aligned}
 \end{array}
 \]
@@ -270,7 +325,7 @@ In order to get an extracted content from a wikipedia page, we can transform the
 \[
 \begin{array}{lr}
 \begin{aligned}
-\text{Replace}\;&\code{.wikipedia.org/wiki/} \\
+\text{Replace}\;&\code{.wikipedia.org/wiki/}\\
 \text{To}\;&\code{.wikipedia.org/w/api.php?}APIs\\
 \end{aligned}
 \end{array}
@@ -280,14 +335,16 @@ Where $APIs$ is:
 
 \[
 \begin{array}{lr}
-\code{format=json} \\
-\code{\&action=query} \\
-\code{\&redirects=1} \\
-\code{\&prop=extracts} \\
-\code{\&exintro=} \\
-\code{\&explaintext=} \\
-\code{\&indexpageids=} \\
-\code{\&titles=}
+\begin{aligned}
+\code{format=json}&\\
+&\code{\&action=query}\\
+&\code{\&redirects=1}\\
+&\code{\&prop=extracts}\\
+&\code{\&exintro=}\\
+&\code{\&explaintext=}\\
+&\code{\&indexpageids=}\\
+&\code{\&titles=}\\
+\end{aligned}
 \end{array}
 \]
 
@@ -298,7 +355,7 @@ For $html$ parser, we introduced jsoup (it is a Java library for working with re
 
 A simple and common OBJ format model can be loaded as an extra model for the placemarker.
 
-****************\\
+****************************************************************\\%####
 vfn\\
 
 %****************************************************************
@@ -310,7 +367,7 @@ A menu contains multi-textfield can be seen as an empty textfield based which te
 
 A head rotation matrix (quaternion matrix \parencite{jvv.quaternions.2013}) is required for locating object in front of camera \parencite{mathworks.quaternion-rotation.2016} .
 
-****************\\
+****************************************************************\\%####
 quaternions\\
 
 %****************************************************************
@@ -322,9 +379,9 @@ LINEAR\_ACCELERATION is same as ACCELERATION which measures the acceleration for
 
 \[
 \begin{array}{lr}
-Linear Acceleration = Accelerometer Data - Gravity \\
-v = \int a\,dt \\
-x = \int v\,dt
+Linear Acceleration = Accelerometer Data - Gravity\\
+v = \int a\,dt\\
+x = \int v\,dt\\
 \end{array}
 \]
 
@@ -334,8 +391,8 @@ On the other hand, use step counter from STEP\_DETECTOR, and pedometer algorithm
 
 \[
 \begin{array}{lr}
-p_1 = p_0 + v_0 \times dt \\
-v_1 = v_0 + a \times dt
+p_1 = p_0 + v_0 \times dt\\
+v_1 = v_0 + a \times dt\\
 \end{array}
 \]
 
@@ -361,11 +418,11 @@ For each new frame:
 \[
 \begin{array}{lr}
 \begin{aligned}
-\overrightarrow{V_0} &= \overrightarrow{V_0} \cdot Damping \\
-\overrightarrow{P_1} &= \overrightarrow{P_0} + \overrightarrow{V_0} \cdot dt \\
-\overrightarrow{V_1} &= \overrightarrow{V_0} + \overrightarrow{Forwarding} \cdot Pulse \cdot Steps \\
-Damping &\in [0,\enspace1] \\
-Pulse &\in [0,\enspace \infty)
+\overrightarrow{V_0} &= \overrightarrow{V_0} \cdot Damping\\
+\overrightarrow{P_1} &= \overrightarrow{P_0} + \overrightarrow{V_0} \cdot dt\\
+\overrightarrow{V_1} &= \overrightarrow{V_0} + \overrightarrow{Forwarding} \cdot Pulse \cdot Steps\\
+Damping &\in [0,\enspace1]\\
+Pulse &\in [0,\enspace \infty)\\
 \end{aligned}
 \end{array}
 \]
@@ -400,15 +457,15 @@ A point \emph{P} on the surface of sphere should match the equation:
 (x_p - x_c)^2 + (y_p - y_c)^2 + (z_p - z_c)^2 = r^2
 \end{equation}
 
-If the ray intersects with the sphere at any position\emph{P} must match the equation \ref{equ:ray-t} and \ref{equ:sphere-surface}. Therefor the solution of \emph{t} in the cointegrate equation implies whether or not the ray will intersect with the sphere:
+If the ray intersects with the sphere at any position\;\emph{P} must match the equation \ref{equ:ray-t} and \ref{equ:sphere-surface}. Therefor the solution of \emph{t} in the cointegrate equation implies whether or not the ray will intersect with the sphere:
 
 \[
 \begin{aligned}
-(x_{R_0} + x_{R_d} \cdot t - x_c)^2 &+ (y_{R_0} + y_{R_d} \cdot t - y_c)^2 + (z_{R_0} + z_{R_d} \cdot t - z_c)^2 = r^2 \\
-&\vdots \\
-x_{R_d}^2\,t^2 &+ (2\,x_{R_d}\,(x_{R_0} - x_c))\,t + (x_{R_0}^2 - 2\,x_{R_0}\,x_c + x_c^2) \\
-+\;y_{R_d}^2\,t^2 &+ (2\,y_{R_d}\,(y_{R_0} - y_c))\,t + (y_{R_0}^2 - 2\,y_{R_0}\,y_c + y_c^2) \\
-+\;z_{R_d}^2\,t^2 &+ (2\,z_{R_d}\,(z_{R_0} - z_c))\,t + (z_{R_0}^2 - 2\,z_{R_0}\,z_c + z_c^2) = r^2
+(x_{R_0} + x_{R_d} \cdot t - x_c)^2 &+ (y_{R_0} + y_{R_d} \cdot t - y_c)^2 + (z_{R_0} + z_{R_d} \cdot t - z_c)^2 = r^2\\
+&\vdots\\
+x_{R_d}^2\,t^2 &+ (2\,x_{R_d}\,(x_{R_0} - x_c))\,t + (x_{R_0}^2 - 2\,x_{R_0}\,x_c + x_c^2)\\
++\;y_{R_d}^2\,t^2 &+ (2\,y_{R_d}\,(y_{R_0} - y_c))\,t + (y_{R_0}^2 - 2\,y_{R_0}\,y_c + y_c^2)\\
++\;z_{R_d}^2\,t^2 &+ (2\,z_{R_d}\,(z_{R_0} - z_c))\,t + (z_{R_0}^2 - 2\,z_{R_0}\,z_c + z_c^2) = r^2\\
 \end{aligned}
 \]
 
@@ -424,9 +481,9 @@ At this point, we are able to solved the \emph{t}:
 \[
 t =
 \begin{cases}
-\frac{-b \pm \sqrt{b^2 - 4\,a\,c}}{2\,a} & \text{if }\;b^2 - 4\,a\,c > 0 \\
-\frac{-b}{2\,a} & \text{if }\; b^2 - 4\,a\,c = 0 \\
-\varnothing & \text{if }\; b^2 - 4\,a\,c < 0
+\frac{-b \pm \sqrt{b^2 - 4\,a\,c}}{2\,a} & \text{if }\;b^2 - 4\,a\,c > 0\\
+\frac{-b}{2\,a} & \text{if }\; b^2 - 4\,a\,c = 0\\
+\varnothing & \text{if }\; b^2 - 4\,a\,c < 0\\
 \end{cases}
 \]
 
@@ -434,54 +491,48 @@ Then, I take a further step to get rid of formula complexity.
 
 $\because$ Equation \ref{equ:sphere-surface},\,\ref{equ:sphere-surface-quadratic-formula}
 \[
-\left\{
 \begin{array}{lr}
-a = x_{R_d}^2 + y_{R_d}^2 + z_{R_d}^2 \\
-b = 2\,(x_{R_d}\,(x_{R_0} - x_c) + y_{R_d}\,(y_{R_0} - y_c) + z_{R_d}\,(z_{R_0} - z_c)) \\
-c = (x_{R_0} - x_c)^2 + (y_{R_0} - y_c)^2 + (z_{R_0} - z_c)^2 - r^2
+a = x_{R_d}^2 + y_{R_d}^2 + z_{R_d}^2\\
+b = 2\,(x_{R_d}\,(x_{R_0} - x_c) + y_{R_d}\,(y_{R_0} - y_c) + z_{R_d}\,(z_{R_0} - z_c))\\
+c = (x_{R_0} - x_c)^2 + (y_{R_0} - y_c)^2 + (z_{R_0} - z_c)^2 - r^2\\
 \end{array}
-\right.
 \]
 
 $\And$
 \[
 \begin{array}{lr}
 \begin{aligned}
-\norm{\overrightarrow{R_d}} &= \sqrt{x_{R_d}^2 + y_{R_d}^2 + z_{R_d}^2} = 1 \\
-\overrightarrow{V_{c\_R_0}} &= \overrightarrow{R_0} - \overrightarrow{C} = \overrightarrow{(x_{R_0} - x_c,\enspace y_{R_0} - y_c,\enspace z_{R_0} - z_c)}
+\norm{\overrightarrow{R_d}} &= \sqrt{x_{R_d}^2 + y_{R_d}^2 + z_{R_d}^2} = 1\\
+\overrightarrow{V_{c\_R_0}} &= \overrightarrow{R_0} - \overrightarrow{C} = \overrightarrow{(x_{R_0} - x_c,\enspace y_{R_0} - y_c,\enspace z_{R_0} - z_c)}\\
 \end{aligned}
 \end{array}
 \]
 
 $\therefore$
 \[
-\left\{
 \begin{array}{lr}
-a =1 \\
-b = 2 \cdot \overrightarrow{R_d} \cdot \overrightarrow{V_{c\_R_0}} \\
-c = \overrightarrow{V_{c\_R_0}} \cdot \overrightarrow{V_{c\_R_0}} \cdot r^2
+a =1\\
+b = 2 \cdot \overrightarrow{R_d} \cdot \overrightarrow{V_{c\_R_0}}\\
+c = \overrightarrow{V_{c\_R_0}} \cdot \overrightarrow{V_{c\_R_0}} \cdot r^2\\
 \end{array}
-\right.
 \]
 
 $\because$ The formula for \emph{t} can also be optimized
 \[
-\left\{
 \begin{array}{lr}
-\frac{-b \pm \sqrt{b^2 - 4\,a\,c}}{2\,a} = -\alpha \pm \sqrt{\beta} \\
-\alpha = \frac{1}{2}\,b \\
-\beta = \alpha^2 - c
+\frac{-b \pm \sqrt{b^2 - 4\,a\,c}}{2\,a} = -\alpha \pm \sqrt{\beta}\\
+\alpha = \frac{1}{2}\,b\\
+\beta = \alpha^2 - c\\
 \end{array}
-\right.
 \]
 
 $\therefore$ The final solution for \emph{t}
 \[
 t =
 \begin{cases}
- -\alpha \pm \sqrt{\beta} & \text{if }\;\beta > 0 \\
--\alpha & \text{if }\;\beta = 0 \\
-\varnothing & \text{if }\;\beta < 0
+ -\alpha \pm \sqrt{\beta} & \text{if }\;\beta > 0\\
+-\alpha & \text{if }\;\beta = 0\\
+\varnothing & \text{if }\;\beta < 0\\
 \end{cases}
 \]
 
@@ -493,7 +544,6 @@ And the collision position for each \emph{t} is:
 
 %****************************************************************
 \subsection{Ray-Plane}
-\parencite{stackoverflow.ray-plane.2014} \\
 
 \begin{figure}[H]
 \caption[ray-plane-intersection]{Ray-Plane intersection}
@@ -507,12 +557,10 @@ If a point \emph{P} on the plane and also belongs to the ray, we have quadric eq
 
 \begin{equation}
 \label{equ:ray-plane-intersection}
-\left\{
 \begin{array}{lr}
-(\overrightarrow{P} - \overrightarrow{P_1}) \cdot \overrightarrow{N} = 0 \\
-\overrightarrow{P} = \overrightarrow{R_0} + \overrightarrow{R_d} \cdot t
+(\overrightarrow{P} - \overrightarrow{P_1}) \cdot \overrightarrow{N} = 0\\
+\overrightarrow{P} = \overrightarrow{R_0} + \overrightarrow{R_d} \cdot t\\
 \end{array}
-\right.
 \end{equation}
 
 Solution for the \emph{t} is:
@@ -520,27 +568,26 @@ Solution for the \emph{t} is:
 \[
 t =
 \begin{cases}
-\frac{-\overrightarrow{N} \cdot (\overrightarrow{R_0} - \overrightarrow{P_1})}{\overrightarrow{N} \cdot \overrightarrow{R_d}} & \text{if }\;\overrightarrow{N} \cdot \overrightarrow{R_d} \nsim 0 \\
-\varnothing & \text{if }\;\overrightarrow{N} \cdot \overrightarrow{R_d} \sim 0
+\frac{-\overrightarrow{N} \cdot (\overrightarrow{R_0} - \overrightarrow{P_1})}{\overrightarrow{N} \cdot \overrightarrow{R_d}} & \text{if }\;\overrightarrow{N} \cdot \overrightarrow{R_d} \nsim 0\\
+\varnothing & \text{if }\;\overrightarrow{N} \cdot \overrightarrow{R_d} \sim 0\\
 \end{cases}
 \]
 
-At last, we have to verify if the collision is inside of the quadrangle by putting \emph{t} back to \ref{equ:ray-plane-intersection}, and the \emph{t} is valid only if:
+At last, we have to verify if the collision is inside of the quadrangle by putting \emph{t} back to \ref{equ:ray-plane-intersection}, \parencite{stackoverflow.ray-plane.2014} the \emph{t} is valid only if:\\
 
 \[
 \begin{array}{lr}
-\mu = \sqrt{(\overrightarrow{P} - \overrightarrow{P_1}) \cdot (\overrightarrow{P_2} - \overrightarrow{P_1}))} \in [0,\enspace\norm{\overrightarrow{P_2} - \overrightarrow{P_1}}] \\
-\nu = \sqrt{(\overrightarrow{P} - \overrightarrow{P_1}) \cdot (\overrightarrow{P_3} - \overrightarrow{P_1}))} \in [0,\enspace\norm{\overrightarrow{P_3} - \overrightarrow{P_1}}] 
+\mu = \sqrt{(\overrightarrow{P} - \overrightarrow{P_1}) \cdot (\overrightarrow{P_2} - \overrightarrow{P_1}))} \in [0,\enspace\norm{\overrightarrow{P_2} - \overrightarrow{P_1}}]\\
+\nu = \sqrt{(\overrightarrow{P} - \overrightarrow{P_1}) \cdot (\overrightarrow{P_3} - \overrightarrow{P_1}))} \in [0,\enspace\norm{\overrightarrow{P_3} - \overrightarrow{P_1}}]\\
 \end{array}
 \]
 
 %****************************************************************
 \subsection{Ray-Box}
-\parencite{Williams.ray-box.2005} \\
-\parencite{Tavian.ray-box-2d.2011} \\
-\parencite{scratchapixel.ray-plane-3d} \\
+% \parencite{scratchapixel.ray-plane-3d} 
+% \parencite{Williams.ray-box.2005}
 
-There is a octree implementation in the VR 3D world that separate the 3D world to invisible 3D boxes that each box contains a certain number of other models. It is to avoid unnecessary ray-object collision detection. In this section, I am going to first explain Ray-Box-2D collision detection, then derive out Ray-Box-3D intersection.
+There is a octree implementation \ref{section:octree} in the VR 3D world that separate the 3D world to invisible 3D boxes that each box contains a certain number of other models. It is to avoid unnecessary ray-object collision detection. In this section, I am going to first explain Ray-Box-2D collision detection \parencite{Tavian.ray-box-2d.2011}, then derive out Ray-Box-3D intersection.
 
 %****************************************************************
 \subsubsection{Ray-Box-2D}
@@ -559,56 +606,54 @@ $\because$ Known $R_0$,\enspace$R_d$,\enspace$P_1$,\enspace$P_2$
 \[
 X_1 =
 \begin{cases}
-x_{P_1} - x_{R_0} & \text{if }\;x_{R_d} > 0 \\
-x_{P_2} - x_{R_0} & \text{if }\;x_{R_d} < 0
+x_{P_1} - x_{R_0} & \text{if }\;x_{R_d} > 0\\
+x_{P_2} - x_{R_0} & \text{if }\;x_{R_d} < 0\\
 \end{cases}
 \]
 \[
 X_2 =
 \begin{cases}
-x_{P_2} - x_{R_0} & \text{if }\;x_{R_d} > 0 \\
-x_{P_1} - x_{R_0} & \text{if }\;x_{R_d} < 0
+x_{P_2} - x_{R_0} & \text{if }\;x_{R_d} > 0\\
+x_{P_1} - x_{R_0} & \text{if }\;x_{R_d} < 0\\
 \end{cases}
 \]
 \[
 \begin{array}{lr}
-t_{X_1} = \frac{X_1}{x_{R_d}} \\
-t_{X_2} = \frac{X_2}{x_{R_d}}
+t_{X_1} = \frac{X_1}{x_{R_d}}\\
+t_{X_2} = \frac{X_2}{x_{R_d}}\\
 \end{array}
 \]
 \columnbreak
 \[
 Y_1 =
 \begin{cases}
-y_{P_1} - y_{R_0} & \text{if }\;y_{R_d} > 0 \\
-y_{P_2} - y_{R_0} & \text{if }\;y_{R_d} < 0
+y_{P_1} - y_{R_0} & \text{if }\;y_{R_d} > 0\\
+y_{P_2} - y_{R_0} & \text{if }\;y_{R_d} < 0\\
 \end{cases}
 \]
 \[
 Y_2 =
 \begin{cases}
-y_{P_2} - y_{R_0} & \text{if }\;y_{R_d} > 0 \\
-y_{P_1} - y_{R_0} & \text{if }\;y_{R_d} < 0
+y_{P_2} - y_{R_0} & \text{if }\;y_{R_d} > 0\\
+y_{P_1} - y_{R_0} & \text{if }\;y_{R_d} < 0\\
 \end{cases}
 \]
 \[
 \begin{array}{lr}
-t_{Y_1} = \frac{Y_1}{y_{R_d}} \\
-t_{Y_2} = \frac{Y_2}{y_{R_d}}
+t_{Y_1} = \frac{Y_1}{y_{R_d}}\\
+t_{Y_2} = \frac{Y_2}{y_{R_d}}\\
 \end{array}
 \]
 \end{multicols}
 
-$\And$ When collision happens,  we have formula
+$\And$ When collision happens,  we have formula:
 \[
-\left\{
 \begin{array}{lr}
 \begin{aligned}
-t_{X_1} &< t_{X_2} \\
-t_{Y_1} &< t_{Y_2}
+t_{X_1} &< t_{X_2}\\
+t_{Y_1} &< t_{Y_2}\\
 \end{aligned}
 \end{array}
-\right.
 \]
 
 $\therefore$ Which is
@@ -634,42 +679,42 @@ $\because$ Known $R_0$,\enspace$R_d$,\enspace$P_1$,\enspace$P_2$
 \[
 X_1 =
 \begin{cases}
-x_{P_1} - x_{R_0} & \text{if }\;x_{R_d} > 0 \\
-x_{P_2} - x_{R_0} & \text{if }\;x_{R_d} < 0
+x_{P_1} - x_{R_0} & \text{if }\;x_{R_d} > 0\\
+x_{P_2} - x_{R_0} & \text{if }\;x_{R_d} < 0\\
 \end{cases}
 \]
 \[
 X_2 =
 \begin{cases}
-x_{P_2} - x_{R_0} & \text{if }\;x_{R_d} > 0 \\
-x_{P_1} - x_{R_0} & \text{if }\;x_{R_d} < 0
+x_{P_2} - x_{R_0} & \text{if }\;x_{R_d} > 0\\
+x_{P_1} - x_{R_0} & \text{if }\;x_{R_d} < 0\\
 \end{cases}
 \]
 \[
 \begin{array}{lr}
-t_{X_1} = \frac{X_1}{x_{R_d}} \\
-t_{X_2} = \frac{X_2}{x_{R_d}}
+t_{X_1} = \frac{X_1}{x_{R_d}}\\
+t_{X_2} = \frac{X_2}{x_{R_d}}\\
 \end{array}
 \]
 \columnbreak
 \[
 Y_1 =
 \begin{cases}
-y_{P_1} - y_{R_0} & \text{if }\;y_{R_d} > 0 \\
-y_{P_2} - y_{R_0} & \text{if }\;y_{R_d} < 0
+y_{P_1} - y_{R_0} & \text{if }\;y_{R_d} > 0\\
+y_{P_2} - y_{R_0} & \text{if }\;y_{R_d} < 0\\
 \end{cases}
 \]
 \[
 Y_2 =
 \begin{cases}
-y_{P_2} - y_{R_0} & \text{if }\;y_{R_d} > 0 \\
-y_{P_1} - y_{R_0} & \text{if }\;y_{R_d} < 0
+y_{P_2} - y_{R_0} & \text{if }\;y_{R_d} > 0\\
+y_{P_1} - y_{R_0} & \text{if }\;y_{R_d} < 0\\
 \end{cases}
 \]
 \[
 \begin{array}{lr}
-t_{Y_1} = \frac{Y_1}{y_{R_d}} \\
-t_{Y_2} = \frac{Y_2}{y_{R_d}}
+t_{Y_1} = \frac{Y_1}{y_{R_d}}\\
+t_{Y_2} = \frac{Y_2}{y_{R_d}}\\
 \end{array}
 \]
 \end{multicols}
@@ -678,21 +723,21 @@ t_{Y_2} = \frac{Y_2}{y_{R_d}}
 \[
 Z_1 =
 \begin{cases}
-z_{P_1} - z_{R_0} & \text{if }\;z_{R_d} > 0 \\
-z_{P_2} - z_{R_0} & \text{if }\;z_{R_d} < 0
+z_{P_1} - z_{R_0} & \text{if }\;z_{R_d} > 0\\
+z_{P_2} - z_{R_0} & \text{if }\;z_{R_d} < 0\\
 \end{cases}
 \]
 \[
 Z_2 =
 \begin{cases}
-z_{P_2} - z_{R_0} & \text{if }\;z_{R_d} > 0 \\
-z_{P_1} - z_{R_0} & \text{if }\;z_{R_d} < 0
+z_{P_2} - z_{R_0} & \text{if }\;z_{R_d} > 0\\
+z_{P_1} - z_{R_0} & \text{if }\;z_{R_d} < 0\\
 \end{cases}
 \]
 \[
 \begin{array}{lr}
-t_{Z_1} = \frac{Z_1}{z_{R_d}} \\
-t_{Z_2} = \frac{Z_2}{z_{R_d}}
+t_{Z_1} = \frac{Z_1}{z_{R_d}}\\
+t_{Z_2} = \frac{Z_2}{z_{R_d}}\\
 \end{array}
 \]
 \columnbreak
@@ -700,14 +745,14 @@ t_{Z_2} = \frac{Z_2}{z_{R_d}}
 \]
 \end{multicols}
 
-$\And$ When collision happens,  we have formula
+$\And$ When collision happens,  we have formula:
 \[
 \left\{
 \begin{array}{lr}
 \begin{aligned}
-t_{X_1} &< t_{X_2} \\
-t_{Y_1} &< t_{Y_2} \\
-t_{Z_1} &< t_{Z_2}
+t_{X_1} &< t_{X_2}\\
+t_{Y_1} &< t_{Y_2}\\
+t_{Z_1} &< t_{Z_2}\\
 \end{aligned}
 \end{array}
 \right.
