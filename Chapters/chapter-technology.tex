@@ -51,10 +51,13 @@ Figure \ref{fig:kml-schema} shows the KML schema. From the point of view of usab
 \end{figure}
 
 %****************************************************************
-\section{Network Data}
+\section{Network}
+\label{section:network}
 
-****************************************************************\\%####
-File server - golang\\
-Client - volley, Jsoup\\
+The key strengths of virtual reality applications is not only easy-to-use, and intuitive nature, but also the ability to incorporate new data very easily. Therefore, real-time data are very important in the environmental sciences \parencite{blower.sharing-visualizing.2007}. To do that, a web server is needed. In this project, we implemented a RESTful web server to support communication with client, along with a  file server to synchronize data. In the client side.
+
+Go (often referred to as golang \parencite{google.golang.2016}) is an open source programming language, and it is compiled, concurrent, garbage-collected, statically typed language developed at Google in late 2007. It was conceived as an answer to some of the problems we were seeing developing software infrastructure \parencite{google.talk-golang.2012}. Also, it growing fast that each month the contributors outside Google is already more then contributors inside the Go team. 
+
+We are using Go to build the server, it is well suited for developing RESTful API’s. The net/http standard library provides key methods for interacting via the http protocol. On the other hand, since our client is Android phone, we introduced Volley for transmitting network data (Volley is an open sourced HTTP library that makes networking for Android apps easier and most importantly, faster \parencite{google.volley.2016}), and jsoup (Java HTML Parser \parencite{joup.2016}) for analysing HTML format response.
 
 %****************************************************************

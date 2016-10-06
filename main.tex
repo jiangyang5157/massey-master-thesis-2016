@@ -172,6 +172,7 @@ What is the significance of the findings in short?\\
 \newcommand{\file}[1]{\texttt{\bfseries#1}}
 \newcommand{\option}[1]{\texttt{\itshape#1}}
 \newcommand{\norm}[1]{\lvert #1 \rvert} % Length of vector
+\newcommand\tab[1][1cm]{\hspace*{#1}}
 
 \include{Chapters/chapter-introduction}
 \include{Chapters/chapter-technology}
@@ -222,13 +223,7 @@ We explain how we have used Web Services to connect virtual globes with diverse 
 \\
 Recently there have been great advances in the development of “virtual globes”: software applications that display a three-dimensional representation of the entire Earth, usually based on satellite imagery, upon which new information can be superimposed.
 \\
-A key strength of virtual globes is that it is very easy to download data
-\\
-Real-time data are very important in the environmental sciences.
-\\
 (Near) real-time data can be displayed in Google Earth using the NetworkLink facility in KML. This facility allows all or part of a KML dataset to be refreshed at a fixed rate or based on the expiration time given in the HTTP header. A user can therefore download a fixed KML file containing the NetworkLink and Google Earth will automatically refresh the link, ensuring that the user always sees the latest information.
-\\
-The key strengths of virtual globe applications are their easy-to-use, intuitive nature and the ability to incorporate new data very easily.
 \\
 A key requirement for environmental scientists is to be able to visualize four dimensional data (i.e. time-dependent three-dimensional data).
 
@@ -251,9 +246,6 @@ Currency is the ability to easily adjust the data available to any given time pe
 \\
 The rapid development of virtual globes and their supporting infrastructure of imagery and servers represent a convergence of mainstream information technology and geography. Geography is increasingly becoming a central organizing principal for managing, analyzing, and visualizing the world’s information.
 \\
-
-
-
 
 
 
