@@ -12,7 +12,7 @@ This chapter presents more details of the key implementation in the project.
 The Google VR SDK repository is free and accessible from \emph{https://github.com/googlevr/gvr-android-sdk}, where we can get the necessary libraries and examples. The SDK libraries are in the libraries directory of the repository as \emph{.aar} files \parencite{google.aar-format.2016}. This project has two dependencies on \emph{base} and \emph{common} modules.
 
 %****************************************************************
-\section{OpenGL ES}
+\section{GLES and GLSL}
 
 OpenGL assumes a square, uniform coordinate system and, by default, happily draws those coordinates onto your typically non-square screen as if it is perfectly square. But the problem is that screens can vary in size and shape:
 
@@ -45,6 +45,9 @@ Vertex' & projectionM * vertex & GPU\\
 \bottomrule
 \end{tabular}
 \end{table}
+
+****************************************************************\\%####
+GLSL
 
 %****************************************************************
 \section{Server}
