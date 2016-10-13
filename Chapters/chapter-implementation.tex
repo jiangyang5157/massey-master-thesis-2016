@@ -4,20 +4,47 @@
 \label{chapter-implementation}
 \chapter{Implementation}
 
+This chapter presents more details of the key implementation in the project.
+
 %****************************************************************
 \section{Google VR SDK}
 
-****************************************************************\\%####
+The Google VR SDK repository is free and accessible from \emph{https://github.com/googlevr/gvr-android-sdk}, where we can get the necessary libraries and examples. The SDK libraries are in the libraries directory of the repository as \emph{.aar} files \parencite{google.aar-format.2016}. This project has two dependencies on \emph{base} and \emph{common} modules.
 
 %****************************************************************
 \section{OpenGL ES}
 
-****************************************************************\\%####
-Pass Perspective matrix, View matrix, and Model matrix to shader to avoid calculate MV or MVP in cpu\\
-Perspective: eye.getPerspective(float zNear, float zFar)\\
-View: eye.getEyeView() * camera.matrix\\
-camera.matrix: build by position, lookAt, up\\
-Model: translation * scale * rotation * mat(1)\\
+OpenGL assumes a square, uniform coordinate system and, by default, happily draws those coordinates onto your typically non-square screen as if it is perfectly square. But the problem is that screens can vary in size and shape:
+
+\begin{figure}[H]
+\caption[opengl-coordinates]{Default OpenGL coordinate system (left) mapped to a typical Android device screen (right) \parencite{google.opengles.2016}}
+\label{fig:opengl-coordinates}
+\centering
+\includegraphics[width=\linewidth]{Figures/opengl-coordinates.png}
+\decoRule
+\end{figure}
+
+The illustration above shows the uniform coordinate system assumed for an OpenGL frame on the left, and how these coordinates actually map to a typical device screen in landscape orientation on the right. To solve this problem, you can apply OpenGL projection modes and camera views to transform coordinates so your graphic objects have the correct proportions on any display.
+
+In order to apply projection and camera views, you create a projection matrix and a camera view matrix and apply them to the OpenGL rendering pipeline. The projection matrix recalculates the coordinates of your graphics so that they map correctly to Android device screens. The camera view matrix creates a transformation that renders objects from a specific eye position.
+
+\begin{table}[H]
+\caption{OpenGL Compute}
+\label{tab:opengl-compute}
+\centering
+\begin{tabular}{l l l l}
+\toprule
+\tabhead{What} & \tabhead{How} & \tabhead{Where}\\
+\midrule
+Model Matrix & translationMatrix * scaleMatrix * rotationMatrix * matrix(1) & CPU\\
+Camera Matrix & Matrix.setLookAtM(positionV, lookAtV, upV) & CPU\\
+View Matrix & eye.getEyeView() * cameraM & CPU\\
+Perspective Matrix & eye.getPerspective(zNear, zFar) & CPU\\
+Projection Matrix & perspectiveM * viewM * modelM & GPU\\
+Vertex' & projectionM * vertex & GPU\\
+\bottomrule
+\end{tabular}
+\end{table}
 
 %****************************************************************
 \section{Server}
@@ -400,10 +427,7 @@ A textfield is a a rectangle vertices based renderable component to display text
 
 A menu contains multi-textfield can be seen as an empty textfield based which texture is fill full a pure background color, and several  textfields are laid out on the top of it with a certain vertical dimension.
 
-A head rotation matrix (quaternion matrix \parencite{jvv.quaternions.2013}) is required for locating object in front of camera \parencite{mathworks.quaternion-rotation.2016} .
-
-****************************************************************\\%####
-quaternions\\
+A head rotation matrix (quaternion matrix \parencite{jvv.quaternions.2013}) is required for locating object in front of camera \parencite{mathworks.quaternion-rotation.2016}.
 
 %****************************************************************
 \section{Camera Movement}
@@ -431,7 +455,7 @@ v_1 = v_0 + a \times dt\\
 \end{array}
 \]
 
-The accuracy of this depends on how precision we can get for changing velocity. Considering that velocity is made of 3-axis directions, the current heading direction is required for a correct velocity calculation. Since the frame life cycle is implemented based on \parencite{Google.VR-SDK.2016}, which provide the heading direction in each frame callback. So I collect everything I need from the last frame to new frame, and update both velocity and position for each new frame.
+The accuracy of this depends on how precision we can get for changing velocity. Considering that velocity is made of 3-axis directions, the current heading direction is required for a correct velocity calculation. Since the frame life cycle is implemented based on \parencite{google.vr-sdk.2016}, which provide the heading direction in each frame callback. So I collect everything I need from the last frame to new frame, and update both velocity and position for each new frame.
 
 For updating process, first of all, 
 

@@ -4,32 +4,54 @@
 \label{chapter-technology}
 \chapter{Technology}
 
-****************************************************************\\%####
-How am I going to discover it?\\
-.... why is best suited to my aims, because …\\
+This chapter expose how I am going to discover geographic data visualization in a 3D virtual reality world by presenting some of the main technologies used in this project, along with the reason why they are suited to my aims.
 
 %****************************************************************
 \section{Android Phone}
 
-****************************************************************\\%####
+There are reasons we implemented this project on the Android device. We intent to build the virtual reality on a common and familar device in the world. Smartphone is fully deserve the title that not only it has a incredible fast growth trend in the last decade and a good promising prospect, but also they have built-in sensors that measure motion, orientation, and various environmental conditions. These sensors are capable of providing raw data with high precision and accuracy, and are useful to monitor three-dimensional device movement or positioning.
 
-%****************************************************************
-\subsection{Mobile Device}
+\begin{figure}[H]
+\caption[smartphone-shipments-forecast]{Global Smartphone Shipments Forecase \parencite{td.global-smartphone-market.2015}}
+\label{fig:smartphone-shipments-forecast}
+\centering
+\includegraphics[width=\linewidth]{Figures/smartphone-shipments-forecast.png}
+\decoRule
+\end{figure}
 
-****************************************************************\\%####
-Sensor\\
+According to data from the International Data Corporation (IDC), Android dominated the smartphone market with a share of 87.6\% in the worldwide.
 
-%****************************************************************
-\subsection{Google Cardboard}
+\begin{figure}[H]
+\caption[smartphone-os-market-share]{Smartphone OS Market Share \parencite{idc.smartphone-os-market-share.2016}}
+\label{fig:smartphone-os-market-share}
+\centering
+\includegraphics[width=\linewidth]{Figures/smartphone-os-market-share.png}
+\decoRule
+\end{figure}
 
-****************************************************************\\%####
-Google VR SDK\\
+Moreover, the perfect part is the Google VR SDK \parencite{google.vr-sdk.2016} for Android supports and the affordable Cardboard product \parencite{google.cardboard.2016} designed for different kind of mobile devices.
 
 %****************************************************************
 \section{OpenGL ES}
 
-****************************************************************\\%####
-OpenGL ES 2.0, 3.0,  3.1, 3.1 ext\\
+Android includes support for high performance 2D and 3D graphics with the Open Graphics Library, specifically, the OpenGL ES API \parencite{google.opengles.2016}. OpenGL ES is a flavor of the OpenGL specification intended for embedded devices. Android supports several versions of the OpenGL ES API:
+
+\begin{table}[H]
+\caption{OpenGL ES API specification supported by Android}
+\label{tab:opengles-spec-android}
+\centering
+\begin{tabular}{l l l}
+\toprule
+\tabhead{OpenGL ES Version} & \tabhead{Android Version}\\
+\midrule
+OpenGL ES 1.0 & Android 1.0 and higher\\
+OpenGL ES 1.1 & Android 1.0 and higher\\
+OpenGL ES 2.0 & Android 2.2 (API level 8) and higher\\
+OpenGL ES 3.0 & Android 4.3 (API level 18) and higher\\
+OpenGL ES 3.1 & Android 5.0 (API level 21) and higher\\
+\bottomrule
+\end{tabular}
+\end{table}
 
 %****************************************************************
 \section{Keyhole Markup Language}
