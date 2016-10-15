@@ -4,12 +4,12 @@
 \label{chapter-technology}
 \chapter{Technology}
 
-This chapter expose how I am going to discover geographic data visualization in a 3D virtual reality world by presenting some of the main technologies used in this project, along with the reason why they are suited to my aims.
+This chapter expose how I am going to discover geographic data visualization in a 3D virtual reality world by presenting some of the main technologies used in this project, along with the reasons why they are suited for my purpose.
 
 %****************************************************************
 \section{Android Phone}
 
-There are reasons we implemented this project on the Android device. We intent to build the virtual reality on a common and familar device in the world. Smartphone is fully deserve the title that not only it has a incredible fast growth trend in the last decade and a good promising prospect, but also they have built-in sensors that measure motion, orientation, and various environmental conditions. These sensors are capable of providing raw data with high precision and accuracy, and are useful to monitor three-dimensional device movement or positioning.
+There are reasons we implemented this project on the Android device. We intent to build the virtual reality on a common and familar device in the world. Smartphone is fully deserve the title that not only it has a incredible fast growth trend in the last decade and a good promising prospect, but also they have built-in sensors that measure motion, orientation, and various environmental conditions. These sensors are capable of providing raw data with high precision and accuracy, and are useful to monitor device movement - six degrees of freedom (DOF) - position coordinates (x, y and z offsets) and orientation (yaw, pitch and roll angles).
 
 \begin{figure}[H]
 \caption[smartphone-shipments-forecast]{Global Smartphone Shipments Forecase \parencite{td.global-smartphone-market.2015}}
@@ -32,7 +32,7 @@ According to data from the International Data Corporation (IDC), Android dominat
 Moreover, the perfect part is the Google VR SDK \parencite{google.vr-sdk.2016} for Android supports and the affordable Cardboard product \parencite{google.cardboard.2016} designed for different kind of mobile devices.
 
 %****************************************************************
-\section{OpenGL ES}
+\section{OpenGL}
 
 Android includes support for high performance 2D and 3D graphics with the Open Graphics Library, specifically, the OpenGL ES API \parencite{google.opengles.2016}. OpenGL ES is a flavor of the OpenGL specification intended for embedded devices. Android supports several versions of the OpenGL ES API:
 
@@ -56,13 +56,11 @@ OpenGL ES 3.1 & Android 5.0 (API level 21) and higher\\
 %****************************************************************
 \section{Keyhole Markup Language}
 
-We were looking for a simple markup languages that we can publish and consume data  in interoperable formats without the need for technical assistance.
+We were looking for a simple markup languages that we can publish and consume data  in interoperable formats without the need for technical assistance. In the \ref{section:literature-review}, we introduced KML (it can be combined with other supporting files such as imagery in a zip archive, producing a KMZ file), which is the markup language we are using in the project. It is not only because it can simply satisfy our application purpose, more importantly, it is supported by many virtual globes and other GIS systems and is therefore already becoming a de facto standard \parencite{blower.sharing-visualizing.2007}. Moreover, the annotations of KML features are not designed as machine readable XML, but a human readable plain text or simple HTML. Moreover, real-time data are important in the environmental sciences. The Networklink facility in KML allows all or part of dataset to be automatically refresh by the URL, to ensure the user always sees the latest information.
 
-In this section, we present Keyhole Markup Language (KML) \parencite{Google.kml.2016}, a file format to display geographic data ( (Note that KML files can be combined with other supporting files such as imagery in a zip archive, producing a KMZ file). It is an international standard maintained by the Open Geospatial Consortium, Inc. (OGC), and also it is supported by many Virtual Globes (VG) applications and other GIS systems and is therefore already becoming a de facto standard. Such as the most wellknown VG application Google Earth that has the largest community, NASA World Wind has more focus toward scientific users, and ArcGIS Explorer that is a lightweight client to the ArcGIS Server \parencite{blower.sharing-visualizing.2007}.
+From an environmental science point of view, KML is a somewhat limited language. It  can only describes simple geometric shapes on the globe (points, lines and polygons) and is not extensible. It is, in many respects, analogous to Geography Markup Language (GML) 3.0+ is much more sophisticated and allows the rich description of geospatial features such as weather fronts and radiosonde profiles. For the above reasons, KML is currently not suitable as a fully-featured, general-purpose environmental data exchange format. Nonetheless, it earns the acceptance from an increasing number of scientists. It is important to be aware of that virtual geographic data visualization (and KML) do not attempt to replace more sophisticated systems. 
 
-From an environmental science point of view, KML is a somewhat limited language. It describes only simple geometric shapes on the globe (points, lines and polygons) and is not extensible. It is, in many respects, analogous to Geography Markup Language (GML) 3.0+ is much more sophisticated and allows the rich description of geospatial features such as weather fronts and radiosonde profiles. So, KML is currently not suitable as a fully-featured, general-purpose environmental data exchange format.
-
-Figure \ref{fig:kml-schema} shows the KML schema. From the point of view of usability, KML spans a gap between very simple (e.g. GeoRSS) and more complex (GML) formats, that makes it easy for non-technical scientists to share and visualize simple geospatial information which can then be manipulated in other applications if required. Also it makes it easier for user to visualize their data quickly using a single, simple data file. Moreover, its rapidly-growing adoption by scientists, and it is important to be aware of that virtual geographic data visualization (and KML) do not attempt to replace more sophisticated systems. 
+Figure \ref{fig:kml-schema} shows the KML schema. From the point of view of usability, KML spans a gap between very simple (e.g. GeoRSS) and more complex (GML) formats, that makes it easy for non-technical scientists to share and visualize simple geospatial information which can then be manipulated in other applications if required. 
 
 \begin{figure}[H]
 \caption[kml-schema]{KML schema \parencite{Google.kml.2016}}

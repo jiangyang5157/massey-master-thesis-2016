@@ -12,7 +12,7 @@ This chapter presents more details of the key implementation in the project.
 The Google VR SDK repository is free and accessible from \emph{https://github.com/googlevr/gvr-android-sdk}, where we can get the necessary libraries and examples. The SDK libraries are in the libraries directory of the repository as \emph{.aar} files \parencite{google.aar-format.2016}. This project has two dependencies on \emph{base} and \emph{common} modules.
 
 %****************************************************************
-\section{GLES and GLSL}
+\section{OpenGL ES}
 
 OpenGL assumes a square, uniform coordinate system and, by default, happily draws those coordinates onto your typically non-square screen as if it is perfectly square. But the problem is that screens can vary in size and shape:
 
@@ -45,9 +45,6 @@ Vertex' & projectionM * vertex & GPU\\
 \bottomrule
 \end{tabular}
 \end{table}
-
-****************************************************************\\%####
-GLSL
 
 %****************************************************************
 \section{Server}
@@ -647,7 +644,7 @@ At last, we have to verify if the collision is inside of the quadrangle by putti
 %****************************************************************
 \subsection{Ray-Box}
 % \parencite{scratchapixel.ray-plane-3d} 
-% \parencite{Williams.ray-box.2005}
+% \parencite{williams.ray-box.2005}
 
 There is a octree implementation \ref{section:octree} in the VR 3D world that separate the 3D world to invisible 3D boxes that each box contains a certain number of other models. It is to avoid unnecessary ray-object collision detection. In this section, I am going to first explain Ray-Box-2D collision detection \parencite{Tavian.ray-box-2d.2011}, then derive out Ray-Box-3D intersection.
 
