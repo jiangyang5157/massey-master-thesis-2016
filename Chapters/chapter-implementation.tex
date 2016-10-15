@@ -49,7 +49,7 @@ Vertex' & projectionM * vertex & GPU\\
 %****************************************************************
 \section{Server}
 
-As mentioned in \ref{section:network}, Go is well suited and super easy for developing network. A simple localhost file server on port 8080 to serve a directory on disk (/tmp) under an alternate URL path (/files/), use StripPrefix to modify the request URL's path before the FileServer sees it.
+As mentioned in \ref{section:network}, Go is well suited and super easy for developing the network. A simple localhost file server on port 8080 to serve a directory on disk (/tmp) under an alternate URL path (/files/), use StripPrefix to modify the request URL's path before the FileServer sees it.
 
 \[
 \begin{array}{lr}
@@ -60,7 +60,7 @@ As mentioned in \ref{section:network}, Go is well suited and super easy for deve
 
 For RESTful APIs, we introduce a free framework Go-Json-Rest \parencite{ant0ine.go-json-rest.2016}, it is a thin layer designed by KISS principle (Keep it simple, stupid) and on top of native net/http package that helps building RESTful JSON APIs easily.
 
-Note that, a file server satisfied all requirement from client at this moment. Alrough the RESTful is setup, but there is no RESTful APIs is actually in use yet.
+Note that, a file server is satisfied all need from the client at this moment. Although the RESTful is setup, but there is no RESTful APIs is actually in use yet.
 
 %****************************************************************
 \subsection{Assets}
@@ -89,9 +89,9 @@ Following is the folder structure served by file server:
 \subsection{Patch}
 \label{section:patch}
 
-Patch check is happening everytime when app start. First of all, client checkout the patch file (\emph{\textbackslash assets\textbackslash static.zip}) from file server, comparing the\emph{lastModifiedTime} with local patch file, and only continue to download if local patch out of date. Once the patch file is downloaded, replace any existing files.
+Patch check is happening every time when the app starts. First of all, client checks out the patch file (\emph{\textbackslash assets\textbackslash static.zip}) from the file server, comparing the\emph{lastModifiedTime} with local patch file, and only continue to download if local patch out of date. Once the patch file is downloaded, replace any existing files.
 
-Note that a build-in default patch is included in the apk (Android app binary) in case of client disconnect from internet during the first time launch time that no available data should be avoid.
+Note that a built-in default patch is included in the apk (Android app binary) in a case of client disconnect from the internet for the first time launch time that no available data should be avoided.
 
 \begin{figure}[H]
 \caption[patch-check]{Patch Check}
@@ -111,7 +111,7 @@ A layer list shows available KML files from \emph{\textbackslash assets\textback
 \subsection{Keyhole Markup Language}
 \label{section:kml}
 
-In this project, we only take use of few feature of KML \ref{fig:kml-schema}: Container, Style, Placemark,  and NetworkLink. The KML parser we are using is based on the open-source library \code{android-maps-utils} \parencite{Google.code-kml.2016} (NetworkLink is one of the unsupported feature in the library). Main modifications are getting rid of \code{com.google.android.gms.maps.GoogleMap} dependency, and extending \code{NetworkLink} feature support in accordance with the current design pattern.
+In this project, we only take use of few feature of KML \ref{fig:kml-schema}: Container, Style, Placemark,  and NetworkLink. The KML parser we are using is based on the open-source library \code{android-maps-utils} \parencite{Google.code-kml.2016} (NetworkLink is one of the unsupported features in the library). Main modifications are getting rid of \code{com.google.android.gms.maps.GoogleMap} dependency, and extending \code{NetworkLink} feature support in accordance with the current design pattern.
 
 \begin{figure}[H]
 \caption[kml-parser-simple]{kML parser simple}
@@ -125,7 +125,7 @@ In this project, we only take use of few feature of KML \ref{fig:kml-schema}: Co
 \subsection{Octree} 
 \label{section:octree}
 
-To reduce the ray-object intersection tests,  space partitioning is needed. The main requirement is not to use a spatial data structure for an ray intersect with irregular geometry, but to determine what objects are in the same cell to avoid doing an $n^2$ check on all objects. In this case, it is spherical placemark. Therefore, we don't need overlapped volumes, and contained objects don't need to be cut on volume boundaries. It is actually 3D space partitioning process with a predefined restricted maximum number of objects in the same cell. A simple axis-aligned Octree is fully satisfy in here \ref{fig:octree-split}.
+To reduce the ray-object intersection tests,  space partitioning is needed. The main requirement is not to use a spatial data structure for a ray intersect with irregular geometry, but to determine what objects are in the same cell to avoid doing an $n^2$ check on all objects. In this case, it is spherical placemark. Therefore, we do not need overlapping volumes, and contained objects do not need to be cut on volume boundaries. It is actually 3D space partitioning process with a predefined restricted maximum number of objects in the same cell. A simple axis-aligned Octree is fully satisfied in here \ref{fig:octree-split}.
 
 \begin{figure}[H]
 \caption[octree-split]{Octree split}
@@ -135,10 +135,10 @@ To reduce the ray-object intersection tests,  space partitioning is needed. The 
 \decoRule
 \end{figure}
 
-For each box splitting process, we also generate eight indexes to indicate the relative position inside the box. These indexes are importent for the next partition, where we might need to relink contained objects to the new corresponding box. To insert a object into
-the box only if the existed contained number of objects is less then the predefined constant value, otherwise splitting the box then relink existed object and insert the new object again.
+For each box splitting process, we also generate eight indexes to indicate the relative position inside the box. These indexes are important for the next partition, where we might need to relink contained objects to the new corresponding box. To insert an object into
+the box only if the existed contained number of objects is less than the predefined constant value, otherwise splitting the box then relink existed object and insert the new object again.
 
-Integer indexes of box is defined by three boolean valuse that indicates three axis-relative value:
+Integer indexes of box is defined by three boolean value that indicates three axis-relative value:
 
 Any position\;\emph{P} in the box with known center\emph{O}:
 
@@ -190,7 +190,7 @@ Index solution:
 %****************************************************************
 \section{Earth}
 
-The Earth is created as a UV Sphere, which somewhat like latitude and longitude lines of the earth, uses rings and segments. Near the poles (both on the Z-axis with the default orientation) the vertical segments converge on the poles. UV spheres are best used in situations where you require a very smooth, symmetrical surface.
+The Earth is created as a UV Sphere, which somewhat likes latitude and longitude lines of the earth, uses rings and segments. Near the poles (both on the Z-axis with the default orientation) the vertical segments converge on the poles. UV spheres are best used in situations where you require a very smooth, symmetrical surface.
 
 \begin{figure}[H]
 \caption[uv-sphere-mapping]{UV sphere mapping}
@@ -267,7 +267,7 @@ Rounding icosphere by subdividing a face to an arbitrary level of resolution. On
 \caption[icosphere-subdivide]{Icosphere subdivide}
 \end{figure}
 
-Then, push edge's midpoints to surface of the sphere.
+Then, push edge's midpoints to the surface of the sphere.
 
 \begin{figure}[H]
 \centering
@@ -295,7 +295,7 @@ Then, push edge's midpoints to surface of the sphere.
 %****************************************************************
 \subsection{Geographic Coordinate System}
 
-A geographic coordinate system is a coordinate system that enables every location on the Earth to be specified by a set of numbers or letters, or symbols \parencite{wiki.geographic-coordinate-system.2016}. A common geodetic-mapping coordinates is latitude, longitude and altitude (LLA), which also is the raw location data read from KML.
+A geographic coordinate system is a coordinate system that enables every location on the Earth to be specified by a set of numbers or letters, or symbols \parencite{wiki.geographic-coordinate-system.2016}. A common geodetic-mapping coordinates are latitude, longitude, and altitude (LLA), which also is the raw location data read from KML.
 
 We introduce ECEF ("earth-centered, earth-fixed") coordinate system for converting  LLA coordinates to position coordinates. According to, the z-axis is pointing towards the north but it does not coincide exactly with the instantaneous earth rotational axis. The x-axis intersects the sphere of the earth at $0$ latitude and $0$ longitude \parencite{wiki.ecef.2016}.
 
@@ -372,9 +372,9 @@ At last, for this project usage, where high accuracy is not required, $a$ equals
 %****************************************************************
 \subsection{Description}
 
-Description of placemarker requires an appropriate analysis for display. The raw data of description is a set of characters that could be a normal text, an image URL, an URL returns different type of content, or maybe just some meaningless characters.
+Description of placemarker requires an appropriate analysis for display. The raw data of description is a set of characters that could be a normal text, an image URL, a URL returns different type of content, or maybe just some meaningless characters.
 
-Althrough the implementation of analysis in this project did not cover every situation, but it is flexible and extendable for more functionality.
+Although the implementation of analysis in this project did not cover every situation, but it is flexible and extendable for more functionality.
 
 \begin{figure}[H]
 \caption[description-analysis]{Description Analysis}
@@ -384,7 +384,7 @@ Althrough the implementation of analysis in this project did not cover every sit
 \decoRule
 \end{figure}
 
-In order to get an extracted content from a wikipedia page, we can transform the URL to a Wiki-API based open-search url \parencite{wiki.api.2016}, which will returns a json format raw data that we can easily get what we need from different json tags.
+In order to get an extracted content from a Wikipedia page, we can transform the URL to a Wiki-API based open-search URL \parencite{wiki.api.2016}, which will return a json format raw data that we can easily get what we need from different json tags.
 
 \[
 \begin{array}{lr}
@@ -412,7 +412,7 @@ Where $APIs$ is:
 \end{array}
 \]
 
-For $html$ parser, we introduced jsoup (it is a Java library for working with real-world HTML \parencite{joup.2016}), to get the basic information we need, such as $title$, and some other metadata. In this project, I am also use $og:description$ (one of the open graph meta tags \parencite{ogp.2014}) from the html source if it exist.
+For $html$ parser, we introduced jsoup (it is a Java library for working with real-world HTML \parencite{joup.2016}), to get the basic information we need, such as $title$, and some other metadata. In this project, I am also using $og:description$ (one of the open graph meta tags \parencite{ogp.2014}) from the HTML source if it exist.
 
 %****************************************************************
 \subsection{OBJ Model}
@@ -423,16 +423,16 @@ A simple and common OBJ format model can be loaded as an extra model for the pla
 %****************************************************************
 \section{Information Display}
 
-A textfield is a a rectangle vertices based renderable component to display text on a flat plane. Since it is a GL scene, the actual text will be drawn as a texture. By a constant width and native \code{android.text.StaticLayout} support, the height of the texture can be calculated. 
+A textfield is a rectangle vertex based renderable component to display text on a flat plane. Since it is a GL scene, the actual text will be drawn as a texture. By a constant width and native \code{android.text.StaticLayout} support, the height of the texture can be calculated. 
 
-A menu contains multi-textfield can be seen as an empty textfield based which texture is fill full a pure background color, and several  textfields are laid out on the top of it with a certain vertical dimension.
+A menu contains multi-textfield can be seen as an empty textfield based which texture is fill-full a pure background color, and several  textfields are laid out on the top of it with a certain vertical dimension.
 
 A head rotation matrix (quaternion matrix \parencite{jvv.quaternions.2013}) is required for locating object in front of camera \parencite{mathworks.quaternion-rotation.2016}.
 
 %****************************************************************
 \section{Camera Movement}
 
-In general, there are two sensors can be useful to manager camera movement: ACCELEROMETER (API level 3), LINEAR\_ACCELERATION (API level 9) and STEP\_DETECTOR (API level 19). 
+In general, there are two sensors can be useful to manage camera movement: ACCELEROMETER (API level 3), LINEAR\_ACCELERATION (API level 9) and STEP\_DETECTOR (API level 19). 
 
 LINEAR\_ACCELERATION is same as ACCELERATION which measures the acceleration force in meter per second repeatedly, except linear acceleration sensor is a synthetic sensor with gravity filtered out. 
 
@@ -444,7 +444,7 @@ x = \int v\,dt\\
 \end{array}
 \]
 
-First of all, we take the acclerometer data and remove gravity that is called gravity compensation, whatever is left is linear movement. Then we have to integrate it one to get velocity, integrated again to get position, which is called double integral. Now if the first integral creates drift, double integrals are really nasty that they create horrible drift. Because of these noise, using acceleration data it isn't so accurate, it is really hard to do any kind of linear movement \parencite{GoogleTechTalks.sensor-fusion.2010}.
+First of all, we take the accelerometer data and remove gravity that is called gravity compensation, whatever is left is linear movement. Then we have to integrate it one to get velocity, integrated again to get the position, which is called double integral. Now if the first integral creates drift, double integrals are really nasty that they create horrible drift. Because of this noise, using acceleration data it isn't so accurate, it is really hard to do any kind of linear movement \parencite{GoogleTechTalks.sensor-fusion.2010}.
 
 On the other hand, use step counter from STEP\_DETECTOR, and pedometer algorithm for pedestrian navigation, that in fact works very well for this project.
 
@@ -455,14 +455,14 @@ v_1 = v_0 + a \times dt\\
 \end{array}
 \]
 
-The accuracy of this depends on how precision we can get for changing velocity. Considering that velocity is made of 3-axis directions, the current heading direction is required for a correct velocity calculation. Since the frame life cycle is implemented based on \parencite{google.vr-sdk.2016}, which provide the heading direction in each frame callback. So I collect everything I need from the last frame to new frame, and update both velocity and position for each new frame.
+The accuracy of this depends on how precision we can get for changing velocity. Considering that velocity is made of 3-axis directions, the current heading direction is required for a correct velocity calculation. Since the frame life cycle is implemented based on \parencite{google.vr-sdk.2016}, which provide the heading direction in each frame callback. So I collect everything I need from the last frame to new frame and update both velocity and position for each new frame.
 
 For updating process, first of all, 
 
-First of all, damping is required. I reduce velocity by a percentage. It is simply for avoiding that camear taking too long to stop. Damping by percentage can stable and stop the camera in a certain of time that won't be affected by the current camera speed. 
+First of all, damping is required. I reduce velocity by a percentage. It is simply for avoiding that camera taking too long to stop. Damping by percentage can stable and stop the camera in a certain of time that won't be affected by the current camera speed. 
 
 
-Secondly, a constant value in head forwarding direction is been used as a pulse for each step. Because a step is happening instantaneously which implies $a\,dt$ made by each step is actually can be replace by a constant value.
+Secondly, a constant value in head forwarding direction is been used as a pulse for each step. Because a step is happening instantaneously which implies $a\,dt$ made by each step is actually can be replaced by a constant value.
 
 \begin{figure}[H]
 \caption[camera-movement]{Camera movement}
@@ -489,7 +489,7 @@ Pulse &\in [0,\enspace \infty)\\
 %****************************************************************
 \section{Ray Intersection}
 
-Detect collisions between ray and models is the key to allow user selecting objects in the VR would, which is one of the importent experience for user interaction.
+Detect collisions between ray and models are the key to allowing user selecting objects in the VR would, which is one of the important experience for user interaction.
 
 A ray can be describe in a equation with known ray start position \emph{$\overrightarrow{R_0}$} and ray direction \emph{$\overrightarrow{R_d}$}.
 
@@ -516,7 +516,7 @@ A point \emph{P} on the surface of sphere should match the equation:
 (x_p - x_c)^2 + (y_p - y_c)^2 + (z_p - z_c)^2 = r^2
 \end{equation}
 
-If the ray intersects with the sphere at any position\;\emph{P} must match the equation \ref{equ:ray-t} and \ref{equ:sphere-surface}. Therefor the solution of \emph{t} in the cointegrate equation implies whether or not the ray will intersect with the sphere:
+If the ray intersects with the sphere at any position\;\emph{P} must match the equation \ref{equ:ray-t} and \ref{equ:sphere-surface}. Therefore the solution of \emph{t} in the cointegrate equation implies whether or not the ray will intersect with the sphere:
 
 \[
 \begin{aligned}
@@ -632,7 +632,7 @@ t =
 \end{cases}
 \]
 
-At last, we have to verify if the collision is inside of the quadrangle by putting \emph{t} back to \ref{equ:ray-plane-intersection}, \parencite{stackoverflow.ray-plane.2014} the \emph{t} is valid only if:\\
+At last, we have to verify if the collision is inside of the quadrangle by putting \emph{t} back to \ref{equ:ray-plane-intersection}, \parencite{stackoverflow.ray-plane.2014} the \emph{t} is valid only if:
 
 \[
 \begin{array}{lr}
@@ -646,7 +646,7 @@ At last, we have to verify if the collision is inside of the quadrangle by putti
 % \parencite{scratchapixel.ray-plane-3d} 
 % \parencite{williams.ray-box.2005}
 
-There is a octree implementation \ref{section:octree} in the VR 3D world that separate the 3D world to invisible 3D boxes that each box contains a certain number of other models. It is to avoid unnecessary ray-object collision detection. In this section, I am going to first explain Ray-Box-2D collision detection \parencite{Tavian.ray-box-2d.2011}, then derive out Ray-Box-3D intersection.
+There is an octree implementation \ref{section:octree} in the VR 3D world that separates the 3D world to invisible 3D boxes that each box contains a certain number of other models. It is to avoid unnecessary ray-object collision detection. In this section, I am going to first explain Ray-Box-2D collision detection \parencite{Tavian.ray-box-2d.2011}, then derive out Ray-Box-3D intersection.
 
 %****************************************************************
 \subsubsection{Ray-Box-2D}
