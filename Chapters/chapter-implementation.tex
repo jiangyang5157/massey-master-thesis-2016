@@ -17,7 +17,7 @@ The Google VR SDK repository is free and accessible from \emph{https://github.co
 OpenGL assumes a square, uniform coordinate system and, by default, happily draws those coordinates onto your typically non-square screen as if it is perfectly square. But the problem is that screens can vary in size and shape:
 
 \begin{figure}[H]
-\caption[opengl-coordinates]{Default OpenGL coordinate system (left) mapped to a typical Android device screen (right) \parencite{google.opengles.2016}}
+\caption{Default OpenGL coordinate system (left) mapped to a typical Android device screen (right) \parencite{google.opengles.2016}}
 \label{fig:opengl-coordinates}
 \centering
 \includegraphics[width=\linewidth]{Figures/opengl-coordinates.png}
@@ -94,7 +94,7 @@ Patch check is happening every time when the app starts. First of all, client ch
 Note that a built-in default patch is included in the apk (Android app binary) in a case of client disconnect from the internet for the first time launch time that no available data should be avoided.
 
 \begin{figure}[H]
-\caption[patch-check]{Patch Check}
+\caption{Patch Check}
 \label{fig:patch-check}
 \centering
 \includegraphics[width=\linewidth]{Figures/patch-check.png}
@@ -114,7 +114,7 @@ A layer list shows available KML files from \emph{\textbackslash assets\textback
 In this project, we only take use of few feature of KML \ref{fig:kml-schema}: Container, Style, Placemark,  and NetworkLink. The KML parser we are using is not coded from scratch, but is based upon the open-source library \code{android-maps-utils} \parencite{Google.code-kml.2016} (NetworkLink is one of the unsupported features in the library). Main modifications are getting rid of \code{GoogleMap} dependency, and extending \code{NetworkLink} feature support in accordance with the current design pattern.
 
 \begin{figure}[H]
-\caption[kml-parser-simple]{kML parser simple}
+\caption{kML parser simple}
 \label{fig:kml-parser-simple}
 \centering
 \includegraphics[width=\linewidth]{Figures/kml-parser-simple.png}
@@ -128,7 +128,7 @@ In this project, we only take use of few feature of KML \ref{fig:kml-schema}: Co
 To reduce the ray-object intersection tests,  space partitioning is needed. The main requirement is not to use a spatial data structure for a ray intersect with irregular geometry, but to determine what objects are in the same cell to avoid doing an $n^2$ check on all objects. In this case, it is spherical placemark. Therefore, we do not need overlapping volumes, and contained objects do not need to be cut on volume boundaries. It is actually 3D space partitioning process with a predefined restricted maximum number of objects in the same cell. A simple axis-aligned Octree is fully satisfied in here \ref{fig:octree-split}.
 
 \begin{figure}[H]
-\caption[octree-split]{Octree split}
+\caption{Octree split}
 \label{fig:octree-split}
 \centering
 \includegraphics[width=\linewidth]{Figures/octree-split.png}
@@ -193,7 +193,7 @@ Index solution:
 The Earth is created as a UV Sphere, which somewhat likes latitude and longitude lines of the earth, uses rings and segments. Near the poles (both on the Z-axis with the default orientation) the vertical segments converge on the poles. UV spheres are best used in situations where you require a very smooth, symmetrical surface.
 
 \begin{figure}[H]
-\caption[uv-sphere-mapping]{UV sphere mapping}
+\caption{UV sphere mapping}
 \label{fig:uv-sphere-mapping}
 \centering
 \includegraphics[width=\linewidth]{Figures/uv-sphere-mapping.png}
@@ -210,7 +210,7 @@ Vertices = Rings \times Segments
 \end{equation}
 
 \begin{figure}[H]
-\caption[uv-sphere-vertex]{UV sphere vertex}
+\caption{UV sphere vertex}
 \label{fig:uv-sphere-vertex}
 \centering
 \includegraphics[width=\linewidth]{Figures/uv-sphere-vertex.png}
@@ -251,7 +251,7 @@ y = v\\
 Generation of vertices for placemarker is a recursion process of subdividing icosphere. Figure \ref{fig:icosahedron-rectangles} shows that the initial vertices of an icosahedron are the corners of three orthogonal rectangles.
 
 \begin{figure}[H]
-\caption[icosahedron-rectangles]{Icosahedron rectangles \parencite{wiki.icosahedron-rectangles.2006}}
+\caption{Icosahedron rectangles \parencite{wiki.icosahedron-rectangles.2006}}
 \label{fig:icosahedron-rectangles}
 \centering
 \includegraphics[width=\linewidth]{Figures/icosahedron-rectangles.png}
@@ -261,19 +261,21 @@ Generation of vertices for placemarker is a recursion process of subdividing ico
 Rounding icosphere by subdividing a face to an arbitrary level of resolution. One face can be subdivided into four by connecting each edge's midpoint.
 
 \begin{figure}[H]
+\caption{Icosphere subdivide}
+\label{fig:icosphere-subdivide}
 \centering
 \includegraphics[width=\linewidth]{Figures/icosphere-subdivide.png}
 \decoRule
-\caption[icosphere-subdivide]{Icosphere subdivide}
 \end{figure}
 
 Then, push edge's midpoints to the surface of the sphere.
 
 \begin{figure}[H]
+\caption{Icosphere refinement}
+\label{fig:icosphere-refinement}
 \centering
 \includegraphics[width=\linewidth]{Figures/icosphere-refinement.png}
 \decoRule
-\caption[icosphere-refinement]{Icosphere refinement}
 \end{figure}
 
 \begin{table}[H]
@@ -300,19 +302,20 @@ A geographic coordinate system is a coordinate system that enables every locatio
 We introduce ECEF ("earth-centered, earth-fixed") coordinate system for converting  LLA coordinates to position coordinates. According to, the z-axis is pointing towards the north but it does not coincide exactly with the instantaneous earth rotational axis. The x-axis intersects the sphere of the earth at $0$ latitude and $0$ longitude \parencite{wiki.ecef.2016}.
 
 \begin{figure}[H]
+\caption{earth-centered, earth-fixed \parencite{wiki.ecef.2016}}
+\label{fig:ecef}
 \centering
 \includegraphics[width=\linewidth]{Figures/ecef.png}
 \decoRule
-\caption[ecef]{earth-centered, earth-fixed \parencite{wiki.ecef.2016}}
 \end{figure}
 
 The ECEF coordinates are expressed in a reference system that is related to mapping representations. Because the earth has a complex shape, a simple, yet accurate, method to approximate the earth’s shape is required. The use of a reference ellipsoid allows for the conversion between ECEF and LLA \parencite{u-blox.datum.1999}.
 
-A reference ellipsoid can be described by a series of parameters that define its shape and which include a semi-major axis ($a$), a semi-minor axis ($b$), its first eccentricity ($e_1$) and its second eccentricity ($e_2$) as shown in Table \ref{tab:WGS-84-parameters}.
+A reference ellipsoid can be described by a series of parameters that define its shape and which include a semi-major axis ($a$), a semi-minor axis ($b$), its first eccentricity ($e_1$) and its second eccentricity ($e_2$) as shown in Table \ref{tab:wgs-84-parameters}.
 
 \begin{table}[H]
 \caption{WGS 84 parameters}
-\label{tab:WGS-84-parameters}
+\label{tab:wgs-84-parameters}
 \centering
 \begin{tabular}{l l l}
 \toprule
@@ -328,19 +331,21 @@ Second eccentricity squared & $e_2^2$ & $a^2 / b^2 - 1 = f\,(2 - f) / (1 - f)^2$
 \end{table}
 
 \begin{figure}[H]
+\caption{Ellipsoid Parameters}
+\label{fig:ellipsoid-parameters}
 \centering
 \includegraphics[width=\linewidth]{Figures/ellipsoid-parameters.png}
 \decoRule
-\caption[ellipsoid-parameters]{Ellipsoid Parameters}
 \end{figure}
 
 The conversion from LLA to ECEF is shown below.
 
 \begin{figure}[H]
+\caption{LLA to ECEF}
+\label{fig:lla2ecef}
 \centering
 \includegraphics[width=\linewidth]{Figures/lla2ecef.png}
 \decoRule
-\caption[lla2ecef]{LLA to ECEF}
 \end{figure}
 
 \[
@@ -377,7 +382,7 @@ Description of placemarker requires an appropriate analysis for display. The raw
 Although the implementation of analysis in this project did not cover every situation, but it is flexible and extendable for more functionality.
 
 \begin{figure}[H]
-\caption[description-analysis]{Description Analysis}
+\caption{Description Analysis}
 \label{fig:description-analysis}
 \centering
 \includegraphics[width=\linewidth]{Figures/description-analysis.png}
@@ -462,7 +467,7 @@ First of all, damping is required. I reduce velocity by a percentage. It is simp
 Secondly, a constant value in head forwarding direction is been used as a pulse for each step. Because a step is happening instantaneously which implies $a\,dt$ made by each step is actually can be replaced by a constant value.
 
 \begin{figure}[H]
-\caption[camera-movement]{Camera movement}
+\caption{Camera movement}
 \label{fig:camera-movement}
 \centering
 \includegraphics[width=\linewidth]{Figures/camera-movement.png}
@@ -499,7 +504,7 @@ A ray can be describe in a equation with known ray start position \emph{$\overri
 \subsection{Ray-Sphere}
 
 \begin{figure}[H]
-\caption[ray-sphere-intersection]{Ray-Sphere intersection}
+\caption{Ray-Sphere intersection}
 \label{fig:ray-sphere}
 \centering
 \includegraphics[width=\linewidth]{Figures/ray-sphere-intersection.png}
@@ -602,7 +607,7 @@ And the collision position for each \emph{t} is:
 \subsection{Ray-Plane}
 
 \begin{figure}[H]
-\caption[ray-plane-intersection]{Ray-Plane intersection}
+\caption{Ray-Plane intersection}
 \label{fig:ray-plane}
 \centering
 \includegraphics[width=\linewidth]{Figures/ray-plane-intersection.png}
@@ -649,7 +654,7 @@ There is an octree implementation \ref{section:octree} in the VR 3D world that s
 \subsubsection{Ray-Box-2D}
 
 \begin{figure}[H]
-\caption[ray-box-2d-intersection]{Ray-Box-2D intersection}
+\caption{Ray-Box-2D intersection}
 \label{fig:ray-box-2d}
 \centering
 \includegraphics[width=\linewidth]{Figures/ray-box-2d-intersection.png}
@@ -722,7 +727,7 @@ max(t_{X_1},\enspace t_{Y_1}) < min(t_{X_2},\enspace t_{Y_2})
 \subsubsection{Ray-Box-3D}
 
 \begin{figure}[H]
-\caption[ray-box-3d-intersection]{Ray-Box-3D intersection}
+\caption{Ray-Box-3D intersection}
 \label{fig:ray-box-3d}
 \centering
 \includegraphics[width=\linewidth]{Figures/ray-box-3d-intersection.png}
