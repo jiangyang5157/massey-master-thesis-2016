@@ -51,13 +51,15 @@ headsepline, % Uncomment to get a line under the header
 \usepackage{float}
 \usepackage{multicol}
 
-\renewcommand{\baselinestretch}{1.4}
+\setlength{\parskip}{\baselineskip}%
+% Override line space
+\linespread{1.4}
 
 \geometry{ % Margins
 	paper=a4paper, % Change to letterpaper for US letter
-	inner=2.5cm, % Inner margin
-	outer=3.8cm, % Outer margin
 	bindingoffset=2cm, % Binding offset
+	inner=2cm, % Inner margin
+	outer=2.5cm, % Outer margin
 	top=1.5cm, % Top margin
 	bottom=1.5cm, % Bottom margin
 	%showframe,% show how the type block is set on the page
@@ -69,7 +71,7 @@ headsepline, % Uncomment to get a line under the header
 % Informations
 %****************************************************************
 \thesistitle{Geographic Data Visualization with Immersive Virtual Reality} % Your thesis title, print it elsewhere with \ttitle
-\keywords{Geographic Information,\;Visualization,\;Virtual Reality,\;KML} % Keywords for your thesis, this is not currently used anywhere in the template, print it elsewhere with \keywordnames
+\keywords{Geographic Information,\;Visualization,\;Virtual Reality} % Keywords for your thesis, this is not currently used anywhere in the template, print it elsewhere with \keywordnames
 
 \author{Yang \textsc{Jiang}} % Your name, print it elsewhere with \authorname
 \supervisor{Dr Arno \textsc{Leist}} % Your supervisor's name, print it elsewhere with \supname
@@ -110,7 +112,7 @@ headsepline, % Uncomment to get a line under the header
 \begin{tabular}{ C{5cm} C{5cm} }
 \emph{Author} & \emph{Supervisor} \\
  {\authorname} & \href{http://www.massey.ac.nz/massey/expertise/profile.cfm?stref=359402}{\supname} \\
-\end{tabular}\\[5cm]
+\end{tabular}\\[4cm]
 \end{table}
  
 \large \textit{A thesis submitted in fulfillment of the requirements\\ for the degree of \degreename}\\[0.2cm]
@@ -169,12 +171,6 @@ We present the historical overview of visualizing geographic data and the curren
 \include{Chapters/chapter-implementation}
 \include{Chapters/chapter-discussion}
 \include{Chapters/chapter-conclusion}
-
-%****************************************************************
-% Acknowledgement
-%****************************************************************
-****************************************************************\\%####
-todo//
 
 %****************************************************************
 % Appendices

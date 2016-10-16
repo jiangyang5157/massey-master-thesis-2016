@@ -4,10 +4,34 @@
 \label{chapter-discussion}
 \chapter{Discussion}
 
-****************************************************************\\%####
-By examining the contribution of  the five human senses: sight (70\%), hearing (20\%), smell (5\%), touch (4\%), and taste (1\%) \parencite{mazuryk.vr.1996}. The immersive virtual reality can certainly improve the feedback of sight sense, and by given the existing Spatial Audio technology (such as \parencite{google.spatial-audio.2016}), it is very likely to be able to "fooling" the hearing sense. 
+%****************************************************************
+\section{Present}
 
-compare to others. etc. this allows to do similar things, google earth etc...\\
-this, strength, limitation
+Our approach to explore geographic data visualization with immersive virtual reality is to actually develop one. We take use of Google Cardboard for turning an Android phone into an immersive virtual reality device. A virtual reality-specific application is developed to import KML format geographic data source and display them in the application. The user is able to make a six degrees of freedom (DOF) - position coordinates (x, y and z offsets) and orientation (yaw, pitch and roll angles) - movement. User is able to do simple interactions: selecting a placemark; viewing the information of the placemark on a popup message board; displaying a customized 3D model (eg: OBJ model) of the placemark; or any further information from a URL (which could be a image or a piece of summarized information extracted from Wikipedia or any HTML text).
+
+By comparison to virtual globes, geographic data visualization with immersive virtual reality device allows to do similar things, but it has more easy used intuitive interface. Firstly, they can share with geographic data that created by a universal markup language (eg: KML), which means almost every data based feature in the existing virtual globe can also migration to the immersive virtual reality application. Secondly, they are both able to have a remote server database that provides synchronous data, such as a server processes the requests and delivers the result in a standard web format back to the client. 
+
+There are five human senses provide the information and passed to our brain for capturing our attention: sight (70\%), hearing (20\%), smell (5\%), touch (4\%), and taste (1\%) \parencite{mazuryk.vr.1996}. The immersive virtual reality has certainly improved the feedback of sight sense, and also by given the existing Spatial Audio technology (such as \parencite{google.spatial-audio.2016}), it is able to use a spatial audio as a simultaneous response from the user for "fooling" the hearing sense.
+
+Due to the limitation sensor fusion, there is a huge drift come from the nasty double integration process, we alternatively using the Step sensor (pedometer) as the pedestrian navigation (it is not the most logical way). It allows move forward in the current heading direction. Nonetheless, it doing very well for navigating through all scene that satisfies our application purpose.
+
+The performance of this immersive virtual reality application is good (55 - 60 FPS) when the there is less than 250 placemarks exist in the scene. Although, we have an Octree based object intersection algorithm avoid most of the invalid recursive detection, and optimized matrix reconstitution, but there is a performance limitation of actual OpenGL ES native call in the Android SDK. To solve this issues require further investigation for reducing the times of OpenGL ES render call for each frame. 
+
+Also, there is a limitation of gesture recognition and perception technology that suppress the development of immersive virtual reality technology.
+
+%****************************************************************
+\section{Future}
+
+Due to the time, and geographic data resource limitation, this project is simply developed with some unfinished features, which are very important as a geographic visualization tool, but it not particularly critical for an exploring purpose.
+
+A key requirement for environmental scientists is to be able to visualize four-dimensional data (i.e. time-dependent three-dimensional data). Indeed, we are able to visualize the environment data from the data file which created from the different period of time. We also can do a fake real-time data visualization by a certain frequently refreshing rate on both client and server, but there is a limitation on both client (performance) and server (data creation), none of them make any sense. However, an implementation of dynamic graphic animation would be excellent for improving user understanding of any environmental data visualization. That is to say, an animation transform from one piece of time-dependent data visualization to another.
+
+There are five human senses provide the information and passed to our brain for capturing our attention: sight (70\%), hearing (20\%), smell (5\%), touch (4\%), and taste (1\%) \parencite{mazuryk.vr.1996}. The immersive virtual reality has certainly improved the feedback of sight sense, and also by given the existing Spatial Audio technology (such as \parencite{google.spatial-audio.2016}), it is able to use a spatial audio as a simultaneous response from the user for "fooling" the hearing sense.
+
+One of the main features of geographic data visualization is the Level Of Detail (LOD) rendering based on distance from the viewpoint. Textures of the virtual reality environment should be separately prepared, and attached as the circumstances may require. They are updatable and detailed on different levels. It can also provide a solution for visualizing a large amount of overlapping data.
+
+Most of the geographic data markup language (eg: KML) supports multiple layers in a single file so that we need a layer switch, and more geometric shapes supporting, such as lines and polygons. Under the LOD implementation, we are able to see the architectural structure or plan if we are close enough.
+
+There is always room for improvement, especially in the immersive virtual reality visualization, when something related to human intuitive nature system, because the feeling will be always not real enough compare to the real world interaction.
 
 %****************************************************************

@@ -111,7 +111,7 @@ A layer list shows available KML files from \emph{\textbackslash assets\textback
 \subsection{Keyhole Markup Language}
 \label{section:kml}
 
-In this project, we only take use of few feature of KML \ref{fig:kml-schema}: Container, Style, Placemark,  and NetworkLink. The KML parser we are using is based on the open-source library \code{android-maps-utils} \parencite{Google.code-kml.2016} (NetworkLink is one of the unsupported features in the library). Main modifications are getting rid of \code{com.google.android.gms.maps.GoogleMap} dependency, and extending \code{NetworkLink} feature support in accordance with the current design pattern.
+In this project, we only take use of few feature of KML \ref{fig:kml-schema}: Container, Style, Placemark,  and NetworkLink. The KML parser we are using is not coded from scratch, but is based upon the open-source library \code{android-maps-utils} \parencite{Google.code-kml.2016} (NetworkLink is one of the unsupported features in the library). Main modifications are getting rid of \code{GoogleMap} dependency, and extending \code{NetworkLink} feature support in accordance with the current design pattern.
 
 \begin{figure}[H]
 \caption[kml-parser-simple]{kML parser simple}
@@ -457,10 +457,7 @@ v_1 = v_0 + a \times dt\\
 
 The accuracy of this depends on how precision we can get for changing velocity. Considering that velocity is made of 3-axis directions, the current heading direction is required for a correct velocity calculation. Since the frame life cycle is implemented based on \parencite{google.vr-sdk.2016}, which provide the heading direction in each frame callback. So I collect everything I need from the last frame to new frame and update both velocity and position for each new frame.
 
-For updating process, first of all, 
-
 First of all, damping is required. I reduce velocity by a percentage. It is simply for avoiding that camera taking too long to stop. Damping by percentage can stable and stop the camera in a certain of time that won't be affected by the current camera speed. 
-
 
 Secondly, a constant value in head forwarding direction is been used as a pulse for each step. Because a step is happening instantaneously which implies $a\,dt$ made by each step is actually can be replaced by a constant value.
 
