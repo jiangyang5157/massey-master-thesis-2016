@@ -21,8 +21,7 @@
 % to edit it. Updates would be harder. If you do make changes, please change the name of
 % the file and add a comment to make your changes more visible.
 %
-% Class license:
-% LPPL v1.3c (http://www.latex-project.org/lppl)
+% Class license: LPPL v1.3c (http://www.latex-project.org/lppl)
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -395,7 +394,7 @@ KOMA-script documentation for details.}]{fancyhdr}
 }
 
 %----------------------------------------------------------------------------------------
-%	ACKNOWLEDGEMENTS PAGE DESIGN
+%	AKNOWLEDGEMENTS PAGE DESIGN
 %----------------------------------------------------------------------------------------
 
 \newcommand{\acknowledgementname}{Acknowledgements}

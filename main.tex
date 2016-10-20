@@ -10,26 +10,25 @@
 % Steve Gunn (http://users.ecs.soton.ac.uk/srg/softwaretools/document/templates/)
 % Sunil Patel (http://www.sunilpatel.co.uk/thesis-template/)
 %
-% Template license:
-% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+% Template license: CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
 %****************************************************************
 
 %****************************************************************
-% Configurations
+%	CONFIGURATIONS
 %****************************************************************
 \documentclass[
-10pt, % The default document font size, options: 10pt, 12pt
-oneside, % Two side (alternating margins) for binding by default, uncomment to switch to one side
-chapterinoneline,% Have the chapter title next to the number in one single line
-english, % ngerman for German
-singlespacing, % Single line spacing, alternatives: onehalfspacing or doublespacing
-%draft, % Uncomment to enable draft mode (no pictures, no links, overfull hboxes indicated)
-%nolistspacing, % If the document is onehalfspacing or doublespacing, uncomment this to set spacing in lists to single
-liststotoc, % Uncomment to add the list of figures/tables/etc to the table of contents
-toctotoc, % Uncomment to add the main table of contents to the table of contents
-parskip, % Uncomment to add space between paragraphs
-%nohyperref, % Uncomment to not load the hyperref package
-headsepline, % Uncomment to get a line under the header
+	10pt, % The default document font size, options: 10pt, 12pt
+	oneside, % Two side (alternating margins) for binding by default, uncomment to switch to one side
+	chapterinoneline,% Have the chapter title next to the number in one single line
+	english, % ngerman for German
+	singlespacing, % Single line spacing, alternatives: onehalfspacing or doublespacing
+	%draft, % Uncomment to enable draft mode (no pictures, no links, overfull hboxes indicated)
+	%nolistspacing, % If the document is onehalfspacing or doublespacing, uncomment this to set spacing in lists to single
+	liststotoc, % Uncomment to add the list of figures/tables/etc to the table of contents
+	toctotoc, % Uncomment to add the main table of contents to the table of contents
+	parskip, % Uncomment to add space between paragraphs
+	%nohyperref, % Uncomment to not load the hyperref package
+	headsepline, % Uncomment to get a line under the header
 ]{MastersDoctoralThesis} % The class file specifying the document structure
 
 \usepackage[utf8]{inputenc} % Required for inputting international characters
@@ -37,10 +36,10 @@ headsepline, % Uncomment to get a line under the header
 \usepackage{palatino} % Use the Palatino font by default
 
 \usepackage[
-backend=bibtex,
-natbib=true,
-style=ieee,
-sorting=nyt
+	backend=bibtex,
+	natbib=true,
+	style=ieee,
+	sorting=nyt
 ]{biblatex}
 
 \addbibresource{Bibliographies/bibliography.bib} % The filename of the bibliography
@@ -50,6 +49,7 @@ sorting=nyt
 \def\blx@maxline{77}
 \makeatother
 
+%\usepackage[titletoc]{appendix}
 %\usepackage[fleqn]{amsmath}
 %\setlength{\mathindent}{10pt}
 \usepackage{amsmath}
@@ -74,7 +74,7 @@ sorting=nyt
 \newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 
 %****************************************************************
-% Informations
+%	INFORMATIONS
 %****************************************************************
 \thesistitle{Geographic Data Visualization with Immersive Virtual Reality} % Your thesis title, print it elsewhere with \ttitle
 \keywords{Geographic Information,\;Visualization,\;Virtual Reality} % Keywords for your thesis, this is not currently used anywhere in the template, print it elsewhere with \keywordnames
@@ -92,12 +92,12 @@ sorting=nyt
 \hypersetup{pdfkeywords=\keywordnames} % Set the PDF's keywords to your keywords
 
 %****************************************************************
-% Begin document
+%	BEGIN DOCUMENT
 %****************************************************************
 \begin{document}
 
 %****************************************************************
-% First Page
+%	FIRST PAGE
 %****************************************************************
 \frontmatter % Use roman page numbering style (i, ii, iii, iv...) for the pre-content pages
 \pagestyle{plain} % Default to the plain heading style until the thesis style is called for the body content
@@ -133,7 +133,7 @@ sorting=nyt
 \end{titlepage}
 
 %****************************************************************
-% Abstract Page
+%	ABSTRACT PAGE
 %****************************************************************
 \begin{abstract}
 \addchaptertocentry{\abstractname} % Add the abstract to the table of contents
@@ -143,22 +143,22 @@ We present the historical overview of visualizing geographic data and the curren
 \end{abstract}
 
 %****************************************************************
-% List of Contents
+%	LIST OF CONTENTS
 %****************************************************************
 \tableofcontents % Prints the main table of contents
 
 %****************************************************************
-% List of Figures
+%	LIST OF FIGURES
 %****************************************************************
 \listoffigures % Prints the list of figures
 
 %****************************************************************
-% List of Tables
+%	LIST OF TABLES
 %****************************************************************
 \listoftables % Prints the list of tables
 
 %****************************************************************
-% Chapters
+%	CHAPTERS
 %****************************************************************
 \mainmatter % Begin numeric (1,2,3...) page numbering
 \pagestyle{thesis} % Return the page headers back to the "thesis" style
@@ -179,23 +179,23 @@ We present the historical overview of visualizing geographic data and the curren
 \include{Chapters/chapter-conclusion}
 
 %****************************************************************
-% Appendices
+%	APPENDICES
 %****************************************************************
 \appendix % Cue to tell LaTeX that the following "chapters" are Appendices
-
-\include{Appendices/appendix-android-app}
-\include{Appendices/appendix-golang-server}
-\include{Appendices/appendix-thesis}
+%\begin{appendices}
+\include{Appendices/appendix-source}
+%\end{appendices}
 
 %****************************************************************
-% Bibliography
+%	BIBLIOGRAPHY
 %****************************************************************
 \printbibliography[heading=bibintoc]
 %\printbibliography[heading = subbibliography, title={Not Online}, nottype=online]
 %\printbibliography[heading = subbibliography, title={Online}, type=online]
 
 %****************************************************************
-% End document
+%	END DOCUMENT
 %****************************************************************
 \end{document}  
+
 %****************************************************************
