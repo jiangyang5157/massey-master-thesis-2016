@@ -36,7 +36,13 @@ headsepline, % Uncomment to get a line under the header
 \usepackage[T1]{fontenc} % Output font encoding for international characters
 \usepackage{palatino} % Use the Palatino font by default
 
-\usepackage[backend=bibtex,style=authoryear,natbib=true]{biblatex}
+\usepackage[
+backend=bibtex,
+natbib=true,
+style=ieee,
+sorting=nyt
+]{biblatex}
+
 \addbibresource{bibliography.bib} % The filename of the bibliography
 \usepackage[autostyle=true]{csquotes} % Required to generate language-dependent quotes in the bibliography
 
@@ -185,6 +191,8 @@ We present the historical overview of visualizing geographic data and the curren
 % Bibliography
 %****************************************************************
 \printbibliography[heading=bibintoc]
+%\printbibliography[heading = subbibliography, title={Not Online}, nottype=online]
+%\printbibliography[heading = subbibliography, title={Online}, type=online]
 
 %****************************************************************
 % End document

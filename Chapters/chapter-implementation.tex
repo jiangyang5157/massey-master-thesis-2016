@@ -9,7 +9,7 @@ This chapter presents more details of the key implementation in the project.
 %****************************************************************
 \section{Google VR SDK}
 
-The Google VR SDK repository is free and accessible from \emph{https://github.com/googlevr/gvr-android-sdk}, where we can get the necessary libraries and examples. The SDK libraries are in the libraries directory of the repository as \emph{.aar} files \parencite{google.aar-format.2016}. This project has two dependencies on \emph{base} and \emph{common} modules.
+The Google VR SDK repository is free and accessible from \emph{https://github.com/googlevr/gvr-android-sdk}, where we can get the necessary libraries and examples. The SDK libraries are in the libraries directory of the repository as \emph{.aar} files \cite{google.aar-format.2016}. This project has two dependencies on \emph{base} and \emph{common} modules.
 
 %****************************************************************
 \section{OpenGL ES}
@@ -17,7 +17,7 @@ The Google VR SDK repository is free and accessible from \emph{https://github.co
 OpenGL assumes a square, uniform coordinate system and, by default, happily draws those coordinates onto your typically non-square screen as if it is perfectly square. But the problem is that screens can vary in size and shape:
 
 \begin{figure}[H]
-\caption{Default OpenGL coordinate system (left) mapped to a typical Android device screen (right) \parencite{google.opengles.2016}}
+\caption{Default OpenGL coordinate system (left) mapped to a typical Android device screen (right) \cite{google.opengles.2016}}
 \label{fig:opengl-coordinates}
 \centering
 \includegraphics[width=\linewidth]{Figures/opengl-coordinates.png}
@@ -58,7 +58,7 @@ As mentioned in \ref{section:network}, Go is well suited and super easy for deve
 \end{array}
 \]
 
-For RESTful APIs, we introduce a free framework Go-Json-Rest \parencite{ant0ine.go-json-rest.2016}, it is a thin layer designed by KISS principle (Keep it simple, stupid) and on top of native net/http package that helps building RESTful JSON APIs easily.
+For RESTful APIs, we introduce a free framework Go-Json-Rest \cite{antoine.go-json-rest.2016}, it is a thin layer designed by KISS principle (Keep it simple, stupid) and on top of native net/http package that helps building RESTful JSON APIs easily.
 
 Note that, a file server is satisfied all need from the client at this moment. Although the RESTful is setup, but there is no RESTful APIs is actually in use yet.
 
@@ -111,7 +111,7 @@ A layer list shows available KML files from \emph{\textbackslash assets\textback
 \subsection{Keyhole Markup Language}
 \label{section:kml}
 
-In this project, we only take use of few feature of KML \ref{fig:kml-schema}: Container, Style, Placemark,  and NetworkLink. The KML parser we are using is not coded from scratch, but is based upon the open-source library \code{android-maps-utils} \parencite{Google.code-kml.2016} (NetworkLink is one of the unsupported features in the library). Main modifications are getting rid of \code{GoogleMap} dependency, and extending \code{NetworkLink} feature support in accordance with the current design pattern.
+In this project, we only take use of few feature of KML \ref{fig:kml-schema}: Container, Style, Placemark,  and NetworkLink. The KML parser we are using is not coded from scratch, but is based upon the open-source library \code{android-maps-utils} \cite{google.code-kml.2016} (NetworkLink is one of the unsupported features in the library). Main modifications are getting rid of \code{GoogleMap} dependency, and extending \code{NetworkLink} feature support in accordance with the current design pattern.
 
 \begin{figure}[H]
 \caption{kML parser simple}
@@ -251,7 +251,7 @@ y = v\\
 Generation of vertices for placemarker is a recursion process of subdividing icosphere. Figure \ref{fig:icosahedron-rectangles} shows that the initial vertices of an icosahedron are the corners of three orthogonal rectangles.
 
 \begin{figure}[H]
-\caption{Icosahedron rectangles \parencite{wiki.icosahedron-rectangles.2006}}
+\caption{Icosahedron rectangles \cite{wiki.icosahedron-rectangles.2006}}
 \label{fig:icosahedron-rectangles}
 \centering
 \includegraphics[width=\linewidth]{Figures/icosahedron-rectangles.png}
@@ -297,19 +297,19 @@ Then, push edge's midpoints to the surface of the sphere.
 %****************************************************************
 \subsection{Geographic Coordinate System}
 
-A geographic coordinate system is a coordinate system that enables every location on the Earth to be specified by a set of numbers or letters, or symbols \parencite{wiki.geographic-coordinate-system.2016}. A common geodetic-mapping coordinates are latitude, longitude, and altitude (LLA), which also is the raw location data read from KML.
+A geographic coordinate system is a coordinate system that enables every location on the Earth to be specified by a set of numbers or letters, or symbols \cite{wiki.geographic-coordinate-system.2016}. A common geodetic-mapping coordinates are latitude, longitude, and altitude (LLA), which also is the raw location data read from KML.
 
-We introduce ECEF ("earth-centered, earth-fixed") coordinate system for converting  LLA coordinates to position coordinates. According to, the z-axis is pointing towards the north but it does not coincide exactly with the instantaneous earth rotational axis. The x-axis intersects the sphere of the earth at $0$ latitude and $0$ longitude \parencite{wiki.ecef.2016}.
+We introduce ECEF ("earth-centered, earth-fixed") coordinate system for converting  LLA coordinates to position coordinates. According to, the z-axis is pointing towards the north but it does not coincide exactly with the instantaneous earth rotational axis. The x-axis intersects the sphere of the earth at $0$ latitude and $0$ longitude \cite{wiki.ecef.2016}.
 
 \begin{figure}[H]
-\caption{earth-centered, earth-fixed \parencite{wiki.ecef.2016}}
+\caption{earth-centered, earth-fixed \cite{wiki.ecef.2016}}
 \label{fig:ecef}
 \centering
 \includegraphics[width=\linewidth]{Figures/ecef.png}
 \decoRule
 \end{figure}
 
-The ECEF coordinates are expressed in a reference system that is related to mapping representations. Because the earth has a complex shape, a simple, yet accurate, method to approximate the earth’s shape is required. The use of a reference ellipsoid allows for the conversion between ECEF and LLA \parencite{u-blox.datum.1999}.
+The ECEF coordinates are expressed in a reference system that is related to mapping representations. Because the earth has a complex shape, a simple, yet accurate, method to approximate the earth’s shape is required. The use of a reference ellipsoid allows for the conversion between ECEF and LLA \cite{ublox.datum.1999}.
 
 A reference ellipsoid can be described by a series of parameters that define its shape and which include a semi-major axis ($a$), a semi-minor axis ($b$), its first eccentricity ($e_1$) and its second eccentricity ($e_2$) as shown in Table \ref{tab:wgs-84-parameters}.
 
@@ -389,7 +389,7 @@ Although the implementation of analysis in this project did not cover every situ
 \decoRule
 \end{figure}
 
-In order to get an extracted content from a Wikipedia page, we can transform the URL to a Wiki-API based open-search URL \parencite{wiki.api.2016}, which will return a json format raw data that we can easily get what we need from different json tags.
+In order to get an extracted content from a Wikipedia page, we can transform the URL to a Wiki-API based open-search URL \cite{wiki.api.2016}, which will return a json format raw data that we can easily get what we need from different json tags.
 
 \[
 \begin{array}{lr}
@@ -417,13 +417,13 @@ Where $APIs$ is:
 \end{array}
 \]
 
-For $html$ parser, we introduced jsoup (it is a Java library for working with real-world HTML \parencite{joup.2016}), to get the basic information we need, such as $title$, and some other metadata. In this project, I am also using $og:description$ (one of the open graph meta tags \parencite{ogp.2014}) from the HTML source if it exist.
+For $html$ parser, we introduced jsoup (it is a Java library for working with real-world HTML \cite{joup.2016}), to get the basic information we need, such as $title$, and some other metadata. In this project, I am also using $og:description$ (one of the open graph meta tags \cite{ogp.2014}) from the HTML source if it exist.
 
 %****************************************************************
 \subsection{OBJ Model}
 \label{section:obj-model}
 
-A simple and common OBJ format model can be loaded as an extra model for the placemarker. OBJ model can be generated by Blender \parencite{blender.2016}.  A simple OBJ parser is created only support v (vertex indices), vn (vertex normals), fv (face vertex), fvn (face vertex normals), and MTL syntax is ignored \parencite{hwshen.obj-parser.2011}.
+A simple and common OBJ format model can be loaded as an extra model for the placemarker. OBJ model can be generated by Blender \cite{blender.2016}.  A simple OBJ parser is created only support v (vertex indices), vn (vertex normals), fv (face vertex), fvn (face vertex normals), and MTL syntax is ignored \cite{shen.obj-parser.2011}.
 
 %****************************************************************
 \section{Information Display}
@@ -432,7 +432,7 @@ A textfield is a rectangle vertex based renderable component to display text on 
 
 A menu contains multi-textfield can be seen as an empty textfield based which texture is fill-full a pure background color, and several  textfields are laid out on the top of it with a certain vertical dimension.
 
-A head rotation matrix (quaternion matrix \parencite{jvv.quaternions.2013}) is required for locating object in front of camera \parencite{mathworks.quaternion-rotation.2016}.
+A head rotation matrix (quaternion matrix \cite{jvv.quaternions.2013}) is required for locating object in front of camera \cite{mathworks.quaternion-rotation.2016}.
 
 %****************************************************************
 \section{Camera Movement}
@@ -449,7 +449,7 @@ x = \int v\,dt\\
 \end{array}
 \]
 
-First of all, we take the accelerometer data and remove gravity that is called gravity compensation, whatever is left is linear movement. Then we have to integrate it one to get velocity, integrated again to get the position, which is called double integral. Now if the first integral creates drift, double integrals are really nasty that they create horrible drift. Because of this noise, using acceleration data it isn't so accurate, it is really hard to do any kind of linear movement \parencite{GoogleTechTalks.sensor-fusion.2010}.
+First of all, we take the accelerometer data and remove gravity that is called gravity compensation, whatever is left is linear movement. Then we have to integrate it one to get velocity, integrated again to get the position, which is called double integral. Now if the first integral creates drift, double integrals are really nasty that they create horrible drift. Because of this noise, using acceleration data it isn't so accurate, it is really hard to do any kind of linear movement \cite{google.sensor-fusion.2010}.
 
 On the other hand, use step counter from STEP\_DETECTOR, and pedometer algorithm for pedestrian navigation, that in fact works very well for this project.
 
@@ -460,7 +460,7 @@ v_1 = v_0 + a \times dt\\
 \end{array}
 \]
 
-The accuracy of this depends on how precision we can get for changing velocity. Considering that velocity is made of 3-axis directions, the current heading direction is required for a correct velocity calculation. Since the frame life cycle is implemented based on \parencite{google.vr-sdk.2016}, which provide the heading direction in each frame callback. So I collect everything I need from the last frame to new frame and update both velocity and position for each new frame.
+The accuracy of this depends on how precision we can get for changing velocity. Considering that velocity is made of 3-axis directions, the current heading direction is required for a correct velocity calculation. Since the frame life cycle is implemented based on \cite{google.vr-sdk.2016}, which provide the heading direction in each frame callback. So I collect everything I need from the last frame to new frame and update both velocity and position for each new frame.
 
 First of all, damping is required. I reduce velocity by a percentage. It is simply for avoiding that camera taking too long to stop. Damping by percentage can stable and stop the camera in a certain of time that won't be affected by the current camera speed. 
 
@@ -634,7 +634,7 @@ t =
 \end{cases}
 \]
 
-At last, we have to verify if the collision is inside of the quadrangle by putting \emph{t} back to \ref{equ:ray-plane-intersection}, \parencite{stackoverflow.ray-plane.2014} the \emph{t} is valid only if:
+At last, we have to verify if the collision is inside of the quadrangle by putting \emph{t} back to \ref{equ:ray-plane-intersection}, \cite{user3146587.ray-plane.2014} the \emph{t} is valid only if:
 
 \[
 \begin{array}{lr}
@@ -645,10 +645,10 @@ At last, we have to verify if the collision is inside of the quadrangle by putti
 
 %****************************************************************
 \subsection{Ray-Box}
-% \parencite{scratchapixel.ray-plane-3d} 
-% \parencite{williams.ray-box.2005}
+% \cite{scratchapixel.ray-plane-3d}
+% \cite{williams.ray-box.2005}
 
-There is an octree implementation \ref{section:octree} in the VR 3D world that separates the 3D world to invisible 3D boxes that each box contains a certain number of other models. It is to avoid unnecessary ray-object collision detection. In this section, I am going to first explain Ray-Box-2D collision detection \parencite{Tavian.ray-box-2d.2011}, then derive out Ray-Box-3D intersection.
+There is an octree implementation \ref{section:octree} in the VR 3D world that separates the 3D world to invisible 3D boxes that each box contains a certain number of other models. It is to avoid unnecessary ray-object collision detection. In this section, I am going to first explain Ray-Box-2D collision detection \cite{tavian.ray-box-2d.2011}, then derive out Ray-Box-3D intersection.
 
 %****************************************************************
 \subsubsection{Ray-Box-2D}
