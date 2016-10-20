@@ -17,7 +17,7 @@ The Google VR SDK repository is free and accessible from \emph{https://github.co
 OpenGL assumes a square, uniform coordinate system and, by default, happily draws those coordinates onto your typically non-square screen as if it is perfectly square. But the problem is that screens can vary in size and shape:
 
 \begin{figure}[H]
-\caption{Default OpenGL coordinate system (left) mapped to a typical Android device screen (right) \cite{google.opengles.2016}}
+\caption[OpenGL coordinate system mapping]{Default OpenGL coordinate system (left) mapped to a typical Android device screen (right) \cite{google.opengles.2016}}
 \label{fig:opengl-coordinates}
 \centering
 \includegraphics[width=\linewidth]{Figures/opengl-coordinates.png}
@@ -29,7 +29,7 @@ The illustration above shows the uniform coordinate system assumed for an OpenGL
 In order to apply projection and camera views, you create a projection matrix and a camera view matrix and apply them to the OpenGL rendering pipeline. The projection matrix recalculates the coordinates of your graphics so that they map correctly to Android device screens. The camera view matrix creates a transformation that renders objects from a specific eye position.
 
 \begin{table}[H]
-\caption{OpenGL Compute}
+\caption{OpenGL compute}
 \label{tab:opengl-compute}
 \centering
 \begin{tabular}{l l l l}
@@ -68,7 +68,7 @@ Note that, a file server is satisfied all need from the client at this moment. A
 Following is the folder structure served by file server:
 
 \begin{table}[H]
-\caption{Assets Structure}
+\caption{Assets structure}
 \label{tab:assets-structure}
 \centering
 \begin{tabular}{l l l}
@@ -94,7 +94,7 @@ Patch check is happening every time when the app starts. First of all, client ch
 Note that a built-in default patch is included in the apk (Android app binary) in a case of client disconnect from the internet for the first time launch time that no available data should be avoided.
 
 \begin{figure}[H]
-\caption{Patch Check}
+\caption{Patch check}
 \label{fig:patch-check}
 \centering
 \includegraphics[width=\linewidth]{Figures/patch-check.png}
@@ -153,7 +153,7 @@ dz &= P_z - O_z\\
 \]
 
 \begin{table}[H]
-\caption{Octree Octant}
+\caption{Octree octant}
 \label{tab:octree-octant}
 \centering
 \begin{tabular}{l l l l}
@@ -251,7 +251,7 @@ y = v\\
 Generation of vertices for placemarker is a recursion process of subdividing icosphere. Figure \ref{fig:icosahedron-rectangles} shows that the initial vertices of an icosahedron are the corners of three orthogonal rectangles.
 
 \begin{figure}[H]
-\caption{Icosahedron rectangles \cite{wiki.icosahedron-rectangles.2006}}
+\caption[Icosahedron rectangles]{Icosahedron rectangles \cite{wiki.icosahedron-rectangles.2006}}
 \label{fig:icosahedron-rectangles}
 \centering
 \includegraphics[width=\linewidth]{Figures/icosahedron-rectangles.png}
@@ -302,7 +302,7 @@ A geographic coordinate system is a coordinate system that enables every locatio
 We introduce ECEF ("earth-centered, earth-fixed") coordinate system for converting  LLA coordinates to position coordinates. According to, the z-axis is pointing towards the north but it does not coincide exactly with the instantaneous earth rotational axis. The x-axis intersects the sphere of the earth at $0$ latitude and $0$ longitude \cite{wiki.ecef.2016}.
 
 \begin{figure}[H]
-\caption{earth-centered, earth-fixed \cite{wiki.ecef.2016}}
+\caption[ECEF]{Earth-centered, earth-fixed \cite{wiki.ecef.2016}}
 \label{fig:ecef}
 \centering
 \includegraphics[width=\linewidth]{Figures/ecef.png}
@@ -331,7 +331,7 @@ Second eccentricity squared & $e_2^2$ & $a^2 / b^2 - 1 = f\,(2 - f) / (1 - f)^2$
 \end{table}
 
 \begin{figure}[H]
-\caption{Ellipsoid Parameters}
+\caption{Ellipsoid parameters}
 \label{fig:ellipsoid-parameters}
 \centering
 \includegraphics[width=\linewidth]{Figures/ellipsoid-parameters.png}
@@ -382,7 +382,7 @@ Description of placemarker requires an appropriate analysis for display. The raw
 Although the implementation of analysis in this project did not cover every situation, but it is flexible and extendable for more functionality.
 
 \begin{figure}[H]
-\caption{Description Analysis}
+\caption{Description analysis}
 \label{fig:description-analysis}
 \centering
 \includegraphics[width=\linewidth]{Figures/description-analysis.png}
@@ -654,7 +654,7 @@ There is an octree implementation \ref{section:octree} in the VR 3D world that s
 \subsubsection{Ray-Box-2D}
 
 \begin{figure}[H]
-\caption{Ray-Box-2D intersection}
+\caption{Ray-Box 2D intersection}
 \label{fig:ray-box-2d}
 \centering
 \includegraphics[width=\linewidth]{Figures/ray-box-2d-intersection.png}
@@ -727,7 +727,7 @@ max(t_{X_1},\enspace t_{Y_1}) < min(t_{X_2},\enspace t_{Y_2})
 \subsubsection{Ray-Box-3D}
 
 \begin{figure}[H]
-\caption{Ray-Box-3D intersection}
+\caption{Ray-Box 3D intersection}
 \label{fig:ray-box-3d}
 \centering
 \includegraphics[width=\linewidth]{Figures/ray-box-3d-intersection.png}
