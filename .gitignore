@@ -1,5 +1,2 @@
-# Created by .ignore support plugin (hsz.mobi)
-.gitignore
-.idea/
-*.log
+main.log
 main.synctex.gz
