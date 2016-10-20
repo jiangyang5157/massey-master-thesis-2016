@@ -394,7 +394,7 @@ KOMA-script documentation for details.}]{fancyhdr}
 }
 
 %----------------------------------------------------------------------------------------
-%	AKNOWLEDGEMENTS PAGE DESIGN
+%	ACKNOWLEDGEMENTS PAGE DESIGN
 %----------------------------------------------------------------------------------------
 
 \newcommand{\acknowledgementname}{Acknowledgements}
