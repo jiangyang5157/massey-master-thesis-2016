@@ -5,8 +5,6 @@
 \chapter{Discussion}
 
 %****************************************************************
-\section{Present}
-
 Our approach to explore geographic data visualization with immersive virtual reality is to actually develop one. We take use of Google Cardboard for turning an Android phone into an immersive virtual reality device. A virtual reality-specific application is developed to import KML format geographic data source and display them in the application. The user is able to make a six degrees of freedom (DOF) - position coordinates (x, y and z offsets) and orientation (yaw, pitch and roll angles) - movement. User is able to do simple interactions: selecting a placemark; viewing the information of the placemark on a popup message board; displaying a customized 3D model (eg: OBJ model) of the placemark; or any further information from a URL (which could be a image or a piece of summarized information extracted from Wikipedia or any HTML text).
 
 By comparison to virtual globes, geographic data visualization with immersive virtual reality device allows to do similar things, but it has more easy used intuitive interface. Firstly, they can share with geographic data that created by a universal markup language (eg: KML), which means almost every data based feature in the existing virtual globe can also migration to the immersive virtual reality application. Secondly, they are both able to have a remote server database that provides synchronous data, such as a server processes the requests and delivers the result in a standard web format back to the client. 
@@ -18,9 +16,6 @@ Due to the limitation sensor fusion, there is a huge drift come from the nasty d
 The performance of this immersive virtual reality application is good (55 - 60 FPS) when the there is less than 250 placemarks exist in the scene. Although, we have an Octree based object intersection algorithm avoid most of the invalid recursive detection, and optimized matrix reconstitution, but there is a performance limitation of actual OpenGL ES native call in the Android SDK. To solve this issues require further investigation for reducing the times of OpenGL ES render call for each frame. 
 
 Also, there is a limitation of gesture recognition and perception technology that suppress the development of immersive virtual reality technology.
-
-%****************************************************************
-\section{Future}
 
 Due to the time, and geographic data resource limitation, this project is simply developed with some unfinished features, which are very important as a geographic visualization tool, but it not particularly critical for an exploring purpose.
 
