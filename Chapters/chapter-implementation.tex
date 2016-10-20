@@ -221,8 +221,8 @@ For each vertex $P$ on sphere from ring $r$ and segment $s$, we have:
 
 \[
 \begin{array}{lr}
-v = r \times  \frac{1}{rings - 1}\\
-u = s \times  \frac{1}{segments - 1}\\
+v = r \times  \dfrac{1}{rings - 1}\\
+u = s \times  \dfrac{1}{segments - 1}\\
 \measuredangle \alpha = v \times \pi\\
 \measuredangle \beta = u \times 2\,\pi\\
 \end{array}
@@ -353,7 +353,7 @@ The conversion from LLA to ECEF is shown below.
 \begin{aligned}
 x &= (N + h)\,\cos(\varphi)\,\cos(\lambda)\\
 y &= (N + h)\,\cos(\varphi)\,\sin(\lambda)\\
-z &= (\frac{b^2}{a^2}\,N + h)\,\sin(\varphi)\\
+z &= (\dfrac{b^2}{a^2}\,N + h)\,\sin(\varphi)\\
 \end{aligned}
 \end{array}
 \]
@@ -367,7 +367,7 @@ Where
 \lambda &= \text{longitude}\\
 h &= \text{height above ellipsoid (meters)}\\
 N &= \text{Radius of Curvature (meters), defined as:}\\
-&= \frac{a}{\sqrt{1 - e^2\,\sin(\varphi)^2}}\\
+&= \dfrac{a}{\sqrt{1 - e^2\,\sin(\varphi)^2}}\\
 \end{aligned}
 \end{array}
 \]
@@ -542,8 +542,8 @@ At this point, we are able to solved the \emph{t}:
 \[
 t =
 \begin{cases}
-\frac{-b \pm \sqrt{b^2 - 4\,a\,c}}{2\,a} & \text{if }\;b^2 - 4\,a\,c > 0\\
-\frac{-b}{2\,a} & \text{if }\; b^2 - 4\,a\,c = 0\\
+\dfrac{-b \pm \sqrt{b^2 - 4\,a\,c}}{2\,a} & \text{if }\;b^2 - 4\,a\,c > 0\\
+\dfrac{-b}{2\,a} & \text{if }\; b^2 - 4\,a\,c = 0\\
 \varnothing & \text{if }\; b^2 - 4\,a\,c < 0\\
 \end{cases}
 \]
@@ -581,8 +581,8 @@ c = \overrightarrow{V_{c\_R_0}} \cdot \overrightarrow{V_{c\_R_0}} \cdot r^2\\
 $\because$ The formula for \emph{t} can also be optimized
 \[
 \begin{array}{lr}
-\frac{-b \pm \sqrt{b^2 - 4\,a\,c}}{2\,a} = -\alpha \pm \sqrt{\beta}\\
-\alpha = \frac{1}{2}\,b\\
+\dfrac{-b \pm \sqrt{b^2 - 4\,a\,c}}{2\,a} = -\alpha \pm \sqrt{\beta}\\
+\alpha = \dfrac{1}{2}\,b\\
 \beta = \alpha^2 - c\\
 \end{array}
 \]
@@ -629,7 +629,7 @@ Solution for the \emph{t} is:
 \[
 t =
 \begin{cases}
-\frac{-\overrightarrow{N} \cdot (\overrightarrow{R_0} - \overrightarrow{P_1})}{\overrightarrow{N} \cdot \overrightarrow{R_d}} & \text{if }\;\overrightarrow{N} \cdot \overrightarrow{R_d} \nsim 0\\
+\dfrac{-\overrightarrow{N} \cdot (\overrightarrow{R_0} - \overrightarrow{P_1})}{\overrightarrow{N} \cdot \overrightarrow{R_d}} & \text{if }\;\overrightarrow{N} \cdot \overrightarrow{R_d} \nsim 0\\
 \varnothing & \text{if }\;\overrightarrow{N} \cdot \overrightarrow{R_d} \sim 0\\
 \end{cases}
 \]
@@ -680,8 +680,8 @@ x_{P_1} - x_{R_0} & \text{if }\;x_{R_d} < 0\\
 \]
 \[
 \begin{array}{lr}
-t_{X_1} = \frac{X_1}{x_{R_d}}\\
-t_{X_2} = \frac{X_2}{x_{R_d}}\\
+t_{X_1} = \dfrac{X_1}{x_{R_d}}\\
+t_{X_2} = \dfrac{X_2}{x_{R_d}}\\
 \end{array}
 \]
 \columnbreak
@@ -701,8 +701,8 @@ y_{P_1} - y_{R_0} & \text{if }\;y_{R_d} < 0\\
 \]
 \[
 \begin{array}{lr}
-t_{Y_1} = \frac{Y_1}{y_{R_d}}\\
-t_{Y_2} = \frac{Y_2}{y_{R_d}}\\
+t_{Y_1} = \dfrac{Y_1}{y_{R_d}}\\
+t_{Y_2} = \dfrac{Y_2}{y_{R_d}}\\
 \end{array}
 \]
 \end{multicols}
@@ -753,8 +753,8 @@ x_{P_1} - x_{R_0} & \text{if }\;x_{R_d} < 0\\
 \]
 \[
 \begin{array}{lr}
-t_{X_1} = \frac{X_1}{x_{R_d}}\\
-t_{X_2} = \frac{X_2}{x_{R_d}}\\
+t_{X_1} = \dfrac{X_1}{x_{R_d}}\\
+t_{X_2} = \dfrac{X_2}{x_{R_d}}\\
 \end{array}
 \]
 \columnbreak
@@ -774,8 +774,8 @@ y_{P_1} - y_{R_0} & \text{if }\;y_{R_d} < 0\\
 \]
 \[
 \begin{array}{lr}
-t_{Y_1} = \frac{Y_1}{y_{R_d}}\\
-t_{Y_2} = \frac{Y_2}{y_{R_d}}\\
+t_{Y_1} = \dfrac{Y_1}{y_{R_d}}\\
+t_{Y_2} = \dfrac{Y_2}{y_{R_d}}\\
 \end{array}
 \]
 \end{multicols}
@@ -797,8 +797,8 @@ z_{P_1} - z_{R_0} & \text{if }\;z_{R_d} < 0\\
 \]
 \[
 \begin{array}{lr}
-t_{Z_1} = \frac{Z_1}{z_{R_d}}\\
-t_{Z_2} = \frac{Z_2}{z_{R_d}}\\
+t_{Z_1} = \dfrac{Z_1}{z_{R_d}}\\
+t_{Z_2} = \dfrac{Z_2}{z_{R_d}}\\
 \end{array}
 \]
 \columnbreak
