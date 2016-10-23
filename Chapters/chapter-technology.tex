@@ -4,11 +4,12 @@
 \label{chapter-technology}
 \chapter{Technology}
 
-%****************************************************************
-\section{Android Phone}
+In this chapter, details of the related technologies are presented. They are Android smartphone, a low-cost way to experience immersive virtual reality environment; OpenGL ES in Android; KML for geographic visualization; Golang RESTful web server for managing data in the back-end.
 
-%identify an appropriate VR devices, that is to say, a common, customer-friendly devices that require a minimum equipment cost.
-There are reasons we implemented this project on the Android device. We intend to build the virtual reality on a common and familiar device in the world. The smartphone fully deserves the title that not only it has an incredibly fast growth trend in the last decade and a good promising prospect, but also they have built-in sensors that measure motion, orientation and various environmental conditions. These sensors are capable of providing raw data with high precision and accuracy and are useful to monitor device movement - six degrees of freedom (DOF) - position coordinates (x, y and z offsets) and orientation (yaw, pitch and roll angles).
+%****************************************************************
+\section{Virtual Reality Device}
+
+There are following reasons for using Android smartphone as the virtual reality device. The intention is to identify immersive virtual reality device that not only low-cost but also a standard, customer-friendly device. That is the smartphone, and it had an incredibly fast growth trend in the last few years and a good promising market prospect \ref{fig:smartphone-shipments-forecast}. After all, it contains all the necessary sensors and positioning systems to measure motion and accurately track device movements - Six degrees of freedom (DOF) - position coordinates (x, y and z offsets) and orientation (yaw, pitch and roll angles). Additionally, 15\$ Google Cardboard kit turns Android or iOS smartphone to immersive virtual reality device. According to International Data Corporation (IDC), Android dominated the smartphone market with a share of 87.6\% in the worldwide \ref{fig:smartphone-os-market-share}. Moreover, there is an existing Google VR SDK \cite{google.vr-sdk.2016} for Android supports.
 
 \begin{figure}[H]
 \caption[Global Smartphone Shipments Forecase]{Global Smartphone Shipments Forecase \cite{tony.global-smartphone-market.2015}}
@@ -18,8 +19,6 @@ There are reasons we implemented this project on the Android device. We intend t
 \decoRule
 \end{figure}
 
-According to data from the International Data Corporation (IDC), Android dominated the smartphone market with a share of 87.6\% in the worldwide.
-
 \begin{figure}[H]
 \caption[Smartphone OS Market Share]{Smartphone OS Market Share \cite{idc.smartphone-os-market-share.2016}}
 \label{fig:smartphone-os-market-share}
@@ -28,10 +27,8 @@ According to data from the International Data Corporation (IDC), Android dominat
 \decoRule
 \end{figure}
 
-Moreover, the perfect part is the Google VR SDK \cite{google.vr-sdk.2016} for Android supports and the affordable Cardboard product \cite{google.cardboard.2016} designed for different kind of mobile devices.
-
 %****************************************************************
-\section{OpenGL}
+\section{OpenGL ES}
 
 Android includes support for high-performance 2D and 3D graphics with the Open Graphics Library, specifically, the OpenGL ES API \cite{google.opengles.2016}. OpenGL ES is a flavor of the OpenGL specification intended for embedded devices. Android supports several versions of the OpenGL ES API:
 
@@ -53,7 +50,7 @@ OpenGL ES 3.1 & Android 5.0 (API level 21) and higher\\
 \end{table}
 
 %****************************************************************
-\section{Keyhole Markup Language}
+\section{Geographic Visualization Markup Language}
 
 We were looking for a simple markup language that we can publish and consume data  in interoperable formats without the need for technical assistance. In the \ref{section:background}, we introduced KML (it can be combined with other supporting files such as imagery in a zip archive, producing a KMZ file), which is the markup language we are using in the project. It is not only because it can simply satisfy our application purpose, more importantly, it is supported by many virtual globes and other GIS systems and is therefore already becoming a de facto standard \cite{blower.sharing-visualizing.2007}. Moreover, the annotations of KML features are not designed as machine-readable XML, but a human readable plain text or simple HTML. Moreover, real-time data are important in the environmental sciences. The Networklink facility in KML allows all or part of the dataset to be automatically refreshed by the URL, to ensure the user always sees the latest information.
 
@@ -70,7 +67,7 @@ Figure \ref{fig:kml-schema} shows the KML schema. From the point of view of usab
 \end{figure}
 
 %****************************************************************
-\section{Network}
+\section{Web Server}
 \label{section:network}
 
 The key strengths of virtual reality applications are not only easy-to-use, and intuitive nature, but also the ability to incorporate new data very easily. Therefore, real-time data are very important in the environmental sciences \cite{blower.sharing-visualizing.2007}. To do that, a web server is needed. In this project, we implemented a RESTful web server to support communication with the client, along with a  file server to synchronize data. In the client side.
