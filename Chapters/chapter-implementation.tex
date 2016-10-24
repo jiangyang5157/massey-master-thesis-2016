@@ -4,6 +4,8 @@
 \label{chapter-implementation}
 \chapter{Implementation}
 
+In this chapter, details of the major implementation are revealed. First, briefly introducing Google VR SDK setup and drawing with OpenGL ES. Then an explanation of the web server design. After that, the creation of 3D virtual scene is highlighted. Finally, the implementation for device movement and object intersection detection are  clarified.
+
 %****************************************************************
 \section{Google VR SDK}
 
@@ -12,7 +14,7 @@ The Google VR SDK repository is free and accessible from \href{https://github.co
 %****************************************************************
 \section{OpenGL ES}
 
-OpenGL assumes a square, uniform coordinate system and, by default, happily draws those coordinates onto your typically non-square screen as if it is perfectly square. But the problem is that screens can vary in size and shape:
+OpenGL assumes a square coordinate system, by default, happily draws those coordinates onto the screen. However screens can vary in size and shape, that is to say, most screens are typically non-square screen. The illustration below \ref{fig:opengl-coordinates} shows the assumed uniform coordinate system of an OpenGL frame on the left, and how these coordinates map to an exemplary non-square device screen in landscape orientation on the right.
 
 \begin{figure}[H]
 \caption[OpenGL coordinate system mapping]{Default OpenGL coordinate system (left) mapped to a typical Android device screen (right) \cite{google.opengles.2016}}
@@ -22,9 +24,9 @@ OpenGL assumes a square, uniform coordinate system and, by default, happily draw
 \decoRule
 \end{figure}
 
-The illustration above shows the uniform coordinate system assumed for an OpenGL frame on the left, and how these coordinates actually map to a typical device screen in landscape orientation on the right. To solve this problem, you can apply OpenGL projection modes and camera views to transform coordinates so your graphic objects have the correct proportions on any display.
+Therefore, OpenGL projection modes and camera views have to be applied to the OpenGL rendering pipeline for coordinates transformation, so the graphic objects have the expected proportions on any display. The projection matrix will recalculate the coordinates of graphics objects, and the camera view matrix will create a transformation that renders objects from a specific eye position.
 
-In order to apply projection and camera views, you create a projection matrix and a camera view matrix and apply them to the OpenGL rendering pipeline. The projection matrix recalculates the coordinates of your graphics so that they map correctly to Android device screens. The camera view matrix creates a transformation that renders objects from a specific eye position.
+The implementation is divided into two phases. First, working out the model matrix, view matrix, and perspective matrix in CPU (Android programming in this case). Secondly pass them to GPU for the rest of calculation (OpenGL Shading Language Programming, i.e. GLSL or GLslang), such as explicit projection matrix, coordinates transformation, lighting, or more abstract circular ring \ref{section:ray-pointer}. The GLSL shaders themselves are a set of strings that passed to the hardware driver for compiling within an application using the OpenGL API's entry points \cite{wiki.glsl.2016}.
 
 \begin{table}[H]
 \caption{OpenGL compute}
@@ -34,7 +36,7 @@ In order to apply projection and camera views, you create a projection matrix an
 \toprule
 \tabhead{What} & \tabhead{How} & \tabhead{Where}\\
 \midrule
-Model Matrix & translationMatrix * scaleMatrix * rotationMatrix * matrix(1) & CPU\\
+Model Matrix & translationMx * scaleM * rotationM * identityM(1) & CPU\\
 Camera Matrix & Matrix.setLookAtM(positionV, lookAtV, upV) & CPU\\
 View Matrix & eye.getEyeView() * cameraM & CPU\\
 Perspective Matrix & eye.getPerspective(zNear, zFar) & CPU\\
@@ -47,7 +49,7 @@ Vertex' & projectionM * vertex & GPU\\
 %****************************************************************
 \section{Web Server}
 
-As mentioned in \ref{section:network}, Go is well suited and super easy for developing the network. A simple localhost file server on port 8080 to serve a directory on disk (/tmp) under an alternate URL path (/files/), use StripPrefix to modify the request URL's path before the FileServer sees it.
+See the example below, a simple file server on port \code{8080} to serve a directory on disk "\emph{/tmp}" under an alternate URL path "\emph{/files/}", using \code{StripPrefix} to modify the request URL's path before the \code{FileServer} sees it.
 
 \[
 \begin{array}{lr}
@@ -56,14 +58,12 @@ As mentioned in \ref{section:network}, Go is well suited and super easy for deve
 \end{array}
 \]
 
-For RESTful APIs, we introduce a free framework Go-Json-Rest \cite{antoine.go-json-rest.2016}, it is a thin layer designed by KISS principle (Keep it simple, stupid) and on top of native net/http package that helps building RESTful JSON APIs easily.
-
-Note that, a file server is satisfied all need from the client at this moment. Although the RESTful is setup, but there is no RESTful APIs is actually in use yet.
+For RESTful APIs setup, I introduce a free framework Go-Json-Rest \cite{antoine.go-json-rest.2016}, it is a thin layer designed by KISS principle (Keep it simple, stupid) and on top of native net/http package that helps building RESTful JSON APIs even easier.
 
 %****************************************************************
 \subsection{Assets}
 
-Following is the folder structure served by file server:
+The file server processes the requests and delivers the result (the particular file) in a standard web format back to the client. Table \ref{tab:assets-structure} indicates the folder structure served by the server.
 
 \begin{table}[H]
 \caption{Assets structure}
@@ -74,11 +74,11 @@ Following is the folder structure served by file server:
 \tabhead{Path} & \tabhead{Usage}\\
 \midrule
 \textbackslash assets & Root\\
-\textbackslash assets\textbackslash static.zip & Patch (see \ref{section:patch}) compressed file\\
-\textbackslash assets\textbackslash static\textbackslash kml & KML (see \ref{section:kml}) storage\\
+\textbackslash assets\textbackslash static.zip & The compressed Patch (see \ref{section:patch}) \\
+\textbackslash assets\textbackslash static\textbackslash kml & KML storage (see \ref{section:kml})\\
 \textbackslash assets\textbackslash static\textbackslash layer & KML storage (see \ref{section:scene})\\
-\textbackslash assets\textbackslash static\textbackslash model & OBJ model (see \ref{section:obj-model}) storage\\
-\textbackslash assets\textbackslash static\textbackslash resource & Image storage\\
+\textbackslash assets\textbackslash static\textbackslash model & Extra model storage (see \ref{section:obj-model})\\
+\textbackslash assets\textbackslash static\textbackslash resource & Resource (eg. images) storage\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -87,9 +87,7 @@ Following is the folder structure served by file server:
 \subsection{Patch}
 \label{section:patch}
 
-Patch check is happening every time when the app starts. First of all, client checks out the patch file (\emph{\textbackslash assets\textbackslash static.zip}) from the file server, comparing the\emph{lastModifiedTime} with local patch file, and only continue to download if local patch out of date. Once the patch file is downloaded, replace any existing files.
-
-Note that a built-in default patch is included in the apk (Android app binary) in a case of client disconnect from the internet for the first time launch time that no available data should be avoided.
+A Path is for the server to guarantee the latest data (if any) will be pushed to each client (Android smartphone). It server as a compressed ZIP file, and it contains one or more files that require client to update. Patch validation is happening whenever the app starts. First, the client sent requests for the patch file "\emph{http://xxx.xxx.xxx.xxx:8080/assets/static.zip}" from the file server. Before actual download the file, take the \code{lastModifiedTime} data of remote Patch from HTTP response headers, and compare it with the other \code{lastModifiedTime} data of local's Patch file. Only when the local's Patch is out of date, the client continues to download the remote Patch file and replacing any existing local files. For a special scenario when the app was just installed in the first time launch, also the network is disconnected. A built-in default Patch that included in the APK (Android app binary) will be uncompressed to avoid no available data. Diagram \ref{fig:patch-check} shows the simplified process.
 
 \begin{figure}[H]
 \caption{Patch check}
@@ -109,7 +107,7 @@ A layer list shows available KML files from \emph{\textbackslash assets\textback
 \subsection{Geographic Visualization Markup Language}
 \label{section:kml}
 
-In this project, we only take use of few feature of KML \ref{fig:kml-schema}: Container, Style, Placemark,  and NetworkLink. The KML parser we are using is not coded from scratch, but is based upon the open-source library \code{android-maps-utils} \cite{google.code-kml.2016} (NetworkLink is one of the unsupported features in the library). Main modifications are getting rid of \code{GoogleMap} dependency, and extending \code{NetworkLink} feature support in accordance with the current design pattern.
+In this project, we only take use of few feature of KML \ref{fig:kml-schema}: Container, Style, Placemark, and NetworkLink. The KML parser we are using is not coded from scratch, but is based upon the open-source library \code{android-maps-utils} \cite{google.code-kml.2016} (NetworkLink is one of the unsupported features in the library). Main modifications are getting rid of \code{GoogleMap} dependency, and extending \code{NetworkLink} feature support in accordance with the current design pattern.
 
 \begin{figure}[H]
 \caption{kML parser simple}
@@ -123,7 +121,7 @@ In this project, we only take use of few feature of KML \ref{fig:kml-schema}: Co
 \subsection{Space Partition} 
 \label{section:space-partition}
 
-To reduce the ray-object intersection tests,  space partitioning is needed. The main requirement is not to use a spatial data structure for a ray intersect with irregular geometry, but to determine what objects are in the same cell to avoid doing an $n^2$ check on all objects. In this case, it is spherical placemark. Therefore, we do not need overlapping volumes, and contained objects do not need to be cut on volume boundaries. It is actually 3D space partitioning process with a predefined restricted maximum number of objects in the same cell. A simple axis-aligned Octree is fully satisfied in here \ref{fig:octree-split}.
+To reduce the ray-object intersection tests, space partitioning is needed. The main requirement is not to use a spatial data structure for a ray intersect with irregular geometry, but to determine what objects are in the same cell to avoid doing an $n^2$ check on all objects. In this case, it is spherical placemark. Therefore, we do not need overlapping volumes, and contained objects do not need to be cut on volume boundaries. It is actually 3D space partitioning process with a predefined restricted maximum number of objects in the same cell. A simple axis-aligned Octree is fully satisfied in here \ref{fig:octree-split}.
 
 \begin{figure}[H]
 \caption{Octree split}
@@ -297,7 +295,7 @@ Then, push edge's midpoints to the surface of the sphere.
 
 A geographic coordinate system is a coordinate system that enables every location on the Earth to be specified by a set of numbers or letters, or symbols \cite{wiki.geographic-coordinate-system.2016}. A common geodetic-mapping coordinates are latitude, longitude, and altitude (LLA), which also is the raw location data read from KML.
 
-We introduce ECEF ("earth-centered, earth-fixed") coordinate system for converting  LLA coordinates to position coordinates. According to, the z-axis is pointing towards the north but it does not coincide exactly with the instantaneous earth rotational axis. The x-axis intersects the sphere of the earth at $0$ latitude and $0$ longitude \cite{wiki.ecef.2016}.
+We introduce ECEF ("earth-centered, earth-fixed") coordinate system for converting LLA coordinates to position coordinates. According to, the z-axis is pointing towards the north but it does not coincide exactly with the instantaneous earth rotational axis. The x-axis intersects the sphere of the earth at $0$ latitude and $0$ longitude \cite{wiki.ecef.2016}.
 
 \begin{figure}[H]
 \caption[ECEF]{Earth-centered, earth-fixed \cite{wiki.ecef.2016}}
@@ -421,14 +419,18 @@ For $html$ parser, we introduced jsoup (it is a Java library for working with re
 \subsection{Extra Model}
 \label{section:obj-model}
 
-A simple and common OBJ format model can be loaded as an extra model for the placemarker. OBJ model can be generated by Blender \cite{blender.2016}.  A simple OBJ parser is created only support v (vertex indices), vn (vertex normals), fv (face vertex), fvn (face vertex normals), and MTL syntax is ignored \cite{shen.obj-parser.2011}.
+A simple and common OBJ format model can be loaded as an extra model for the placemarker. OBJ model can be generated by Blender \cite{blender.2016}. A simple OBJ parser is created only support v (vertex indices), vn (vertex normals), fv (face vertex), fvn (face vertex normals), and MTL syntax is ignored \cite{shen.obj-parser.2011}.
+
+%****************************************************************
+\section{Ray Pointer}
+\label{section:ray-pointer}
 
 %****************************************************************
 \section{Information Display}
 
 A textfield is a rectangle vertex based renderable component to display text on a flat plane. Since it is a GL scene, the actual text will be drawn as a texture. By a constant width and native \code{android.text.StaticLayout} support, the height of the texture can be calculated. 
 
-A menu contains multi-textfield can be seen as an empty textfield based which texture is fill-full a pure background color, and several  textfields are laid out on the top of it with a certain vertical dimension.
+A menu contains multi-textfield can be seen as an empty textfield based which texture is fill-full a pure background color, and several textfields are laid out on the top of it with a certain vertical dimension.
 
 A head rotation matrix (quaternion matrix \cite{jvv.quaternions.2013}) is required for locating object in front of camera \cite{mathworks.quaternion-rotation.2016}.
 
@@ -705,7 +707,7 @@ t_{Y_2} = \dfrac{Y_2}{y_{R_d}}\\
 \]
 \end{multicols}
 
-$\And$ When collision happens,  we have formula:
+$\And$ When collision happens, we have formula:
 \[
 \begin{array}{lr}
 \begin{aligned}
@@ -804,7 +806,7 @@ t_{Z_2} = \dfrac{Z_2}{z_{R_d}}\\
 \]
 \end{multicols}
 
-$\And$ When collision happens,  we have formula:
+$\And$ When collision happens, we have formula:
 \[
 \left\{
 \begin{array}{lr}
