@@ -149,7 +149,7 @@ See diagram \ref{fig:octree-split}, the parent cell has eight indexes indicate t
 
 The integer index is not chosen randomly. It is defined by its geometric meaning - three boolean value that indicates the three axis-relative delta value. Table \ref{tab:octree-octant} gives the relationship between the index and three boolean values.
 
-If the three delta values of any position $P$ in a cell with known center $O$:
+The three delta values of any position $P$ in a cell with known center $O$ are:
 
 \[
 \begin{array}{lr}
@@ -203,7 +203,7 @@ The transformation from known Octant to index:
 %****************************************************************
 \section{Earth}
 
-The Earth is created as a UV Sphere, which somewhat likes latitude and longitude lines of the earth, uses rings and segments. Near the poles (both on the Z-axis with the default orientation) the vertical segments converge on the poles. UV spheres are best used in situations where you require a very smooth, symmetrical surface.
+UV Sphere often used in the situation where requires a very smooth, symmetrical surface. In this application, the Earth model is created as the UV sphere. Similar to latitude and longitude lines of the earth, it uses rings and segments (near the poles, the vertical segments converge on the poles). Therefore, the UV texturing for 2D Earth image mapping to the 3D sphere's surface can be conveniently calculated during its vertex creation process.
 
 \begin{figure}[H]
 \caption{UV sphere mapping}
@@ -213,13 +213,13 @@ The Earth is created as a UV Sphere, which somewhat likes latitude and longitude
 \decoRule
 \end{figure}
 
-As we can see the mapping from \ref{fig:uv-sphere-mapping}. Vertex $A0,\;A1,\;A2,\;A3,\;A4$ and $E0,\;E1,\;E2,\;E3,\;E4$ are duplicated, and $A0,\;B0,\;C0,\;D0,\;E0$ converge together as well as $A4,\;B4,\;C4,\;D4,\;E4$. So we can simply define it as a UV sphere has 5 rings and 4 segments. Also be noticed that each ring spans $2\,\pi$ radians, but each segment spans $\pi$ radians in the sphere mapping.
+The diagram \ref{fig:uv-sphere-mapping} illustrates the mapping from 2D plane to 3D UV sphere's surface which has $5$ rings and $4$ segments. As we can seen, vertex $A0$, $A1$, $A2$, $A3$, $A4$ and $E0$, $E1$, $E2$, $E3$, $E4$ are duplicated; vertex $A0$, $B0$, $C0$, $D0$, $E0$ converge together in the pole, as well as $A4$, $B4$, $C4$, $D4$, $E4$. Also, in the UV sphere, each ring spans $2\,\pi$ radians, but each segment only spans $\pi$ radians.
 
-The total vertex number is:
+The total vertex count for a UV sphere is:
 
 \begin{equation}
 \label{equ:uv-sphere-vertices}
-Vertices = Rings \times Segments
+\code{VerticesCount} = \code{RingsCount} \times \code{SegmentsCount}
 \end{equation}
 
 \begin{figure}[H]
@@ -230,18 +230,18 @@ Vertices = Rings \times Segments
 \decoRule
 \end{figure}
 
-For each vertex $P$ on sphere from ring $r$ and segment $s$, we have:
+If a vertex $P$ on the UV sphere belongs to ring $r$ and segment $s$:
 
 \[
 \begin{array}{lr}
-v = r \times  \dfrac{1}{rings - 1}\\
-u = s \times  \dfrac{1}{segments - 1}\\
+v = r \times  \dfrac{1}{\code{RingsCount} - 1}\\\\
+u = s \times  \dfrac{1}{\code{SegmentsCount} - 1}\\\\
 \measuredangle \alpha = v \times \pi\\
 \measuredangle \beta = u \times 2\,\pi\\
 \end{array}
 \]
 
-$\therefore$ P (x,\;y,\;z)
+$\therefore$ The vertex P (x,\;y,\;z) can be calculated:
 \[
 \begin{array}{lr}
 x = (\sin(\alpha) \times radius) \times \cos(\beta)\\
@@ -250,7 +250,8 @@ z =  (\sin(\alpha) \times radius) \times \sin(\beta)\\
 \end{array}
 \]
 
-$\And$ 2D Texture (x,\;y) mapping for vertex $P$ is:
+The UV texturing (x,\;y) mapping for vertex $P$ is:
+
 \[
 \begin{array}{lr}
 x = u\\
