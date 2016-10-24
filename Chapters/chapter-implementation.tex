@@ -9,7 +9,7 @@ In this chapter, details of the major implementation are revealed. First, briefl
 %****************************************************************
 \section{Google VR SDK}
 
-The Google VR SDK repository is free and accessible from \href{https://github.com/googlevr/gvr-android-sdk}{\emph{https://github.com/googlevr/gvr-android-sdk}}, where we can get access to any necessary libraries and examples. The SDK libraries locate in the libraries directory of the repository as \emph{.aar} files \cite{google.aar-format.2016}. This project has two dependencies on \code{base} and \code{common} Google VR SDK modules.
+The Google VR SDK repository is free and accessible from\href{https://github.com/googlevr/gvr-android-sdk}{\emph{https://github.com/googlevr/gvr-android-sdk}}, where we can get access to any necessary libraries and examples. The SDK libraries locate in the libraries directory of the repository as \emph{.aar} files \cite{google.aar-format.2016}. This project has two dependencies on \code{base} and \code{common} Google VR SDK modules.
 
 %****************************************************************
 \section{OpenGL ES}
@@ -101,13 +101,17 @@ A Path is for the server to guarantee the latest data (if any) will be pushed to
 \section{Scene}
 \label{section:scene}
 
-A layer list shows available KML files from \emph{\textbackslash assets\textbackslash static\textbackslash layer}, scene will be created according to which KML is selected. The KMLs in \emph{\textbackslash assets\textbackslash static\textbackslash layer} is literally same as KMLs in \emph{\textbackslash assets\textbackslash static\textbackslash kml}, only different is that user can only able to see laye that achieving the idea of KML categorization by KML NetworkLink feature (see \ref{section:kml}). The NetworkLink feature allows a KML file (\emph{\textbackslash assets\textbackslash static\textbackslash layer}) includes one or more KMLs (\emph{\textbackslash assets\textbackslash static\textbackslash kml}).
+The Keyhole Markup Language (KML) is contributed to the application as the geographic visualization markup language. KML files from folder "\emph{/assets/static/layer} are visible to the user, and each KML file represents an individual 3D scene which contains any necessary geographic data related to the topic.
+
+As you can see from table \ref{tab:assets-structure}, there are two assets folders contains KML files - "\emph{/assets/static/layer}" and "\emph{/assets/static/kml}". These files are literally the same, but existing in different concepts for achieving the purpose of categorizing. By making use of \code{Networklink} facility, an individual KML file can contains one or more other KML files by given URLs. Therefore, folder "\emph{/assets/static/layer}" intends to be the scene topic (KML file) storage that visible and selectable to the user, and any inside topic could include one or more topics that exist in folder "\emph{/assets/static/kml}".
+
+It has many advantages to dividing the space with certain patterns during the space creation. Such as, runtime graphical analysis and optimization, intersection and collision detection.
 
 %****************************************************************
 \subsection{Geographic Visualization Markup Language}
 \label{section:kml}
 
-In this project, we only take use of few feature of KML \ref{fig:kml-schema}: Container, Style, Placemark, and NetworkLink. The KML parser we are using is not coded from scratch, but is based upon the open-source library \code{android-maps-utils} \cite{google.code-kml.2016} (NetworkLink is one of the unsupported features in the library). Main modifications are getting rid of \code{GoogleMap} dependency, and extending \code{NetworkLink} feature support in accordance with the current design pattern.
+There are only some of KML features from KML schema \ref{fig:kml-schema} are be used in this application. They are \code{Container}, \code{Style}, \code{Placemark}, and \code{NetworkLink}. The KML parser I am using is not coded from scratch, and it is based on the open-source library \code{android-maps-utils} \cite{google.code-kml.2016} but with certain modification and extension: getting rid of \code{GoogleMap} dependency; extending \code{NetworkLink} facility support that was one of the unsupported features in the library.
 
 \begin{figure}[H]
 \caption{kML parser simple}
@@ -121,7 +125,17 @@ In this project, we only take use of few feature of KML \ref{fig:kml-schema}: Co
 \subsection{Space Partition} 
 \label{section:space-partition}
 
-To reduce the ray-object intersection tests, space partitioning is needed. The main requirement is not to use a spatial data structure for a ray intersect with irregular geometry, but to determine what objects are in the same cell to avoid doing an $n^2$ check on all objects. In this case, it is spherical placemark. Therefore, we do not need overlapping volumes, and contained objects do not need to be cut on volume boundaries. It is actually 3D space partitioning process with a predefined restricted maximum number of objects in the same cell. A simple axis-aligned Octree is fully satisfied in here \ref{fig:octree-split}.
+Space partition often used for optimizing collision detection algorithms among polygonal models. These algorithms are often expensive operations and can significantly slow FPS down. Although there is no collision detection in this application yet, there is an intersection detection between the ray tracing (see \ref{section:ray-pointer}) and other objects. Space partition is contributed to reducing the ray-object intersection test load by skipping objects that locate far away from current ray tracing area. It avoids doing an $n^2$ times intersection detection on all objects.
+
+A axis-aligned Octree is implemented for the space partition \ref{fig:octree-split}. It has a predefined constant positive integer to decide whether or not a new partitioning should happen - a minimum number of objects allowed exist in the same cell. This number is important for the purpose of reducing intersection detections. I have taken $5$, object complexity and cell complexity need to be considered.
+
+\begin{description}
+	\setlength{\parskip}{0pt}
+	\item[$\bullet$ Object Complexity] \code{Plackmarker} is doing ray-sphere detection (see \ref{section:ray-sphere})
+	\item[$\bullet$ Cell Complexity] Cell is doing ray-box detection (see \ref{section:ray-box})
+\end{description}
+
+If the number is positive infinity - whole space seen as a cell and no further space partition is required, this is not reduce anything but also increase to $n + 1$ times of detections ($n$ times for ray-object, $1$ times for ray-cell). If the number is $1$ - each cell only contains one object, this also not reduces the number of detection times, but increase to at least $2\,n$ times. Since the ray-box detection action is much cheaper then ray-sphere's, an appropriate value can eventually reduce the overall intersection detections.
 
 \begin{figure}[H]
 \caption{Octree split}
@@ -131,12 +145,11 @@ To reduce the ray-object intersection tests, space partitioning is needed. The m
 \decoRule
 \end{figure}
 
-For each box splitting process, we also generate eight indexes to indicate the relative position inside the box. These indexes are important for the next partition, where we might need to relink contained objects to the new corresponding box. To insert an object into
-the box only if the existed contained number of objects is less than the predefined constant value, otherwise splitting the box then relink existed object and insert the new object again.
+See diagram \ref{fig:octree-split}, the parent cell has eight indexes indicate the different relative position inside the parent cell. These indexes are important for the next time of division, where the objects in parent cell need to be relinked to a new cell. On the other words, a new object will be linked to the parent cell only if the existed objects is less than the predefined constant value. If not, the parent cell will be spatially divided into eight cells. Then, the existing objects will be unlinked from the parent cell and relink to a new cell.
 
-Integer indexes of box is defined by three boolean value that indicates three axis-relative value:
+The integer index is not chosen randomly. It is defined by its geometric meaning - three boolean value that indicates the three axis-relative delta value. Table \ref{tab:octree-octant} gives the relationship between the index and three boolean values.
 
-Any position\;\emph{P} in the box with known center\emph{O}:
+If the three delta values of any position $P$ in a cell with known center $O$:
 
 \[
 \begin{array}{lr}
@@ -148,13 +161,15 @@ dz &= P_z - O_z\\
 \end{array}
 \]
 
+The relationship between the index and three boolean values as follow:
+
 \begin{table}[H]
 \caption{Octree octant}
 \label{tab:octree-octant}
 \centering
 \begin{tabular}{l l l l}
 \toprule
-\tabhead{Index} & \tabhead{Octant} & \tabhead{Geometric Meaning}\\
+\tabhead{Binary Index} & \tabhead{Octant} & \tabhead{Geometric Meaning}\\
 \midrule
 0x00000000 & T,\;T,\;T & dx > 0, dy > 0, dz > 0\\
 0x00000001 & F,\;T,\;T & dx < 0, dy > 0, dz > 0\\
@@ -168,12 +183,14 @@ dz &= P_z - O_z\\
 \end{tabular}
 \end{table}
 
-Octant solution:
+$\therefore$ The transformation from known index to three boolean values (Octant):
+
 \[
 \code{octant[] = (index \& 1, index \& 2, index \& 4)}
 \]
 
-Index solution:
+The transformation from known Octant to index:
+
 \[
 \begin{array}{lr}
 \begin{aligned}
@@ -502,6 +519,7 @@ A ray can be describe in a equation with known ray start position \emph{$\overri
 
 %****************************************************************
 \subsection{Ray-Sphere}
+\label{section:ray-sphere}
 
 \begin{figure}[H]
 \caption{Ray-Sphere intersection}
@@ -645,6 +663,7 @@ At last, we have to verify if the collision is inside of the quadrangle by putti
 
 %****************************************************************
 \subsection{Ray-Box}
+\label{section:ray-box}
 % \cite{scratchapixel.ray-plane-3d}
 % \cite{williams.ray-box.2005}
 
