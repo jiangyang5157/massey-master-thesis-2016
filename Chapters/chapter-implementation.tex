@@ -203,7 +203,7 @@ The transformation from known Octant to index:
 %****************************************************************
 \section{Earth}
 
-UV Sphere often used in the situation where requires a very smooth, symmetrical surface. In this application, the Earth model is created as the UV sphere. Similar to latitude and longitude lines of the earth, it uses rings and segments (near the poles, the vertical segments converge on the poles). Therefore, the UV texturing for 2D Earth image mapping to the 3D sphere's surface can be conveniently calculated during its vertex creation process.
+UV Sphere often used in the situation where requires a very smooth, symmetrical surface. In this application, the Earth model is created as the UV sphere. Similar to latitude and longitude lines of the Earth, it uses rings and segments (near the poles, the vertical segments converge on the poles). Therefore, the UV texturing for 2D earth image mapping to the 3D sphere's surface can be conveniently calculated during its vertex creation process.
 
 \begin{figure}[H]
 \caption{UV sphere mapping}
@@ -259,10 +259,30 @@ y = v\\
 \end{array}
 \]
 
-%****************************************************************
-\section{Placemarker}
+It is vital to recognize the flip-side effect caused by the processing order of texturing. Diagram \ref{fig:uv-sphere-flip-side} shows a flip on the longitude direction. Which is not looking correct from outside of the Earth, but it is a precise mapping when the user is viewing from the inside.
+ 
+\begin{figure}[H]
+	\caption{UV sphere flip-side effect}
+	\label{fig:uv-sphere-flip-side}
+	\centering
+	\includegraphics[width=\linewidth]{Figures/uv-sphere-flip-side.png}
+	\decoRule
+\end{figure}
 
-The vertex generation for \code{Placemarker} is a recurring process of subdividing icosphere. Figure \ref{fig:icosahedron-rectangles} is an icosahedron, the corners of three orthogonal rectangles are the initial vertices for \code{Placemarker}.
+Given an ordering of each triangle's vertices, a triangle can appear to have a clockwise winding or counter-clockwise winding. Using OpenGL features Culling Face and Winding Order together to determine whether the triangle is visible from the front or the back side. In order to guarantee an inside visible only, \code{glFrontFace(GL\_CCW)} and \code{glCullFace(GL\_BACK)} can be adopted. The vertex indexes is ordered as diagram \ref{fig:uv-sphere-ccw}.
+
+\begin{figure}[H]
+	\caption{UV sphere CCW}
+	\label{fig:uv-sphere-ccw}
+	\centering
+	\includegraphics[width=\linewidth]{Figures/uv-sphere-ccw.png}
+	\decoRule
+\end{figure}
+
+%****************************************************************
+\section{Placemark}
+
+The vertex generation for \code{Placemark} is a recurring process of subdividing icosphere. Figure \ref{fig:icosahedron-rectangles} is an icosahedron, the corners of three orthogonal rectangles are the initial vertices for \code{Placemark}.
 
 \begin{figure}[H]
 \caption[Icosahedron rectangles]{Icosahedron rectangles \cite{wiki.icosahedron-rectangles.2006}}
@@ -272,18 +292,7 @@ The vertex generation for \code{Placemarker} is a recurring process of subdividi
 \decoRule
 \end{figure}
 
-%####
-Rounding icosphere by subdividing a face to an arbitrary level of resolution. One face can be subdivided into four by connecting each edge's midpoint.
-
-\begin{figure}[H]
-\caption{Icosphere subdivide}
-\label{fig:icosphere-subdivide}
-\centering
-\includegraphics[width=\linewidth]{Figures/icosphere-subdivide.png}
-\decoRule
-\end{figure}
-
-Then, push edge's midpoints to the surface of the sphere.
+Rounding the icosphere by subdividing a face to an arbitrary level of resolution \ref{tab:rounding-icosphere}. One face can be subdivided into four by connecting each edge's midpoint, then push the midpoints to the surface of the sphere \ref{fig:icosphere-refinement}.
 
 \begin{figure}[H]
 \caption{Icosphere refinement}
@@ -309,12 +318,44 @@ Then, push edge's midpoints to the surface of the sphere.
 \end{tabular}
 \end{table}
 
+Rounding icosphere is not only increasing the vertex number but also adjusting vertex indexes. As we can see from the diagram \ref{fig:icosphere-vertex-index}, the refinement of each face has three steps.
+
+First, get the midpoint of each edge.
+
+\[
+\begin{array}{lr}
+\overrightarrow{d} = \dfrac{\overrightarrow{A} + \overrightarrow{B}}{2}\\
+\overrightarrow{e} = \dfrac{\overrightarrow{A} + \overrightarrow{C}}{2}\\
+\overrightarrow{f} = \dfrac{\overrightarrow{B} + \overrightarrow{C}}{2}\\
+\end{array}
+\]
+
+Second, push midpoints to the surface of the unit sphere(1).
+
+\[
+\begin{array}{lr}
+\overrightarrow{D} = \code{normalize}(\overrightarrow{d})\\
+\overrightarrow{E} = \code{normalize}(\overrightarrow{e})\\
+\overrightarrow{F} = \code{normalize}(\overrightarrow{f})\\
+\end{array}
+\]
+
+Third, remove \code{$\triangle$ABC} in the vertex indexes list, add \code{$\triangle$ADE}, \code{$\triangle$DBF}, \code{$\triangle$EFC}, and \code{$\triangle$DEF}.
+
+\begin{figure}[H]
+	\caption{Icosphere vertex index}
+	\label{fig:icosphere-vertex-index}
+	\centering
+	\includegraphics[width=\linewidth]{Figures/icosphere-vertex-index.png}
+	\decoRule
+\end{figure}
+
 %****************************************************************
 \subsection{Geographic Coordinate System}
 
-A geographic coordinate system is a coordinate system that enables every location on the Earth to be specified by a set of numbers or letters, or symbols \cite{wiki.geographic-coordinate-system.2016}. A common geodetic-mapping coordinates are latitude, longitude, and altitude (LLA), which also is the raw location data read from KML.
+The Earth geographic coordinate system is a coordinate system that enables everywhere on the Earth to be specified by a set of numbers or symbols \cite{wiki.geographic-coordinate-system.2016}. A common geodetic mapping coordinates are latitude, longitude, and altitude (LLA), which also is the raw location data decorated in KML file.
 
-We introduce ECEF ("earth-centered, earth-fixed") coordinate system for converting LLA coordinates to position coordinates. According to, the z-axis is pointing towards the north but it does not coincide exactly with the instantaneous earth rotational axis. The x-axis intersects the sphere of the earth at $0$ latitude and $0$ longitude \cite{wiki.ecef.2016}.
+However, the LLA coordinates cannot be directly used from a program. Therefore, I introduce "earth-centered, earth-fixed" (ECEF) coordinate system for converting LLA coordinates to position coordinates. As we can see from diagram \ref{fig:ecef}, the origin of the axis (0, 0, 0) is located at the center of the Earth, the z-axis and y-axis are pointing towards the north and east, and the x-axis intersects the Earth at $0$ latitude and $0$ longitude.
 
 \begin{figure}[H]
 \caption[ECEF]{Earth-centered, earth-fixed \cite{wiki.ecef.2016}}
@@ -324,26 +365,7 @@ We introduce ECEF ("earth-centered, earth-fixed") coordinate system for converti
 \decoRule
 \end{figure}
 
-The ECEF coordinates are expressed in a reference system that is related to mapping representations. Because the earth has a complex shape, a simple, yet accurate, method to approximate the earth’s shape is required. The use of a reference ellipsoid allows for the conversion between ECEF and LLA \cite{ublox.datum.1999}.
-
-A reference ellipsoid can be described by a series of parameters that define its shape and which include a semi-major axis ($a$), a semi-minor axis ($b$), its first eccentricity ($e_1$) and its second eccentricity ($e_2$) as shown in Table \ref{tab:wgs-84-parameters}.
-
-\begin{table}[H]
-\caption{WGS 84 parameters}
-\label{tab:wgs-84-parameters}
-\centering
-\begin{tabular}{l l l}
-\toprule
-\tabhead{Parameter} & \tabhead{Notation} & \tabhead{Value}\\
-\midrule
-Reciprocal of flattening & $1 / f$ & 298.257\,223\,563\\
-Semi-major axis & $a$ & 6\,378\,137\,m\\
-Semi-minor axis & $b$ & $a\,(1 - f)$\\
-First eccentricity squared & $e_1^2$ & $1 - b^2 / a^2 = 2\,f - f^2$\\
-Second eccentricity squared & $e_2^2$ & $a^2 / b^2 - 1 = f\,(2 - f) / (1 - f)^2$\\
-\bottomrule
-\end{tabular}
-\end{table}
+The ECEF coordinates are expressed in a reference system that is tended to be associated with geodetic mapping representations. In a system that practically requires high precision,  an accurate method to approximate the Earth’s shape is required. There have been researches on the elliptical earth since the 1980s. Nowadays, The new World Geodetic System was called WGS 84 which is currently being used by the Global Positioning System (GPS). It is geocentric and globally consistent within $\pm{1}$m. The WGS 84 has a series of parameters (table \ref{tab:wgs-84-parameters}) that define the shape of the ellipsoid (the Earth), they include a semi-major axis ($a$), a semi-minor axis ($b$) \ref{fig:ellipsoid-parameters}, its first eccentricity ($e_1$) and its second eccentricity ($e_2$).
 
 \begin{figure}[H]
 \caption{Ellipsoid parameters}
@@ -353,7 +375,24 @@ Second eccentricity squared & $e_2^2$ & $a^2 / b^2 - 1 = f\,(2 - f) / (1 - f)^2$
 \decoRule
 \end{figure}
 
-The conversion from LLA to ECEF is shown below.
+\begin{table}[H]
+	\caption{WGS 84 parameters}
+	\label{tab:wgs-84-parameters}
+	\centering
+	\begin{tabular}{l l l}
+		\toprule
+		\tabhead{Parameter} & \tabhead{Notation} & \tabhead{Value}\\
+		\midrule
+		Reciprocal of flattening & $\dfrac{1}{f}$ & 298.257\,223\,563\\
+		Semi-major axis & $a$ & 6\,378\,137\,m\\
+		Semi-minor axis & $b$ & $a\,(1 - f)$\\
+		First eccentricity squared & $e_1^2$ & $1 - \dfrac{b^2}{a^2} = 2\,f - f^2$\\
+		Second eccentricity squared & $e_2^2$ & $\dfrac{a^2}{b^2} - 1 = \dfrac{f\,(2 - f)}{(1 - f)^2}$\\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+In this application, where high accuracy is not required, simply using $a$ equals to $b$ (equals to the radius of the sphere). The conversion from LLA to ECEF as follow. 
 
 \begin{figure}[H]
 \caption{LLA to ECEF}
@@ -373,28 +412,44 @@ z &= (\dfrac{b^2}{a^2}\,N + h)\,\sin(\varphi)\\
 \end{array}
 \]
 
-Where
+Where,
 
 \[
 \begin{array}{lr}
 \begin{aligned}
 \varphi &= \text{latitude}\\
 \lambda &= \text{longitude}\\
-h &= \text{height above ellipsoid (meters)}\\
-N &= \text{Radius of Curvature (meters), defined as:}\\
+h &= \text{altitude}\\
+N &= \text{Radius of Curvature}\\
 &= \dfrac{a}{\sqrt{1 - e^2\,\sin(\varphi)^2}}\\
 \end{aligned}
 \end{array}
 \]
 
-At last, for this project usage, where high accuracy is not required, $a$ equals to $b$. And also the ECEF coordinate system is y-east, z-north (up), and x points to $0$ latitude and $0$ longitude, but for project specific, we still need to convert ECEF to x-east, y-north (up), and x points to $0$ latitude and $180$ longitude.
+The final transformation from the ECEF to program graphic coordinates. This is relevant to how texture mapping and graphic system be implemented.
+
+\[
+\begin{array}{lr}
+\begin{aligned}
+\code{(x, y, z)}:\;&\text{y-east, z-north (up), x points to $0$ latitude and $0$ longitude}.\\
+\Downarrow\;&\text{Reversal x, and switch z and y}.\\
+\code{(-x, z, y)}:\;&\text{x-east, y-north (up), z points to $0$ latitude and $180$ longitude}.\\
+\end{aligned}
+\end{array}
+\]
 
 %****************************************************************
 \subsection{Description}
 
-Description of placemarker requires an appropriate analysis for display. The raw data of description is a set of characters that could be a normal text, an image URL, a URL returns different type of content, or maybe just some meaningless characters.
+The raw description data of a \code{Placemark} decorated in KML file is a series of characters that could include any URL. Therefore, an analysis of the description is required before transforming for display. In this application, it currently supports following information display.
 
-Although the implementation of analysis in this project did not cover every situation, but it is flexible and extendable for more functionality.
+\begin{description}
+	\setlength{\parskip}{0pt}
+	\item[$\bullet$ Plain text] Display the raw description data.
+	\item[$\bullet$ Image] Display the image from the URL.
+	\item[$\bullet$ Wikipedia] Display a extracted explanation on the topic.
+	\item[$\bullet$ HTML] Display \code{title} and \code{og:description} (one of the Open Graph metadata tags \cite{ogp.2014}) data (if it exists).
+\end{description}
 
 \begin{figure}[H]
 \caption{Description analysis}
@@ -404,18 +459,21 @@ Although the implementation of analysis in this project did not cover every situ
 \decoRule
 \end{figure}
 
-In order to get an extracted content from a Wikipedia page, we can transform the URL to a Wiki-API based open-search URL \cite{wiki.api.2016}, which will return a json format raw data that we can easily get what we need from different json tags.
+Treat the raw description data as plain text if it does not have a URL included. The\;\code{Content-Type} from the response of URL request, defines what kind of byte data is coming over, such as \code{image/jpeg}, \code{application/json}, or \code{text/html}. I am using Jsoup (a Java library for working with real-world HTML \cite{joup.2016}) for extracting target data from the HTML source. The most efficient way to get an extracted explanation or description on the topic from a Wikipedia page is to take use of the Opensearch API \cite{wiki.api.2016}. Therefore, a transformation from Wikipedia URL to Opensearch URL is required for an expected JSON response with \code{extract} tag included.
+
+Given any valid Wikipedia page,
 
 \[
 \begin{array}{lr}
 \begin{aligned}
 \text{Replace}\;&\code{.wikipedia.org/wiki/}\\
-\text{To}\;&\code{.wikipedia.org/w/api.php?}APIs\\
+&\Downarrow\\
+\text{To}\;&\code{.wikipedia.org/w/api.php?}\textbf{APIs}\\
 \end{aligned}
 \end{array}
 \]
 
-Where $APIs$ is:
+Where \textbf{APIs} is:
 
 \[
 \begin{array}{lr}
@@ -432,13 +490,34 @@ Where $APIs$ is:
 \end{array}
 \]
 
-For $html$ parser, we introduced jsoup (it is a Java library for working with real-world HTML \cite{joup.2016}), to get the basic information we need, such as $title$, and some other metadata. In this project, I am also using $og:description$ (one of the open graph meta tags \cite{ogp.2014}) from the HTML source if it exist.
+For instance,
+
+\[
+\begin{array}{lr}
+\begin{aligned}
+\code{https://en.wikipedia.org/}&\code{wiki/Virtual\_reality}\\
+&\Downarrow\\
+\code{https://en.wikipedia.org/}&\code{w/api.php?}\\
+&\code{format=json\&action=query\&redirects=1}\\
+&\code{\&prop=extracts\&exintro=\&explaintext=}\\
+&\code{\&indexpageids=\&titles=Virtual\_reality}\\
+\end{aligned}
+\end{array}
+\]
 
 %****************************************************************
 \subsection{Extra Model}
 \label{section:obj-model}
 
-A simple and common OBJ format model can be loaded as an extra model for the placemarker. OBJ model can be generated by Blender \cite{blender.2016}. A simple OBJ parser is created only support v (vertex indices), vn (vertex normals), fv (face vertex), fvn (face vertex normals), and MTL syntax is ignored \cite{shen.obj-parser.2011}.
+
+A simple and common OBJ format model can be loaded as an extra model for a \code{Placemark}. 
+
+
+There are some simple Wavefront OBJ models are created by the Blender (free software) and being used in this application.
+
+
+A simple OBJ parser is created only support v (vertex indices), vn (vertex normals), fv (face vertex), fvn (face vertex normals), and MTL syntax is ignored \cite{shen.obj-parser.2011}.
+
 
 %****************************************************************
 \section{Ray Pointer}
