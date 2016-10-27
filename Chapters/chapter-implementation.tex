@@ -103,7 +103,7 @@ A Path is for the server to guarantee the latest data (if any) will be pushed to
 
 The Keyhole Markup Language (KML) is contributed to the application as the geographic visualization markup language. KML files from folder "\emph{/assets/static/layer} are visible to the user, and each KML file represents an individual 3D scene which contains any necessary geographic data related to the topic.
 
-As you can see from table \ref{tab:assets-structure}, there are two assets folders contains KML files - "\emph{/assets/static/layer}" and "\emph{/assets/static/kml}". These files are literally the same, but existing in different concepts for achieving the purpose of categorizing. By making use of \code{Networklink} facility, an individual KML file can contains one or more other KML files by given URLs. Therefore, folder "\emph{/assets/static/layer}" intends to be the scene topic (KML file) storage that visible and selectable to the user, and any inside topic could include one or more topics that exist in folder "\emph{/assets/static/kml}".
+As you can see from Table \ref{tab:assets-structure}, there are two assets folders contains KML files - "\emph{/assets/static/layer}" and "\emph{/assets/static/kml}". These files are literally the same, but existing in different concepts for achieving the purpose of categorizing. By making use of \code{Networklink} facility, an individual KML file can contains one or more other KML files by given URLs. Therefore, folder "\emph{/assets/static/layer}" intends to be the scene topic (KML file) storage that visible and selectable to the user, and any inside topic could include one or more topics that exist in folder "\emph{/assets/static/kml}".
 
 It has many advantages to dividing the space with certain patterns during the space creation. Such as, runtime graphical analysis and optimization, intersection and collision detection.
 
@@ -138,14 +138,14 @@ A axis-aligned Octree is implemented for the space partition \ref{fig:octree-spl
 If the number is positive infinity - whole space seen as a cell and no further space partition is required, this is not reduce anything but also increase to $n + 1$ times of detections ($n$ times for ray-object, $1$ times for ray-cell). If the number is $1$ - each cell only contains one object, this also not reduces the number of detection times, but increase to at least $2\,n$ times. Since the ray-box detection action is much cheaper then ray-sphere's, an appropriate value can eventually reduce the overall intersection detections.
 
 \begin{figure}[H]
-\caption{Octree split}
-\label{fig:octree-split}
+\caption{Octree division}
+\label{fig:octree-division}
 \centering
-\includegraphics[width=\linewidth]{Figures/octree-split.png}
+\includegraphics[width=\linewidth]{Figures/octree-division.png}
 \decoRule
 \end{figure}
 
-See diagram \ref{fig:octree-split}, the parent cell has eight indexes indicate the different relative position inside the parent cell. These indexes are important for the next time of division, where the objects in parent cell need to be relinked to a new cell. On the other words, a new object will be linked to the parent cell only if the existed objects is less than the predefined constant value. If not, the parent cell will be spatially divided into eight cells. Then, the existing objects will be unlinked from the parent cell and relink to a new cell.
+See Diagram \ref{fig:octree-split}, the parent cell has eight indexes indicate the different relative position inside the parent cell. These indexes are important for the next time of division, where the objects in parent cell need to be relinked to a new cell. On the other words, a new object will be linked to the parent cell only if the existed objects is less than the predefined constant value. If not, the parent cell will be spatially divided into eight cells. Then, the existing objects will be unlinked from the parent cell and relink to a new cell.
 
 The integer index is not chosen randomly. It is defined by its geometric meaning - three boolean value that indicates the three axis-relative delta value. Table \ref{tab:octree-octant} gives the relationship between the index and three boolean values.
 
@@ -164,23 +164,23 @@ dz &= P_z - O_z\\
 The relationship between the index and three boolean values as follow:
 
 \begin{table}[H]
-\caption{Octree octant}
+\caption{Octree Octant}
 \label{tab:octree-octant}
 \centering
-\begin{tabular}{l l l l}
-\toprule
-\tabhead{Binary Index} & \tabhead{Octant} & \tabhead{Geometric Meaning}\\
-\midrule
-0x00000000 & T,\;T,\;T & dx > 0, dy > 0, dz > 0\\
-0x00000001 & F,\;T,\;T & dx < 0, dy > 0, dz > 0\\
-0x00000010 & T,\;F,\;T & dx > 0, dy < 0, dz > 0\\
-0x00000011 & F,\;F,\;T & dx < 0, dy < 0, dz > 0\\
-0x00000100 & T,\;T,\;F & dx > 0, dy > 0, dz < 0\\
-0x00000101 & F,\;T,\;F & dx < 0, dy > 0, dz < 0\\
-0x00000110 & T,\;F,\;F & dx > 0, dy < 0, dz > 0\\
-0x00000111 & F,\;F,\;F & dx < 0, dy < 0, dz < 0\\
-\bottomrule
-\end{tabular}
+	\begin{tabular}{l l l l}
+	\toprule
+	\tabhead{Binary Index} & \tabhead{Octant} & \tabhead{Geometric Meaning}\\
+	\midrule
+	0x00000000 & T,\;T,\;T & dx > 0, dy > 0, dz > 0\\
+	0x00000001 & F,\;T,\;T & dx < 0, dy > 0, dz > 0\\
+	0x00000010 & T,\;F,\;T & dx > 0, dy < 0, dz > 0\\
+	0x00000011 & F,\;F,\;T & dx < 0, dy < 0, dz > 0\\
+	0x00000100 & T,\;T,\;F & dx > 0, dy > 0, dz < 0\\
+	0x00000101 & F,\;T,\;F & dx < 0, dy > 0, dz < 0\\
+	0x00000110 & T,\;F,\;F & dx > 0, dy < 0, dz > 0\\
+	0x00000111 & F,\;F,\;F & dx < 0, dy < 0, dz < 0\\
+	\bottomrule
+	\end{tabular}
 \end{table}
 
 $\therefore$ The transformation from known index to three boolean values (Octant):
@@ -193,10 +193,8 @@ The transformation from known Octant to index:
 
 \[
 \begin{array}{lr}
-\begin{aligned}
-\code{For Each oction[i]:}&\\
-&\code{index |= (1 < < i)}\\
-\end{aligned}
+\code{For Each oction[i]:}\\
+\;\;\;\;\;\;\;\;\code{index |= (1 < < i)}\\
 \end{array}
 \]
 
@@ -213,7 +211,7 @@ UV Sphere often used in the situation where requires a very smooth, symmetrical 
 \decoRule
 \end{figure}
 
-The diagram \ref{fig:uv-sphere-mapping} illustrates the mapping from 2D plane to 3D UV sphere's surface which has $5$ rings and $4$ segments. As we can seen, vertex $A0$, $A1$, $A2$, $A3$, $A4$ and $E0$, $E1$, $E2$, $E3$, $E4$ are duplicated; vertex $A0$, $B0$, $C0$, $D0$, $E0$ converge together in the pole, as well as $A4$, $B4$, $C4$, $D4$, $E4$. Also, in the UV sphere, each ring spans $2\,\pi$ radians, but each segment only spans $\pi$ radians.
+The Diagram \ref{fig:uv-sphere-mapping} illustrates the mapping from 2D plane to 3D UV sphere's surface which has $5$ rings and $4$ segments. As we can seen, vertex $A0$, $A1$, $A2$, $A3$, $A4$ and $E0$, $E1$, $E2$, $E3$, $E4$ are duplicated; vertex $A0$, $B0$, $C0$, $D0$, $E0$ converge together in the pole, as well as $A4$, $B4$, $C4$, $D4$, $E4$. Also, in the UV sphere, each ring spans $2\,\pi$ radians, but each segment only spans $\pi$ radians.
 
 The total vertex count for a UV sphere is:
 
@@ -269,7 +267,7 @@ It is vital to recognize the flip-side effect caused by the processing order of 
 	\decoRule
 \end{figure}
 
-Given an ordering of each triangle's vertices, a triangle can appear to have a clockwise winding or counter-clockwise winding. Using OpenGL features Culling Face and Winding Order together to determine whether the triangle is visible from the front or the back side. In order to guarantee an inside visible only, \code{glFrontFace(GL\_CCW)} and \code{glCullFace(GL\_BACK)} can be adopted. The vertex indexes is ordered as diagram \ref{fig:uv-sphere-ccw}.
+Given an ordering of each triangle's vertices, a triangle can appear to have a clockwise winding or counter-clockwise winding. Using OpenGL features Culling Face and Winding Order together to determine whether the triangle is visible from the front or the back side. In order to guarantee an inside visible only, \code{glFrontFace(GL\_CCW)} and \code{glCullFace(GL\_BACK)} can be adopted. The vertex indexes is ordered as Diagram \ref{fig:uv-sphere-ccw}.
 
 \begin{figure}[H]
 	\caption{UV sphere CCW}
@@ -318,14 +316,14 @@ Rounding the icosphere by subdividing a face to an arbitrary level of resolution
 \end{tabular}
 \end{table}
 
-Rounding icosphere is not only increasing the vertex number but also adjusting vertex indexes. As we can see from the diagram \ref{fig:icosphere-vertex-index}, the refinement of each face has three steps.
+Rounding icosphere is not only increasing the vertex number but also adjusting vertex indexes. As we can see from the Diagram \ref{fig:icosphere-vertex-index}, the refinement of each face has three steps.
 
 First, get the midpoint of each edge.
 
 \[
 \begin{array}{lr}
-\overrightarrow{d} = \dfrac{\overrightarrow{A} + \overrightarrow{B}}{2}\\
-\overrightarrow{e} = \dfrac{\overrightarrow{A} + \overrightarrow{C}}{2}\\
+\overrightarrow{d} = \dfrac{\overrightarrow{A} + \overrightarrow{B}}{2}\\\\
+\overrightarrow{e} = \dfrac{\overrightarrow{A} + \overrightarrow{C}}{2}\\\\
 \overrightarrow{f} = \dfrac{\overrightarrow{B} + \overrightarrow{C}}{2}\\
 \end{array}
 \]
@@ -350,12 +348,14 @@ Third, remove \code{$\triangle$ABC} in the vertex indexes list, add \code{$\tria
 	\decoRule
 \end{figure}
 
+Finally, draw the \code{Placemark} that looks the same size regardless of the distance in perspective view.
+
 %****************************************************************
 \subsection{Geographic Coordinate System}
 
 The Earth geographic coordinate system is a coordinate system that enables everywhere on the Earth to be specified by a set of numbers or symbols \cite{wiki.geographic-coordinate-system.2016}. A common geodetic mapping coordinates are latitude, longitude, and altitude (LLA), which also is the raw location data decorated in KML file.
 
-However, the LLA coordinates cannot be directly used from a program. Therefore, I introduce "earth-centered, earth-fixed" (ECEF) coordinate system for converting LLA coordinates to position coordinates. As we can see from diagram \ref{fig:ecef}, the origin of the axis (0, 0, 0) is located at the center of the Earth, the z-axis and y-axis are pointing towards the north and east, and the x-axis intersects the Earth at $0$ latitude and $0$ longitude.
+However, the LLA coordinates cannot be directly used from a program. Therefore, I introduce "earth-centered, earth-fixed" (ECEF) coordinate system for converting LLA coordinates to position coordinates. As we can see from Diagram \ref{fig:ecef}, the origin of the axis (0, 0, 0) is located at the center of the Earth, the z-axis and y-axis are pointing towards the north and east, and the x-axis intersects the Earth at $0$ latitude and $0$ longitude.
 
 \begin{figure}[H]
 \caption[ECEF]{Earth-centered, earth-fixed \cite{wiki.ecef.2016}}
@@ -385,8 +385,8 @@ The ECEF coordinates are expressed in a reference system that is tended to be as
 		\midrule
 		Reciprocal of flattening & $\dfrac{1}{f}$ & 298.257\,223\,563\\
 		Semi-major axis & $a$ & 6\,378\,137\,m\\
-		Semi-minor axis & $b$ & $a\,(1 - f)$\\
-		First eccentricity squared & $e_1^2$ & $1 - \dfrac{b^2}{a^2} = 2\,f - f^2$\\
+		Semi-minor axis & $b$ & $a\,(1 - f)$\\\\
+		First eccentricity squared & $e_1^2$ & $1 - \dfrac{b^2}{a^2} = 2\,f - f^2$\\\\
 		Second eccentricity squared & $e_2^2$ & $\dfrac{a^2}{b^2} - 1 = \dfrac{f\,(2 - f)}{(1 - f)^2}$\\
 		\bottomrule
 	\end{tabular}
@@ -405,22 +405,22 @@ In this application, where high accuracy is not required, simply using $a$ equal
 \[
 \begin{array}{lr}
 \begin{aligned}
-x &= (N + h)\,\cos(\varphi)\,\cos(\lambda)\\
-y &= (N + h)\,\cos(\varphi)\,\sin(\lambda)\\
-z &= (\dfrac{b^2}{a^2}\,N + h)\,\sin(\varphi)\\
+x &= (\mathbf{N} + \mathbf{h})\,\cos(\varphi)\,\cos(\lambda)\\
+y &= (\mathbf{N} + \mathbf{h})\,\cos(\varphi)\,\sin(\lambda)\\
+z &= (\dfrac{b^2}{a^2}\,\mathbf{N} + \mathbf{h})\,\sin(\varphi)\\
 \end{aligned}
 \end{array}
 \]
 
-Where,
+Where;
 
 \[
 \begin{array}{lr}
 \begin{aligned}
-\varphi &= \text{latitude}\\
-\lambda &= \text{longitude}\\
-h &= \text{altitude}\\
-N &= \text{Radius of Curvature}\\
+\varphi &= \code{Latitude}\\
+\lambda &= \code{Longitude}\\
+\mathbf{h} &= \code{Altitude}\\
+\mathbf{N} &= \code{Radius of Curvature}\\
 &= \dfrac{a}{\sqrt{1 - e^2\,\sin(\varphi)^2}}\\
 \end{aligned}
 \end{array}
@@ -478,7 +478,7 @@ Where \textbf{APIs} is:
 \[
 \begin{array}{lr}
 \begin{aligned}
-\code{format=json}&\\
+&\;\;\code{format=json}\\
 &\code{\&action=query}\\
 &\code{\&redirects=1}\\
 &\code{\&prop=extracts}\\
@@ -498,7 +498,7 @@ For instance,
 \code{https://en.wikipedia.org/}&\code{wiki/Virtual\_reality}\\
 &\Downarrow\\
 \code{https://en.wikipedia.org/}&\code{w/api.php?}\\
-&\code{format=json\&action=query\&redirects=1}\\
+&\;\;\code{format=json\&action=query\&redirects=1}\\
 &\code{\&prop=extracts\&exintro=\&explaintext=}\\
 &\code{\&indexpageids=\&titles=Virtual\_reality}\\
 \end{aligned}
@@ -509,60 +509,100 @@ For instance,
 \subsection{Extra Model}
 \label{section:obj-model}
 
+A \code{Placemark} offers an ability to display a particular model that can be decorated as a URL in the \code{ExtendedData} (an element for adding custom data to a KML feature). In the sample data, there are some Wavefront OBJ models \cite{wiki.obj.2016} are created by the Blender (free software) and being used in this application.
 
-A simple and common OBJ format model can be loaded as an extra model for a \code{Placemark}. 
+A simple OBJ parser is implemented, it yet supports a full OBJ features \cite{paulbourke.obj}, such as syntax \code{mtllib} and \code{usemtl} are ignored. However, the main features that contain vertex related data for the model creation are supported, see Table \ref{tab:obj-syntax}.
 
-
-There are some simple Wavefront OBJ models are created by the Blender (free software) and being used in this application.
-
-
-A simple OBJ parser is created only support v (vertex indices), vn (vertex normals), fv (face vertex), fvn (face vertex normals), and MTL syntax is ignored \cite{shen.obj-parser.2011}.
-
+\begin{table}[H]
+	\caption{OBJ syntax}
+	\label{tab:obj-syntax}
+	\centering
+	\begin{tabular}{l l l}
+		\toprule
+		\tabhead{Starting character / word} & \tabhead{Meaning}\\
+		\midrule
+		\code{v} & Geometric vertices\\
+		\code{vt} & Texture coordinates\\
+		\code{vn} & Vertex normals\\
+		\code{f} & Face, composed of \code{v} / \code{vt} (optional) / \code{vn} (optional)\\
+		\bottomrule
+	\end{tabular}
+\end{table}
 
 %****************************************************************
 \section{Ray Pointer}
 \label{section:ray-pointer}
 
+A ray pointer is displayed in the center of sight for tracing the path of eyes. It is important to understand that the centering is a trick in the immersive virtual reality applications which works with glass lenses. There are different implementation on both eye's viewports to convert a world-space vertex into inverse-lens distorted screen space. As a result, the user can see a slightly overlapping effect on an object when it is not on focused. This is acting the same in reality, and a blurred overlapping effect is happening when people are focusing on different objects in the same direction. Therefore, the centering pointer for ray-tracing always locates at the surface of the distant objects. It removes unnecessary distraction and guarantees a clear focus on the object that user is looking at.
+
+The ray pointer is drawn as \code{GL\_POINTS}, but rounding to a ring shape (see Figure \ref{fig:ray-pointer-point2ring}) in its Fragment Shader.
+
+\begin{figure}[H]
+	\caption{Ray Pointer ring}
+	\label{fig:ray-pointer-point2ring}
+	\centering
+	\includegraphics[width=\linewidth]{Figures/ray-pointer-point2ring.png}
+	\decoRule
+\end{figure}
+
+\[
+\begin{array}{lr}
+\begin{aligned}
+&\code{// Transform coord from range [0, 1] to [-0.5, 0.5]}\\
+&\code{vec2 coord = gl\_PointCoord - vec2(0.5);}\\
+&\code{float length = length(coord);}\\
+&\code{if (0.4 < length \&\& length < 0.5)}\\
+&\;\;\;\;\;\;\;\;\code{FragColor = vec4(u\_Color, 1.0);}
+\end{aligned}
+\end{array}
+\]
+
 %****************************************************************
 \section{Information Display}
 
-A textfield is a rectangle vertex based renderable component to display text on a flat plane. Since it is a GL scene, the actual text will be drawn as a texture. By a constant width and native \code{android.text.StaticLayout} support, the height of the texture can be calculated. 
+A flat plane 3D rectangular \code{Textfield} is implemented for displaying certain information, such as plain text and image. This information will be drawn as a texture and mapping to the \code{Textfield} vertex including the plain text. The calculation for the height of the total text with a certain pre-defined container width can be done by taking use of the Android native \code{android.text.StaticLayout}. 
 
-A menu contains multi-textfield can be seen as an empty textfield based which texture is fill-full a pure background color, and several textfields are laid out on the top of it with a certain vertical dimension.
+The \code{Textfield} is been used for presenting details of \code{Placemark}, and the KML chooser menu. The menu which contains multiple \code{Textfield} that are laid out on the top of a 3D rectangular \code{Panel} with a small vertical dimension.
 
-A head rotation matrix (quaternion matrix \cite{jvv.quaternions.2013}) is required for locating object in front of camera \cite{mathworks.quaternion-rotation.2016}.
+The vital part of the implementation for flat rectangular objects is to estimate and give them a right rotation (in front of eyes with zero relative rotation angle) based on the users' 3D head pose. Therefore, a head poses related quaternion matrix \cite{jvv.quaternions.2013} is needed to this end. I take the \code{head.quaternion} \code{(x, y, z, w)} provided by Google VR SDK from each frame, then convert the quaternion to a rotation matrix. First, reverse direction \code{(-x, -y, -z, w)} for facing to eye. Then, compute the rotation matrix by the given inhomogeneous expression \cite{wiki.quaternion-mat.2016}.
+
+\begin{equation}
+\label{equ:quaternion-matrix}
+R = 
+	\begin{bmatrix}
+	1 - 2\,(q_z^2 + q_w^2) & 2\,(q_y\,q_z - q_x\,q_w) & 2\,(q_x\,q_z + q_y\,q_w)\\
+	2\,(q_y\,q_z + q_x\,q_w) & 1 - 2\,(q_y^2 + q_w^2) & 2\,(q_z\,q_w - q_x\,q_y)\\
+	2\,(q_y\,q_w - q_x\,q_z) & 2\,(q_x\,q_y + q_z\,q_w) & 1 - 2\,(q_y^2 + q_z^2)\\
+	\end{bmatrix}
+\end{equation}
 
 %****************************************************************
 \section{Camera Movement}
 
-In general, there are two sensors can be useful to manage camera movement: ACCELEROMETER (API level 3), LINEAR\_ACCELERATION (API level 9) and STEP\_DETECTOR (API level 19). 
+The ability to move around in virtual reality is important to satisfy user's need. Most Android-powered devices have built-in sensors that measure motion, orientation, and various environmental conditions \cite{google.sensors.2016}. The motion sensors measure acceleration forces and rotational forces along three axes. They include accelerometers, gravity sensors, gyroscopes, and rotational vector sensors. 
 
-LINEAR\_ACCELERATION is same as ACCELERATION which measures the acceleration force in meter per second repeatedly, except linear acceleration sensor is a synthetic sensor with gravity filtered out. 
-
-\[
-\begin{array}{lr}
-Linear Acceleration = Accelerometer Data - Gravity\\
-v = \int a\,dt\\
-x = \int v\,dt\\
-\end{array}
-\]
-
-First of all, we take the accelerometer data and remove gravity that is called gravity compensation, whatever is left is linear movement. Then we have to integrate it one to get velocity, integrated again to get the position, which is called double integral. Now if the first integral creates drift, double integrals are really nasty that they create horrible drift. Because of this noise, using acceleration data it isn't so accurate, it is really hard to do any kind of linear movement \cite{google.sensor-fusion.2010}.
-
-On the other hand, use step counter from STEP\_DETECTOR, and pedometer algorithm for pedestrian navigation, that in fact works very well for this project.
+In general, the three physical axes (x, y, and z) data from Accelerometer sensor and Linear Acceleration sensor are useful to track and calculate device movement. Linear Acceleration is same as Accelerometer which measures the acceleration force in meter per second repeatedly, except the Linear Acceleration sensor is a synthetic sensor with gravity filtered out. 
 
 \[
 \begin{array}{lr}
-p_1 = p_0 + v_0 \times dt\\
-v_1 = v_0 + a \times dt\\
+\begin{aligned}
+\code{LinearAcceleration} &= \code{Accelerometer} - \code{Gravity}\\
+v &= \int a \cdot dt\\
+x &= \int v \cdot dt\\
+\end{aligned}
 \end{array}
 \]
 
-The accuracy of this depends on how precision we can get for changing velocity. Considering that velocity is made of 3-axis directions, the current heading direction is required for a correct velocity calculation. Since the frame life cycle is implemented based on \cite{google.vr-sdk.2016}, which provide the heading direction in each frame callback. So I collect everything I need from the last frame to new frame and update both velocity and position for each new frame.
+However, there is a technical limitation. First of all, we take the accelerometer data and remove gravity that is called gravity compensation, whatever is left is linear movement. Then we have to integrate it once to get velocity, and integrated again to get the position, which is called double integral. If the first integral creates drift, the double integrals are nasty that they create horrible drift. In such noise, using acceleration data for navigation is not accurate, and it is hard to do any kind of linear movement \cite{google.sensor-fusion.2010}.
 
-First of all, damping is required. I reduce velocity by a percentage. It is simply for avoiding that camera taking too long to stop. Damping by percentage can stable and stop the camera in a certain of time that won't be affected by the current camera speed. 
+Therefore, I introduce Step Detector sensor and pedometer algorithm pedestrian navigation - user move forward on the current heading direction. First of all, during each frame life cycle, speed damping is calculated by a percentage stable and stop the camera in a certain of time regardless of current velocity. This is simply for avoiding that camera taking too long to stop. Secondly, each detected step causes a constant velocity pulse in the heading direction, see Diagram \ref{fig:camera-movement}.
 
-Secondly, a constant value in head forwarding direction is been used as a pulse for each step. Because a step is happening instantaneously which implies $a\,dt$ made by each step is actually can be replaced by a constant value.
+\[
+\begin{array}{lr}
+p_1 = p_0 + v_0 \cdot dt\\
+v_1 = v_0 + a \cdot dt\\
+\end{array}
+\]
 
 \begin{figure}[H]
 \caption{Camera movement}
@@ -572,16 +612,14 @@ Secondly, a constant value in head forwarding direction is been used as a pulse 
 \decoRule
 \end{figure}
 
-For each new frame:
-
 \[
 \begin{array}{lr}
 \begin{aligned}
-\overrightarrow{V_0} &= \overrightarrow{V_0} \cdot Damping\\
-\overrightarrow{P_1} &= \overrightarrow{P_0} + \overrightarrow{V_0} \cdot dt\\
-\overrightarrow{V_1} &= \overrightarrow{V_0} + \overrightarrow{Forwarding} \cdot Pulse \cdot Steps\\
-Damping &\in [0,\enspace1]\\
-Pulse &\in [0,\enspace \infty)\\
+\overrightarrow{V_0} &= \overrightarrow{V_0} \cdot \code{SpeedDamping}\\\\
+\overrightarrow{P_1} &= \overrightarrow{P_0} + \overrightarrow{V_0} \cdot dt\\\\
+\overrightarrow{V_1} &= \overrightarrow{V_0} + \overrightarrow{\code{HeadingDirection}} \cdot \code{Pulse} \cdot \code{DetectedStep}\\\\
+\code{SpeedDamping} &\in [0,\enspace1]\\
+\code{Pulse} &\in [0,\enspace \infty)\\
 \end{aligned}
 \end{array}
 \]
@@ -589,14 +627,16 @@ Pulse &\in [0,\enspace \infty)\\
 %****************************************************************
 \section{Ray Intersection}
 
-Detect collisions between ray and models are the key to allowing user selecting objects in the VR would, which is one of the important experience for user interaction.
+In order to allow user interacts with virtual reality environment, the ability of intersection detection for ray-tracing is needed. In this way, it not only information can be easier present and understand, but also the user is able to interact (or select) objects in the 3D world.
 
-A ray can be describe in a equation with known ray start position \emph{$\overrightarrow{R_0}$} and ray direction \emph{$\overrightarrow{R_d}$}.
+A ray can be described in an equation with known starting position, $\overrightarrow{R_0}$ and its direction $\overrightarrow{R_d}$:
 
 \begin{equation}
 \label{equ:ray-t}
 \overrightarrow{R(t)} = \overrightarrow{R_0} + \overrightarrow{R_d} \cdot t
 \end{equation}
+
+In this section, I separately reveal the intersection detection for basic elements. They are ray-sphere, ray-plane (3D rectangular), ray-box (2D and 3D).
 
 %****************************************************************
 \subsection{Ray-Sphere}
@@ -610,46 +650,49 @@ A ray can be describe in a equation with known ray start position \emph{$\overri
 \decoRule
 \end{figure}
 
-A point \emph{P} on the surface of sphere should match the equation:
+A point $P$ on the surface of sphere can be described in an equation:
 
 \begin{equation}
 \label{equ:sphere-surface}
 (x_p - x_c)^2 + (y_p - y_c)^2 + (z_p - z_c)^2 = r^2
 \end{equation}
 
-If the ray intersects with the sphere at any position\;\emph{P} must match the equation \ref{equ:ray-t} and \ref{equ:sphere-surface}. Therefore the solution of \emph{t} in the cointegrate equation implies whether or not the ray will intersect with the sphere:
+If the ray intersects with the sphere at any position $P$, it must match both equation \ref{equ:ray-t} and \ref{equ:sphere-surface}. Therefore the solution of $t$ from the cointegrate equation (as shown below) implies whether or not the ray will intersect with the sphere.
 
 \[
 \begin{aligned}
-(x_{R_0} + x_{R_d} \cdot t - x_c)^2 &+ (y_{R_0} + y_{R_d} \cdot t - y_c)^2 + (z_{R_0} + z_{R_d} \cdot t - z_c)^2 = r^2\\
+(x_{R_0} + x_{R_d} \cdot t - x_c)^2 + (y_{R_0} + y_{R_d} \cdot t - y_c)^2 &+ (z_{R_0} + z_{R_d} \cdot t - z_c)^2 &&= r^2\\
 &\vdots\\
-x_{R_d}^2\,t^2 &+ (2\,x_{R_d}\,(x_{R_0} - x_c))\,t + (x_{R_0}^2 - 2\,x_{R_0}\,x_c + x_c^2)\\
-+\;y_{R_d}^2\,t^2 &+ (2\,y_{R_d}\,(y_{R_0} - y_c))\,t + (y_{R_0}^2 - 2\,y_{R_0}\,y_c + y_c^2)\\
-+\;z_{R_d}^2\,t^2 &+ (2\,z_{R_d}\,(z_{R_0} - z_c))\,t + (z_{R_0}^2 - 2\,z_{R_0}\,z_c + z_c^2) = r^2\\
+x_{R_d}^2\,t^2 + (2\,x_{R_d}\,(x_{R_0} - x_c))\,t &+ (x_{R_0}^2 - 2\,x_{R_0}\,x_c + x_c^2)\\
++\;y_{R_d}^2\,t^2 + (2\,y_{R_d}\,(y_{R_0} - y_c))\,t &+ (y_{R_0}^2 - 2\,y_{R_0}\,y_c + y_c^2)\\
++\;z_{R_d}^2\,t^2 + (2\,z_{R_d}\,(z_{R_0} - z_c))\,t &+ (z_{R_0}^2 - 2\,z_{R_0}\,z_c + z_c^2) &&= r^2\\
 \end{aligned}
 \]
 
-It can be seen as a quadratic formula:
+It is essentially can be seen as a quadratic formula:
 
 \begin{equation}
 \label{equ:sphere-surface-quadratic-formula}
 a\,t^2 + b\,t + c = 0
 \end{equation}
 
-At this point, we are able to solved the \emph{t}:
+Where the solution of $t$ are:
 
-\[
+\begin{equation}
+\label{equ:sphere-t-solution}
 t =
 \begin{cases}
-\dfrac{-b \pm \sqrt{b^2 - 4\,a\,c}}{2\,a} & \text{if }\;b^2 - 4\,a\,c > 0\\
-\dfrac{-b}{2\,a} & \text{if }\; b^2 - 4\,a\,c = 0\\
+\dfrac{-b \pm \sqrt{b^2 - 4\,a\,c}}{2\,a} & \text{if }\;b^2 - 4\,a\,c > 0\\\\
+\dfrac{-b}{2\,a} & \text{if }\; b^2 - 4\,a\,c = 0\\\\
 \varnothing & \text{if }\; b^2 - 4\,a\,c < 0\\
 \end{cases}
-\]
+\end{equation}
 
-Then, I take a further step to get rid of formula complexity.
+A further step to get rid of formula complexity by taking in geometric vector calculation.
 
-$\because$ Equation \ref{equ:sphere-surface},\,\ref{equ:sphere-surface-quadratic-formula}
+
+$\because$\;\;\;\;Equation \ref{equ:sphere-surface} and equation \ref{equ:sphere-surface-quadratic-formula},
+
 \[
 \begin{array}{lr}
 a = x_{R_d}^2 + y_{R_d}^2 + z_{R_d}^2\\
@@ -658,35 +701,47 @@ c = (x_{R_0} - x_c)^2 + (y_{R_0} - y_c)^2 + (z_{R_0} - z_c)^2 - r^2\\
 \end{array}
 \]
 
-$\And$
+$\And$\;\;\;\;Geometric vector equation for $\overrightarrow{R_d}$ (ray's direction) and $\overrightarrow{V_c\_R_0}$ (vector from center of the sphere points to the ray's starting position):
+
 \[
 \begin{array}{lr}
 \begin{aligned}
-\norm{\overrightarrow{R_d}} &= \sqrt{x_{R_d}^2 + y_{R_d}^2 + z_{R_d}^2} = 1\\
-\overrightarrow{V_{c\_R_0}} &= \overrightarrow{R_0} - \overrightarrow{C} = \overrightarrow{(x_{R_0} - x_c,\enspace y_{R_0} - y_c,\enspace z_{R_0} - z_c)}\\
+&\norm{\overrightarrow{R_d}} &&= \sqrt{x_{R_d}^2 + y_{R_d}^2 + z_{R_d}^2} = 1\\\\
+&\overrightarrow{V_{c\_R_0}} &&= \overrightarrow{R_0} - \overrightarrow{C} = \overrightarrow{(x_{R_0} - x_c,\enspace y_{R_0} - y_c,\enspace z_{R_0} - z_c)}\\
 \end{aligned}
 \end{array}
 \]
 
-$\therefore$
+$\therefore$\;\;\;\;Value of $a$, $b$ and $c$ can be described as below:
 \[
 \begin{array}{lr}
-a =1\\
-b = 2 \cdot \overrightarrow{R_d} \cdot \overrightarrow{V_{c\_R_0}}\\
+a =1\\\\
+b = 2 \cdot \overrightarrow{R_d} \cdot \overrightarrow{V_{c\_R_0}}\\\\
 c = \overrightarrow{V_{c\_R_0}} \cdot \overrightarrow{V_{c\_R_0}} \cdot r^2\\
 \end{array}
 \]
 
-$\because$ The formula for \emph{t} can also be optimized
+$\And$\;\;\;\;Introducing $\alpha$ and $\beta$ to get rid of complexity for the equation \ref{equ:sphere-t-solution} of $t$:
+
 \[
 \begin{array}{lr}
 \dfrac{-b \pm \sqrt{b^2 - 4\,a\,c}}{2\,a} = -\alpha \pm \sqrt{\beta}\\
-\alpha = \dfrac{1}{2}\,b\\
-\beta = \alpha^2 - c\\
 \end{array}
 \]
 
-$\therefore$ The final solution for \emph{t}
+Where:
+
+\[
+\begin{array}{lr}
+\begin{aligned}
+\alpha &= \dfrac{1}{2}\,b\\
+\beta &= \alpha^2 - c\\
+\end{aligned}
+\end{array}
+\]
+
+$\therefore$\;\;\;\;The solution formula for $t$ can also be optimized as below:
+
 \[
 t =
 \begin{cases}
@@ -696,7 +751,7 @@ t =
 \end{cases}
 \]
 
-And the collision position for each \emph{t} is:
+$\therefore$\;\;\;\;Given the known value of $\overrightarrow{R_0}$, $\overrightarrow{R_d}$ and $\overrightarrow{V_c}$, it is able to solve the $t$. The intersection position at any valid $t$ can be obtained as follow:
 
 \[
 \overrightarrow{P} = \overrightarrow{R_0} + \overrightarrow{R_d} \cdot t
@@ -713,42 +768,65 @@ And the collision position for each \emph{t} is:
 \decoRule
 \end{figure}
 
-If a point \emph{P} on the plane and also belongs to the ray, we have quadric equation:
+A point $P$ on the plane which means it perpendicular to the $\overrightarrow{N}$ of the plane. If the $P$ also belongs to the ray, then it can be described in a quadratic equation:
 
 \begin{equation}
 \label{equ:ray-plane-intersection}
 \begin{array}{lr}
-(\overrightarrow{P} - \overrightarrow{P_1}) \cdot \overrightarrow{N} = 0\\
+(\overrightarrow{P} - \overrightarrow{P_1}) \cdot \overrightarrow{N} = 0\\\\
 \overrightarrow{P} = \overrightarrow{R_0} + \overrightarrow{R_d} \cdot t\\
 \end{array}
 \end{equation}
 
-Solution for the \emph{t} is:
+$\therefore$\;\;\;\;The solution for the $t$ is:
 
 \[
 t =
 \begin{cases}
-\dfrac{-\overrightarrow{N} \cdot (\overrightarrow{R_0} - \overrightarrow{P_1})}{\overrightarrow{N} \cdot \overrightarrow{R_d}} & \text{if }\;\overrightarrow{N} \cdot \overrightarrow{R_d} \nsim 0\\
-\varnothing & \text{if }\;\overrightarrow{N} \cdot \overrightarrow{R_d} \sim 0\\
+\dfrac{-\overrightarrow{N} \cdot (\overrightarrow{R_0} - \overrightarrow{P_1})}{\overrightarrow{N} \cdot \overrightarrow{R_d}} & \text{if }\;\overrightarrow{N} \cdot \overrightarrow{R_d} \nsim 0\;\;(\text{or} > \code{EPSILON})\\\\
+\varnothing & \text{if }\;\overrightarrow{N} \cdot \overrightarrow{R_d} \sim 0\;\;(\text{or} < \code{EPSILON})\\
 \end{cases}
 \]
 
-At last, we have to verify if the collision is inside of the quadrangle by putting \emph{t} back to \ref{equ:ray-plane-intersection}, \cite{user3146587.ray-plane.2014} the \emph{t} is valid only if:
+After all, taking a valid $t$ in equation \ref{equ:ray-plane-intersection} can only get the position $\overrightarrow{P}$ where the ray intersects with the plane. Therefore, we have to verify whether or not the $\overrightarrow{P}$ belongs to a specific rectangular with certain width and height. 
+
+$\because$\;\;\;\;Given vector projection equation of $\overrightarrow{A}$ on $\overrightarrow{B}$:
+
+\begin{equation}
+\label{equ:vector-projection}
+\begin{array}{lr}
+A_{B} = \norm{A} \cdot \cos(\theta)\\\\
+A_{B} = \dfrac{A \cdot B}{\norm{B}}\\
+\end{array}
+\end{equation}
+
+$\therefore$\;\;\;\;The vector projection $\mu$ and $\nu$ of a valid $\overrightarrow{P}$ on both edges should greater than $0$ but smaller than the length of the edge.
 
 \[
 \begin{array}{lr}
-\mu = \sqrt{(\overrightarrow{P} - \overrightarrow{P_1}) \cdot (\overrightarrow{P_2} - \overrightarrow{P_1}))} \in [0,\enspace\norm{\overrightarrow{P_2} - \overrightarrow{P_1}}]\\
-\nu = \sqrt{(\overrightarrow{P} - \overrightarrow{P_1}) \cdot (\overrightarrow{P_3} - \overrightarrow{P_1}))} \in [0,\enspace\norm{\overrightarrow{P_3} - \overrightarrow{P_1}}]\\
+\mu = \dfrac{(\overrightarrow{P} - \overrightarrow{P_1}) \cdot (\overrightarrow{P_2} - \overrightarrow{P_1})}{\enspace\norm{\overrightarrow{P_2} - \overrightarrow{P_1}}}\\\\
+\nu = \dfrac{(\overrightarrow{P} - \overrightarrow{P_1}) \cdot (\overrightarrow{P_3} - \overrightarrow{P_1}))}{\norm{\overrightarrow{P_3} - \overrightarrow{P_1}}}\\\\
+\mu \in [0,\enspace\norm{\overrightarrow{P_2} - \overrightarrow{P_1}}]\\
+\nu \in [0,\enspace\norm{\overrightarrow{P_3} - \overrightarrow{P_1}}]\\
+\end{array}
+\]
+
+Finally, transform them into a more optimized expression, and only if $\mu'$ and $\nu'$ satisfy the conditions below, the intersection position $\overrightarrow{P}$ is valid:
+
+\[
+\begin{array}{lr}
+\mu' = (\overrightarrow{P} - \overrightarrow{P_1}) \cdot (\overrightarrow{P_2} - \overrightarrow{P_1})\\
+\nu' = (\overrightarrow{P} - \overrightarrow{P_1}) \cdot (\overrightarrow{P_3} - \overrightarrow{P_1})\\
+\mu' \in [0,\enspace (\overrightarrow{P_2} - \overrightarrow{P_1}) \cdot (\overrightarrow{P_2} - \overrightarrow{P_1})]\\
+\nu' \in [0,\enspace (\overrightarrow{P_3} - \overrightarrow{P_1}) \cdot (\overrightarrow{P_3} - \overrightarrow{P_1})]\\
 \end{array}
 \]
 
 %****************************************************************
 \subsection{Ray-Box}
 \label{section:ray-box}
-% \cite{scratchapixel.ray-plane-3d}
-% \cite{williams.ray-box.2005}
 
-There is an octree implementation \ref{section:space-partition} in the VR 3D world that separates the 3D world to invisible 3D boxes that each box contains a certain number of other models. It is to avoid unnecessary ray-object collision detection. In this section, I am going to first explain Ray-Box-2D collision detection \cite{tavian.ray-box-2d.2011}, then derive out Ray-Box-3D intersection.
+See section \ref{section:space-partition}, space partition is implemented in the 3D world that separates the space to invisible boxes that each box may or may not contain other objects. Ray-box intersection implementation for avoids unnecessary ray-object intersection tests. In this section, explanation divided into two parts, ray-box in 2D and which have inspired to ray-box 3D implementation.
 
 %****************************************************************
 \subsubsection{Ray-Box 2D}
@@ -761,53 +839,79 @@ There is an octree implementation \ref{section:space-partition} in the VR 3D wor
 \decoRule
 \end{figure}
 
-$\because$ Known $R_0$,\enspace$R_d$,\enspace$P_1$,\enspace$P_2$
+Given known $R_0$ (ray's starting position),\enspace$R_d$ (ray's direction),\enspace$P_1$ (left-bottom corner),\enspace$P_2$ (right-top corner), we can get the value of $X_1$,\enspace$X_2$,\enspace$Y_1$ and $Y_2$. When ray intersecting with the 2D box, they have such meaning:
+
+\begin{description}
+	\setlength{\parskip}{0pt}
+	\item[$\bullet$ Vertical Area] Vertical route area between the left edge and right edge (include the area beyond the box)
+	\item[$\bullet$ Horizontal Area] Horizontal route area between the top edge and bottom edge (include the area beyond the box)
+	\item[$\bullet$ $\mathbf{X}_1$] The distance from $R_0$ to the "in" point of Vertical Area in the x-axis direction.   
+	\item[$\bullet$ $\mathbf{X}_2$] The distance from $R_0$ to the "out" point of Vertical Area in the x-axis direction. 
+	\item[$\bullet$ $\mathbf{Y}_1$] The distance from $R_0$ to the "in" point of Horizontal Area in the y-axis direction.
+	\item[$\bullet$ $\mathbf{Y}_2$] The distance from $R_0$ to the "out" point of Horizontal Area in the y-axis direction. 
+\end{description}
+
+$\therefore$
+
 \begin{multicols}{2}
 \noindent
-\[
-X_1 =
-\begin{cases}
-x_{P_1} - x_{R_0} & \text{if }\;x_{R_d} > 0\\
-x_{P_2} - x_{R_0} & \text{if }\;x_{R_d} < 0\\
-\end{cases}
-\]
-\[
-X_2 =
-\begin{cases}
-x_{P_2} - x_{R_0} & \text{if }\;x_{R_d} > 0\\
-x_{P_1} - x_{R_0} & \text{if }\;x_{R_d} < 0\\
-\end{cases}
-\]
-\[
-\begin{array}{lr}
-t_{X_1} = \dfrac{X_1}{x_{R_d}}\\
-t_{X_2} = \dfrac{X_2}{x_{R_d}}\\
-\end{array}
-\]
+	\[
+	X_1 =
+	\begin{cases}
+	x_{P_1} - x_{R_0} & \text{if }\;x_{R_d} > 0\\
+	x_{P_2} - x_{R_0} & \text{if }\;x_{R_d} < 0\\
+	\end{cases}
+	\]
 \columnbreak
-\[
-Y_1 =
-\begin{cases}
-y_{P_1} - y_{R_0} & \text{if }\;y_{R_d} > 0\\
-y_{P_2} - y_{R_0} & \text{if }\;y_{R_d} < 0\\
-\end{cases}
-\]
-\[
-Y_2 =
-\begin{cases}
-y_{P_2} - y_{R_0} & \text{if }\;y_{R_d} > 0\\
-y_{P_1} - y_{R_0} & \text{if }\;y_{R_d} < 0\\
-\end{cases}
-\]
-\[
-\begin{array}{lr}
-t_{Y_1} = \dfrac{Y_1}{y_{R_d}}\\
-t_{Y_2} = \dfrac{Y_2}{y_{R_d}}\\
-\end{array}
-\]
+	\[
+	X_2 =
+	\begin{cases}
+	x_{P_2} - x_{R_0} & \text{if }\;x_{R_d} > 0\\
+	x_{P_1} - x_{R_0} & \text{if }\;x_{R_d} < 0\\
+	\end{cases}
+	\]
 \end{multicols}
 
-$\And$ When collision happens, we have formula:
+\begin{multicols}{2}
+\noindent
+	\[
+	Y_1 =
+	\begin{cases}
+	y_{P_1} - y_{R_0} & \text{if }\;y_{R_d} > 0\\
+	y_{P_2} - y_{R_0} & \text{if }\;y_{R_d} < 0\\
+	\end{cases}
+	\]
+\columnbreak
+	\[
+	Y_2 =
+	\begin{cases}
+	y_{P_2} - y_{R_0} & \text{if }\;y_{R_d} > 0\\
+	y_{P_1} - y_{R_0} & \text{if }\;y_{R_d} < 0\\
+	\end{cases}
+	\]
+\end{multicols}
+
+$\And$\;\;\;\;The relative distance in x-axis and y-axis direction:
+
+\begin{multicols}{2}
+\noindent
+	\[
+	\begin{array}{lr}
+	t_{X_1} = \dfrac{X_1}{x_{R_d}}\\\\
+	t_{X_2} = \dfrac{X_2}{x_{R_d}}\\
+	\end{array}
+	\]
+\columnbreak
+	\[
+	\begin{array}{lr}
+	t_{Y_1} = \dfrac{Y_1}{y_{R_d}}\\\\
+	t_{Y_2} = \dfrac{Y_2}{y_{R_d}}\\
+	\end{array}
+	\]
+\end{multicols}
+
+$\therefore$\;\;\;\;A valid intersection exist only if following equation satisfied:
+
 \[
 \begin{array}{lr}
 \begin{aligned}
@@ -817,11 +921,11 @@ t_{Y_1} &< t_{Y_2}\\
 \end{array}
 \]
 
-$\therefore$ Which is
-\begin{equation}
-\label{equ:ray-box-2d-intersection}
-max(t_{X_1},\enspace t_{Y_1}) < min(t_{X_2},\enspace t_{Y_2})
-\end{equation}
+Which is:
+
+\[
+\code{max}\;(t_{X_1},\enspace t_{Y_1}) < \code{min}\;(t_{X_2},\enspace t_{Y_2})
+\]
 
 %****************************************************************
 \subsubsection{Ray-Box 3D}
@@ -834,81 +938,109 @@ max(t_{X_1},\enspace t_{Y_1}) < min(t_{X_2},\enspace t_{Y_2})
 \decoRule
 \end{figure}
 
-$\because$ Known $R_0$,\enspace$R_d$,\enspace$P_1$,\enspace$P_2$
+Given known $R_0$ (ray's starting position),\enspace$R_d$ (ray's direction),\enspace$P_1$ (left-bottom-front corner),\enspace$P_2$ (right-top-back corner), we can get the value of $X_1$,\enspace$X_2$,\enspace$Y_1$, $Y_2$, $Z_1$ and $Z_2$. When ray intersecting with the 3D box, they have such meaning:
+
+\begin{description}
+	\setlength{\parskip}{0pt}
+	\item[$\bullet$ Vertical Area] Vertical route area within the scope of left-face, right-face, back-face and front face (include the area beyond the box)
+	\item[$\bullet$ Horizontal Area] Horizontal route area within the scope of top-face, bottom-face, back-face and front face (include the area beyond the box)
+	\item[$\bullet$ Z-depth Area] Z-depth route area within the scope of top-face, bottom-face, left-face and right face (include the area beyond the box)
+	\item[$\bullet$ $\mathbf{X}_1$] The distance from $R_0$ to the "in" point of Vertical Area in the x-axis direction.   
+	\item[$\bullet$ $\mathbf{X}_2$] The distance from $R_0$ to the "out" point of Vertical Area in the x-axis direction. 
+	\item[$\bullet$ $\mathbf{Y}_1$] The distance from $R_0$ to the "in" point of Horizontal Area in the y-axis direction.
+	\item[$\bullet$ $\mathbf{Y}_2$] The distance from $R_0$ to the "out" point of Horizontal Area in the y-axis direction. 
+	\item[$\bullet$ $\mathbf{Z}_1$] The distance from $R_0$ to the "in" point of Z-depth Area in the z-axis direction.
+	\item[$\bullet$ $\mathbf{Z}_2$] The distance from $R_0$ to the "out" point of Z-depth Area in the z-axis direction. 
+\end{description}
+
+$\therefore$
+
 \begin{multicols}{2}
 \noindent
-\[
-X_1 =
-\begin{cases}
-x_{P_1} - x_{R_0} & \text{if }\;x_{R_d} > 0\\
-x_{P_2} - x_{R_0} & \text{if }\;x_{R_d} < 0\\
-\end{cases}
-\]
-\[
-X_2 =
-\begin{cases}
-x_{P_2} - x_{R_0} & \text{if }\;x_{R_d} > 0\\
-x_{P_1} - x_{R_0} & \text{if }\;x_{R_d} < 0\\
-\end{cases}
-\]
-\[
-\begin{array}{lr}
-t_{X_1} = \dfrac{X_1}{x_{R_d}}\\
-t_{X_2} = \dfrac{X_2}{x_{R_d}}\\
-\end{array}
-\]
+	\[
+	X_1 =
+	\begin{cases}
+	x_{P_1} - x_{R_0} & \text{if }\;x_{R_d} > 0\\
+	x_{P_2} - x_{R_0} & \text{if }\;x_{R_d} < 0\\
+	\end{cases}
+	\]
 \columnbreak
-\[
-Y_1 =
-\begin{cases}
-y_{P_1} - y_{R_0} & \text{if }\;y_{R_d} > 0\\
-y_{P_2} - y_{R_0} & \text{if }\;y_{R_d} < 0\\
-\end{cases}
-\]
-\[
-Y_2 =
-\begin{cases}
-y_{P_2} - y_{R_0} & \text{if }\;y_{R_d} > 0\\
-y_{P_1} - y_{R_0} & \text{if }\;y_{R_d} < 0\\
-\end{cases}
-\]
-\[
-\begin{array}{lr}
-t_{Y_1} = \dfrac{Y_1}{y_{R_d}}\\
-t_{Y_2} = \dfrac{Y_2}{y_{R_d}}\\
-\end{array}
-\]
-\end{multicols}
-\begin{multicols}{2}
-\noindent
-\[
-Z_1 =
-\begin{cases}
-z_{P_1} - z_{R_0} & \text{if }\;z_{R_d} > 0\\
-z_{P_2} - z_{R_0} & \text{if }\;z_{R_d} < 0\\
-\end{cases}
-\]
-\[
-Z_2 =
-\begin{cases}
-z_{P_2} - z_{R_0} & \text{if }\;z_{R_d} > 0\\
-z_{P_1} - z_{R_0} & \text{if }\;z_{R_d} < 0\\
-\end{cases}
-\]
-\[
-\begin{array}{lr}
-t_{Z_1} = \dfrac{Z_1}{z_{R_d}}\\
-t_{Z_2} = \dfrac{Z_2}{z_{R_d}}\\
-\end{array}
-\]
-\columnbreak
-\[
-\]
+	\[
+	X_2 =
+	\begin{cases}
+	x_{P_2} - x_{R_0} & \text{if }\;x_{R_d} > 0\\
+	x_{P_1} - x_{R_0} & \text{if }\;x_{R_d} < 0\\
+	\end{cases}
+	\]
 \end{multicols}
 
-$\And$ When collision happens, we have formula:
+\begin{multicols}{2}
+\noindent
+	\[
+	Y_1 =
+	\begin{cases}
+	y_{P_1} - y_{R_0} & \text{if }\;y_{R_d} > 0\\
+	y_{P_2} - y_{R_0} & \text{if }\;y_{R_d} < 0\\
+	\end{cases}
+	\]
+\columnbreak
+	\[
+	Y_2 =
+	\begin{cases}
+	y_{P_2} - y_{R_0} & \text{if }\;y_{R_d} > 0\\
+	y_{P_1} - y_{R_0} & \text{if }\;y_{R_d} < 0\\
+	\end{cases}
+	\]
+\end{multicols}
+
+\begin{multicols}{2}
+\noindent
+	\[
+	Z_1 =
+	\begin{cases}
+	z_{P_1} - z_{R_0} & \text{if }\;z_{R_d} > 0\\
+	z_{P_2} - z_{R_0} & \text{if }\;z_{R_d} < 0\\
+	\end{cases}
+	\]
+\columnbreak
+	\[
+	Z_2 =
+	\begin{cases}
+	z_{P_2} - z_{R_0} & \text{if }\;z_{R_d} > 0\\
+	z_{P_1} - z_{R_0} & \text{if }\;z_{R_d} < 0\\
+	\end{cases}
+	\]
+\end{multicols}
+
+$\And$\;\;\;\;The relative distance in different axis direction:
+
+\begin{multicols}{3}
+\noindent
+	\[
+	\begin{array}{lr}
+	t_{X_1} = \dfrac{X_1}{x_{R_d}}\\\\
+	t_{X_2} = \dfrac{X_2}{x_{R_d}}\\
+	\end{array}
+	\]
+\columnbreak
+	\[
+	\begin{array}{lr}
+	t_{Y_1} = \dfrac{Y_1}{y_{R_d}}\\\\
+	t_{Y_2} = \dfrac{Y_2}{y_{R_d}}\\
+	\end{array}
+	\]
+\columnbreak
+	\[
+	\begin{array}{lr}
+	t_{Z_1} = \dfrac{Z_1}{z_{R_d}}\\\\
+	t_{Z_2} = \dfrac{Z_2}{z_{R_d}}\\
+	\end{array}
+	\]
+\end{multicols}
+
+$\therefore$\;\;\;\;A valid intersection exist only if following equation satisfied:
+
 \[
-\left\{
 \begin{array}{lr}
 \begin{aligned}
 t_{X_1} &< t_{X_2}\\
@@ -916,13 +1048,13 @@ t_{Y_1} &< t_{Y_2}\\
 t_{Z_1} &< t_{Z_2}\\
 \end{aligned}
 \end{array}
-\right.
 \]
 
-$\therefore$ Which is
+$\therefore$ Which is:
+
 \begin{equation}
 \label{equ:ray-box-3d-intersection}
-max(t_{X_1},\enspace t_{Y_1},\enspace t_{Z_1}) < min(t_{X_2},\enspace t_{Y_2},\enspace t_{Z_2})
+\code{max}\;(t_{X_1},\enspace t_{Y_1},\enspace t_{Z_1}) < \code{min}\;(t_{X_2},\enspace t_{Y_2},\enspace t_{Z_2})
 \end{equation}
 
 %****************************************************************
