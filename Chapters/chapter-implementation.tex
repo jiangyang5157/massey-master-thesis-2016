@@ -125,7 +125,7 @@ There are only some of KML features from KML schema \ref{fig:kml-schema} are be 
 \subsection{Space Partition} 
 \label{section:space-partition}
 
-Space partition often used for optimizing collision detection algorithms among polygonal models. These algorithms are often expensive operations and can significantly slow FPS down. Although there is no collision detection in this application yet, there is an intersection detection between the ray tracing (see \ref{section:ray-pointer}) and other objects. Space partition is contributed to reducing the ray-object intersection test load by skipping objects that locate far away from current ray tracing area. It avoids doing an $n^2$ times intersection detection on all objects.
+Space partition often used for optimizing collision detection algorithms among polygonal models. These algorithms are often expensive operations and can significantly slow FPS down. Although there is no collision detection in this application yet, there is an intersection detection between the ray tracing (see \ref{section:ray-pointer}) and other objects. Space partition is contributed to reducing the ray-object intersection test load by skipping invalid objects that locate far away from current ray tracing area. It avoids doing an $n^2$ times intersection detection on all objects.
 
 A axis-aligned Octree is implemented for the space partition \ref{fig:octree-split}. It has a predefined constant positive integer to decide whether or not a new partitioning should happen - a minimum number of objects allowed exist in the same cell. This number is important for the purpose of reducing intersection detections. I have taken $5$, object complexity and cell complexity need to be considered.
 
@@ -826,7 +826,7 @@ Finally, transform them into a more optimized expression, and only if $\mu'$ and
 \subsection{Ray-Box}
 \label{section:ray-box}
 
-See section \ref{section:space-partition}, space partition is implemented in the 3D world that separates the space to invisible boxes that each box may or may not contain other objects. Ray-box intersection implementation for avoids unnecessary ray-object intersection tests. In this section, explanation divided into two parts, ray-box in 2D and which have inspired to ray-box 3D implementation.
+See section \ref{section:space-partition}, space partition is implemented in the 3D world that separates the space to invisible boxes that each box may or may not contain other objects. Ray-box intersection implementation for avoids unnecessary ray-object intersection tests. In this section, explanation divided into two parts, ray-box in 2D and which have inspired to ray-box 3D implementation. In the current implementation, I assume the boxes are located aligned with the axis, which is exactly how space partition works. This limitation can be solved with a certain rotation transformation in advance.
 
 %****************************************************************
 \subsubsection{Ray-Box 2D}
