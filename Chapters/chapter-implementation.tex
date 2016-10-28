@@ -26,7 +26,7 @@ OpenGL assumes a square coordinate system, by default, happily draws those coord
 
 Therefore, OpenGL projection modes and camera views have to be applied to the OpenGL rendering pipeline for coordinates transformation, so the graphic objects have the expected proportions on any display. The projection matrix will recalculate the coordinates of graphics objects, and the camera view matrix will create a transformation that renders objects from a specific eye position.
 
-The implementation is divided into two phases. First, working out the model matrix, view matrix, and perspective matrix in CPU (Android programming in this case). Secondly pass them to GPU for the rest of calculation (OpenGL Shading Language Programming, i.e. GLSL or GLslang), such as explicit projection matrix, coordinates transformation, lighting, or more abstract circular ring \ref{section:ray-pointer}. The GLSL shaders themselves are a set of strings that passed to the hardware driver for compiling within an application using the OpenGL API's entry points \cite{wiki.glsl.2016}.
+The implementation is divided into two phases. First, working out the model matrix, view matrix, and perspective matrix in CPU (Android programming in this case). Secondly pass them to GPU for the rest of calculation (OpenGL Shading Language Programming, i.e. GLSL or GLslang), such as explicit projection matrix, coordinates transformation, lighting, or more particular calculation (see \ref{section:ray}). The GLSL shaders themselves are a set of strings that passed to the hardware driver for compiling within an application using the OpenGL API's entry points \cite{wiki.glsl.2016}.
 
 \begin{table}[H]
 \caption{OpenGL compute}
@@ -125,7 +125,7 @@ There are only some of KML features from KML schema \ref{fig:kml-schema} are be 
 \subsection{Space Partition} 
 \label{section:space-partition}
 
-Space partition often used for optimizing collision detection algorithms among polygonal models. These algorithms are often expensive operations and can significantly slow FPS down. Although there is no collision detection in this application yet, there is an intersection detection between the ray tracing (see \ref{section:ray-pointer}) and other objects. Space partition is contributed to reducing the ray-object intersection test load by skipping invalid objects that locate far away from current ray tracing area. It avoids doing an $n^2$ times intersection detection on all objects.
+Space partition often used for optimizing collision detection algorithms among polygonal models. These algorithms are often expensive operations and can significantly slow FPS down. Although there is no collision detection in this application yet, there is an intersection detection between the ray tracing (see \ref{section:ray}) and other objects. Space partition is contributed to reducing the ray-object intersection test load by skipping invalid objects that locate far away from current ray tracing area. It avoids doing an $n^2$ times intersection detection on all objects.
 
 A axis-aligned Octree is implemented for the space partition \ref{fig:octree-split}. It has a predefined constant positive integer to decide whether or not a new partitioning should happen - a minimum number of objects allowed exist in the same cell. This number is important for the purpose of reducing intersection detections. I have taken $5$, object complexity and cell complexity need to be considered.
 
@@ -530,32 +530,72 @@ A simple OBJ parser is implemented, it yet supports a full OBJ features \cite{pa
 \end{table}
 
 %****************************************************************
-\section{Ray Pointer}
+\section{Ray}
+\label{section:ray}
+
+A sight indicator is displayed in the center of sight for tracking the user's eyes. It is important to understand that the immersive virtual reality device works with glass lenses. Therefore the centering is not exactly the center of both view container. There are There are different implementation on both eye's viewports to convert a world-space vertex into inverse-lens distorted screen space. As a result, the user can see a slightly overlapping effect if the ray indicator is not be placed in a right distance. This phenomenon exists in reality as well. People can either get a better look at on a distant object or the fingers near to eyes.
+
+%****************************************************************
+\subsection{Ray Pointer}
 \label{section:ray-pointer}
 
-A ray pointer is displayed in the center of sight for tracing the path of eyes. It is important to understand that the centering is a trick in the immersive virtual reality applications which works with glass lenses. There are different implementation on both eye's viewports to convert a world-space vertex into inverse-lens distorted screen space. As a result, the user can see a slightly overlapping effect on an object when it is not on focused. This is acting the same in reality, and a blurred overlapping effect is happening when people are focusing on different objects in the same direction. Therefore, the centering pointer for ray-tracing always locates at the surface of the distant objects. It removes unnecessary distraction and guarantees a clear focus on the object that user is looking at.
-
-The ray pointer is drawn as \code{GL\_POINTS}, but rounding to a ring shape (see Figure \ref{fig:ray-pointer-point2ring}) in its Fragment Shader.
+I place a ray pointer on the surface of the objects. It guarantees a clear display on both ray pointer and the target that user is staring at. It is drawn as \code{GL\_POINTS}, but rounding to a ring shape (see Figure \ref{fig:ray-point2ring}) in Fragment Shader \cite{wiki.fragment-shader.2016} - programmable Shader stage.
 
 \begin{figure}[H]
-	\caption{Ray Pointer ring}
-	\label{fig:ray-pointer-point2ring}
+	\caption{Ray point to ring}
+	\label{fig:ray-point2ring}
 	\centering
-	\includegraphics[width=\linewidth]{Figures/ray-pointer-point2ring.png}
+	\includegraphics[width=\linewidth]{Figures/ray-point2ring.png}
+	\decoRule
+\end{figure}
+
+The \code{gl\_PointCoord} in the Fragment Shader has a range from $0$ to $1$ regardless of the point size. Therefore, center the point for circular calculation by shifting with $0.5$ offset on both x-axis and y-axis:
+
+\[
+\begin{array}{lr}
+\begin{aligned}
+&\code{// transform coord from range [0, 1] to [-0.5, 0.5]}\\
+&\code{vec2 coord = gl\_PointCoord - vec2(0.5);}\\
+\end{aligned}
+\end{array}
+\]
+
+It is clear that a transformation from point to ring can be performed by ignoring invalid pixels in the point:
+
+\[
+\begin{array}{lr}
+\begin{aligned}
+&\code{float length = length(coord); // distance from the center}\\
+&\code{bool belongsToPointer = pointerDown < length \&\& length < pointerUp;}\\
+\end{aligned}
+\end{array}
+\]
+
+%****************************************************************
+\subsection{Ray Spinner}
+\label{section:ray-spinner}
+
+A ray spinner is an indicator gives a user feedback when the user is staring at a target. The ray spinner has a ring shape, but it is rendered as a dynamical arc by the given radian.
+
+\begin{figure}[H]
+	\caption{Ray ring to spinner}
+	\label{fig:ray-ring2spinner}
+	\centering
+	\includegraphics[width=\linewidth]{Figures/ray-ring2spinner.png}
 	\decoRule
 \end{figure}
 
 \[
 \begin{array}{lr}
 \begin{aligned}
-&\code{// Transform coord from range [0, 1] to [-0.5, 0.5]}\\
-&\code{vec2 coord = gl\_PointCoord - vec2(0.5);}\\
-&\code{float length = length(coord);}\\
-&\code{if (0.4 < length \&\& length < 0.5)}\\
-&\;\;\;\;\;\;\;\;\code{FragColor = vec4(u\_Color, 1.0);}
+&\code{bool belongsToSpinner = spinnerDown < length \&\& length < spinnerUp;}\\
+&\code{float theta = atan (-coord.x, coord.y); //  (-PI, PI)}\\
+&\code{belongsToSpinner = belongsToSpinner \&\& theta < u\_Spinner;}\\
 \end{aligned}
 \end{array}
 \]
+
+The \code{u\_Spinner} is a dynamical radian which came from CPU, and it has a range from $-\pi$ to $\pi$. The \code{genType atan(genType y, genType x)} returns the angle whose trigonometric arc tangent is $\dfrac{y}{x}$. The signs of \code{y} and \code{x} are used to determine the quadrant that the angle lies in. The value returned by \code{atan} is in the range from $-\pi$ to $\pi$.
 
 %****************************************************************
 \section{Information Display}
