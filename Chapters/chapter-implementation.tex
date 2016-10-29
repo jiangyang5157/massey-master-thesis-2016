@@ -20,7 +20,7 @@ OpenGL assumes a square coordinate system, by default, happily draws those coord
 \caption[OpenGL coordinate system mapping]{Default OpenGL coordinate system (left) mapped to a typical Android device screen (right) \cite{google.opengles.2016}}
 \label{fig:opengl-coordinates}
 \centering
-\includegraphics[width=\linewidth]{Figures/opengl-coordinates.png}
+\includegraphics[width=\textwidth, keepaspectratio]{Figures/opengl-coordinates.png}
 \decoRule
 \end{figure}
 
@@ -93,7 +93,7 @@ A Path is for the server to guarantee the latest data (if any) will be pushed to
 \caption{Patch check}
 \label{fig:patch-check}
 \centering
-\includegraphics[width=\linewidth]{Figures/patch-check.png}
+\includegraphics[width=\textwidth, keepaspectratio]{Figures/patch-check.png}
 \decoRule
 \end{figure}
 
@@ -117,7 +117,7 @@ There are only some of KML features from KML schema \ref{fig:kml-schema} are be 
 \caption{kML parser simple}
 \label{fig:kml-parser-simple}
 \centering
-\includegraphics[width=\linewidth]{Figures/kml-parser-simple.png}
+\includegraphics[width=\textwidth, keepaspectratio]{Figures/kml-parser-simple.png}
 \decoRule
 \end{figure}
 
@@ -141,7 +141,7 @@ If the number is positive infinity - whole space seen as a cell and no further s
 \caption{Octree division}
 \label{fig:octree-division}
 \centering
-\includegraphics[width=\linewidth]{Figures/octree-division.png}
+\includegraphics[width=\textwidth, keepaspectratio]{Figures/octree-division.png}
 \decoRule
 \end{figure}
 
@@ -207,7 +207,7 @@ UV Sphere often used in the situation where requires a very smooth, symmetrical 
 \caption{UV sphere mapping}
 \label{fig:uv-sphere-mapping}
 \centering
-\includegraphics[width=\linewidth]{Figures/uv-sphere-mapping.png}
+\includegraphics[width=\textwidth, keepaspectratio]{Figures/uv-sphere-mapping.png}
 \decoRule
 \end{figure}
 
@@ -224,7 +224,7 @@ The total vertex count for a UV sphere is:
 \caption{UV sphere vertex}
 \label{fig:uv-sphere-vertex}
 \centering
-\includegraphics[width=\linewidth]{Figures/uv-sphere-vertex.png}
+\includegraphics[width=\textwidth, keepaspectratio]{Figures/uv-sphere-vertex.png}
 \decoRule
 \end{figure}
 
@@ -260,21 +260,21 @@ y = v\\
 It is vital to recognize the flip-side effect caused by the processing order of texturing. Diagram \ref{fig:uv-sphere-flip-side} shows a flip on the longitude direction. Which is not looking correct from outside of the Earth, but it is a precise mapping when the user is viewing from the inside.
  
 \begin{figure}[H]
-	\caption{UV sphere flip-side effect}
-	\label{fig:uv-sphere-flip-side}
-	\centering
-	\includegraphics[width=\linewidth]{Figures/uv-sphere-flip-side.png}
-	\decoRule
+\caption{UV sphere flip-side effect}
+\label{fig:uv-sphere-flip-side}
+\centering
+\includegraphics[width=\textwidth, keepaspectratio]{Figures/uv-sphere-flip-side.png}
+\decoRule
 \end{figure}
 
 Given an ordering of each triangle's vertices, a triangle can appear to have a clockwise winding or counter-clockwise winding. Using OpenGL features Culling Face and Winding Order together to determine whether the triangle is visible from the front or the back side. In order to guarantee an inside visible only, \code{glFrontFace(GL\_CCW)} and \code{glCullFace(GL\_BACK)} can be adopted. The vertex indexes is ordered as Diagram \ref{fig:uv-sphere-ccw}.
 
 \begin{figure}[H]
-	\caption{UV sphere CCW}
-	\label{fig:uv-sphere-ccw}
-	\centering
-	\includegraphics[width=\linewidth]{Figures/uv-sphere-ccw.png}
-	\decoRule
+\caption{UV sphere CCW}
+\label{fig:uv-sphere-ccw}
+\centering
+\includegraphics[width=\textwidth, keepaspectratio]{Figures/uv-sphere-ccw.png}
+\decoRule
 \end{figure}
 
 %****************************************************************
@@ -286,7 +286,7 @@ The vertex generation for \code{Placemark} is a recurring process of subdividing
 \caption[Icosahedron rectangles]{Icosahedron rectangles \cite{wiki.icosahedron-rectangles.2006}}
 \label{fig:icosahedron-rectangles}
 \centering
-\includegraphics[width=\linewidth]{Figures/icosahedron-rectangles.png}
+\includegraphics[width=0.7\textwidth, keepaspectratio]{Figures/icosahedron-rectangles.png}
 \decoRule
 \end{figure}
 
@@ -296,7 +296,7 @@ Rounding the icosphere by subdividing a face to an arbitrary level of resolution
 \caption{Icosphere refinement}
 \label{fig:icosphere-refinement}
 \centering
-\includegraphics[width=\linewidth]{Figures/icosphere-refinement.png}
+\includegraphics[width=\textwidth, keepaspectratio]{Figures/icosphere-refinement.png}
 \decoRule
 \end{figure}
 
@@ -341,11 +341,11 @@ Second, push midpoints to the surface of the unit sphere(1).
 Third, remove \code{$\triangle$ABC} in the vertex indexes list, add \code{$\triangle$ADE}, \code{$\triangle$DBF}, \code{$\triangle$EFC}, and \code{$\triangle$DEF}.
 
 \begin{figure}[H]
-	\caption{Icosphere vertex index}
-	\label{fig:icosphere-vertex-index}
-	\centering
-	\includegraphics[width=\linewidth]{Figures/icosphere-vertex-index.png}
-	\decoRule
+\caption{Icosphere vertex index}
+\label{fig:icosphere-vertex-index}
+\centering
+\includegraphics[width=\textwidth, keepaspectratio]{Figures/icosphere-vertex-index.png}
+\decoRule
 \end{figure}
 
 Finally, draw the \code{Placemark} that looks the same size regardless of the distance in perspective view.
@@ -361,7 +361,7 @@ However, the LLA coordinates cannot be directly used from a program. Therefore, 
 \caption[ECEF]{Earth-centered, earth-fixed \cite{wiki.ecef.2016}}
 \label{fig:ecef}
 \centering
-\includegraphics[width=\linewidth]{Figures/ecef.png}
+\includegraphics[width=\textwidth, keepaspectratio]{Figures/ecef.png}
 \decoRule
 \end{figure}
 
@@ -371,24 +371,24 @@ The ECEF coordinates are expressed in a reference system that is tended to be as
 \caption{Ellipsoid parameters}
 \label{fig:ellipsoid-parameters}
 \centering
-\includegraphics[width=\linewidth]{Figures/ellipsoid-parameters.png}
+\includegraphics[width=\textwidth, keepaspectratio]{Figures/ellipsoid-parameters.png}
 \decoRule
 \end{figure}
 
 \begin{table}[H]
-	\caption{WGS 84 parameters}
-	\label{tab:wgs-84-parameters}
-	\centering
+\caption{WGS 84 parameters}
+\label{tab:wgs-84-parameters}
+\centering
 	\begin{tabular}{l l l}
-		\toprule
-		\tabhead{Parameter} & \tabhead{Notation} & \tabhead{Value}\\
-		\midrule
+	\toprule
+	\tabhead{Parameter} & \tabhead{Notation} & \tabhead{Value}\\
+	\midrule
 		Reciprocal of flattening & $\dfrac{1}{f}$ & 298.257\,223\,563\\
 		Semi-major axis & $a$ & 6\,378\,137\,m\\
 		Semi-minor axis & $b$ & $a\,(1 - f)$\\\\
 		First eccentricity squared & $e_1^2$ & $1 - \dfrac{b^2}{a^2} = 2\,f - f^2$\\\\
 		Second eccentricity squared & $e_2^2$ & $\dfrac{a^2}{b^2} - 1 = \dfrac{f\,(2 - f)}{(1 - f)^2}$\\
-		\bottomrule
+	\bottomrule
 	\end{tabular}
 \end{table}
 
@@ -398,7 +398,7 @@ In this application, where high accuracy is not required, simply using $a$ equal
 \caption{LLA to ECEF}
 \label{fig:lla2ecef}
 \centering
-\includegraphics[width=\linewidth]{Figures/lla2ecef.png}
+\includegraphics[width=\textwidth, keepaspectratio]{Figures/lla2ecef.png}
 \decoRule
 \end{figure}
 
@@ -444,18 +444,18 @@ The final transformation from the ECEF to program graphic coordinates. This is r
 The raw description data of a \code{Placemark} decorated in KML file is a series of characters that could include any URL. Therefore, an analysis of the description is required before transforming for display. In this application, it currently supports following information display.
 
 \begin{description}
-	\setlength{\parskip}{0pt}
-	\item[$\bullet$ Plain text] Display the raw description data.
-	\item[$\bullet$ Image] Display the image from the URL.
-	\item[$\bullet$ Wikipedia] Display a extracted explanation on the topic.
-	\item[$\bullet$ HTML] Display \code{title} and \code{og:description} (one of the Open Graph metadata tags \cite{ogp.2014}) data (if it exists).
+\setlength{\parskip}{0pt}
+\item[$\bullet$ Plain text] Display the raw description data.
+\item[$\bullet$ Image] Display the image from the URL.
+\item[$\bullet$ Wikipedia] Display a extracted explanation on the topic.
+\item[$\bullet$ HTML] Display \code{title} and \code{og:description} (one of the Open Graph metadata tags \cite{ogp.2014}) data (if it exists).
 \end{description}
 
 \begin{figure}[H]
 \caption{Description analysis}
 \label{fig:description-analysis}
 \centering
-\includegraphics[width=\linewidth]{Figures/description-analysis.png}
+\includegraphics[width=\textwidth, keepaspectratio]{Figures/description-analysis.png}
 \decoRule
 \end{figure}
 
@@ -514,19 +514,19 @@ A \code{Placemark} offers an ability to display a particular model that can be d
 A simple OBJ parser is implemented, it yet supports a full OBJ features \cite{paulbourke.obj}, such as syntax \code{mtllib} and \code{usemtl} are ignored. However, the main features that contain vertex related data for the model creation are supported, see Table \ref{tab:obj-syntax}.
 
 \begin{table}[H]
-	\caption{OBJ syntax}
-	\label{tab:obj-syntax}
-	\centering
-	\begin{tabular}{l l l}
-		\toprule
-		\tabhead{Starting character / word} & \tabhead{Meaning}\\
-		\midrule
-		\code{v} & Geometric vertices\\
-		\code{vt} & Texture coordinates\\
-		\code{vn} & Vertex normals\\
-		\code{f} & Face, composed of \code{v} / \code{vt} (optional) / \code{vn} (optional)\\
-		\bottomrule
-	\end{tabular}
+\caption{OBJ syntax}
+\label{tab:obj-syntax}
+\centering
+\begin{tabular}{l l l}
+	\toprule
+	\tabhead{Starting character / word} & \tabhead{Meaning}\\
+	\midrule
+	\code{v} & Geometric vertices\\
+	\code{vt} & Texture coordinates\\
+	\code{vn} & Vertex normals\\
+	\code{f} & Face, composed of \code{v} / \code{vt} (optional) / \code{vn} (optional)\\
+	\bottomrule
+\end{tabular}
 \end{table}
 
 %****************************************************************
@@ -542,11 +542,11 @@ A sight indicator is displayed in the center of sight for tracking the user's ey
 I place a ray pointer on the surface of the objects. It guarantees a clear display on both ray pointer and the target that user is staring at. It is drawn as \code{GL\_POINTS}, but rounding to a ring shape (see Figure \ref{fig:ray-point2ring}) in Fragment Shader \cite{wiki.fragment-shader.2016} - programmable Shader stage.
 
 \begin{figure}[H]
-	\caption{Ray point to ring}
-	\label{fig:ray-point2ring}
-	\centering
-	\includegraphics[width=\linewidth]{Figures/ray-point2ring.png}
-	\decoRule
+\caption{Ray point to ring}
+\label{fig:ray-point2ring}
+\centering
+\includegraphics[width=\textwidth, keepaspectratio]{Figures/ray-point2ring.png}
+\decoRule
 \end{figure}
 
 The \code{gl\_PointCoord} in the Fragment Shader has a range from $0$ to $1$ regardless of the point size. Therefore, center the point for circular calculation by shifting with $0.5$ offset on both x-axis and y-axis:
@@ -578,11 +578,11 @@ It is clear that a transformation from point to ring can be performed by ignorin
 A ray spinner is an indicator gives a user feedback when the user is staring at a target. The ray spinner has a ring shape, but it is rendered as a dynamical arc by the given radian.
 
 \begin{figure}[H]
-	\caption{Ray ring to spinner}
-	\label{fig:ray-ring2spinner}
-	\centering
-	\includegraphics[width=\linewidth]{Figures/ray-ring2spinner.png}
-	\decoRule
+\caption{Ray ring to spinner}
+\label{fig:ray-ring2spinner}
+\centering
+\includegraphics[width=\textwidth, keepaspectratio]{Figures/ray-ring2spinner.png}
+\decoRule
 \end{figure}
 
 \[
@@ -648,7 +648,7 @@ v_1 = v_0 + a \cdot dt\\
 \caption{Camera movement}
 \label{fig:camera-movement}
 \centering
-\includegraphics[width=\linewidth]{Figures/camera-movement.png}
+\includegraphics[width=\textwidth, keepaspectratio]{Figures/camera-movement.png}
 \decoRule
 \end{figure}
 
@@ -686,7 +686,7 @@ In this section, I separately reveal the intersection detection for basic elemen
 \caption{Ray-Sphere intersection}
 \label{fig:ray-sphere}
 \centering
-\includegraphics[width=\linewidth]{Figures/ray-sphere-intersection.png}
+\includegraphics[width=\textwidth, keepaspectratio]{Figures/ray-sphere-intersection.png}
 \decoRule
 \end{figure}
 
@@ -804,7 +804,7 @@ $\therefore$\;\;\;\;Given the known value of $\overrightarrow{R_0}$, $\overright
 \caption{Ray-Plane intersection}
 \label{fig:ray-plane}
 \centering
-\includegraphics[width=\linewidth]{Figures/ray-plane-intersection.png}
+\includegraphics[width=\textwidth, keepaspectratio]{Figures/ray-plane-intersection.png}
 \decoRule
 \end{figure}
 
@@ -875,7 +875,7 @@ See section \ref{section:space-partition}, space partition is implemented in the
 \caption{Ray-Box 2D intersection}
 \label{fig:ray-box-2d}
 \centering
-\includegraphics[width=\linewidth]{Figures/ray-box-2d-intersection.png}
+\includegraphics[width=\textwidth, keepaspectratio]{Figures/ray-box-2d-intersection.png}
 \decoRule
 \end{figure}
 
@@ -974,7 +974,7 @@ Which is:
 \caption{Ray-Box 3D intersection}
 \label{fig:ray-box-3d}
 \centering
-\includegraphics[width=\linewidth]{Figures/ray-box-3d-intersection.png}
+\includegraphics[width=\textwidth, keepaspectratio]{Figures/ray-box-3d-intersection.png}
 \decoRule
 \end{figure}
 
