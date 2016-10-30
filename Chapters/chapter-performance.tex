@@ -7,7 +7,7 @@
 %****************************************************************
 What is great about the Android runtime is that most of the stress of memory reclamation is done for developers. The system will track what developers are doing and when it sees that an object is not needed anymore, it will free it on their behalf. However, this does not exclude performance problems from happening here. When the amount of memory have allocated reaches an upper limit, a Garbage Collection (GC) event will be kicked off to free any resources that might not be needed any longer, freeing up space for future allocations. 
 
-Anytime the frame drips about the $16$ milliseconds barrier, and the users are going to start to notice \ref{fig:16ms-per-frame}. So any code that forces allocated memory to spike above this threshold can cause problems. For instance, memory can become tighter, if the developer is allocating and freeing a large number of objects in a short period of time, the temporary objects again kicking off GC event. As result, increasing the risk of Memory leaks. They are objects which the application is no longer using, but the garbage collector fails to recognize them as unused.
+Anytime the frame drips about the $16$ milliseconds barrier, and the users are going to start to notice. Therefore, any code that forces allocated memory to spike above this threshold can cause problems. For instance, memory can become tighter, if the developer is allocating and freeing a large number of objects in a short period of time, the temporary objects again kicking off GC event. 
 
 \begin{figure}[H]
 \caption{16ms Per Frame}
@@ -89,23 +89,13 @@ Figure \ref{fig:geographic-data-performance} is the performance of initializing 
 \section{Cyclic}
 
 %****************************************************************
-Task that required repeatedly executed during the render cyclicity of each frame is the factors influencing the runtime performance.
-
+Task that required repeatedly executed during the rendering cyclicity of each frame is the factors influencing the runtime performance. They are ray-model intersection detection, update models, and draw models. In this section, I present the result of memory leak analysis and crucial tasks that closely related to performance.
 
 %****************************************************************
 \subsection{Memory Leak}
 
 %****************************************************************
-
-
-
-%The application has $55$ to $60$ FPS when the there is less than 250 \code{Placemark} exist in the scene. Although, the space partition that optimizes the intersection test has been significantly improved the performance. However, there is a performance limitation of current implementation due to the expensive render call in Android OpenGL ES API. It has a high priority and needs to be solved by calling the function once for all the same objects (\code{Placemark}).
-
-
-
-%in a world where you app is not doing much of anything, you should see a flat graph  just like this one. From a performance perspective , this is actually an ideal scenarion. As you app allocates and free memory, you will see  the allocative amount fluctuate in your graph at the same time. any time you allocated memory drops by a significant amount, thats a signal that GC event has occurred. These GC events arenot  generally a noticeable performance problem, however a lots of them occurring over and over and over again in a short period of time can actually lead to performance issues. the more time you are spending doing GC, the less time you will have to do other stuff.
-
-
+I am using Memory Monitor to evaluate memory leak. As the application allocates and free memory, we will see the allocative amount fluctuate in the graph at the same time. Any time the allocated memory drops by a significant amount, that is a signal that GC event has occurred (see \ref{fig:memory-monitor}). These GC events are not generally a noticeable performance problem, however a lots of them occurring over and over and over again in a short period of time can actually lead to performance issues. Additionally, it more or less created memory leaks, which are objects which the application is no longer using, but the garbage collector fails to recognize them as unused.
 
 \begin{figure}[H]
 	\caption{Memory Monitor \cite{google.memory-monitor.2015}}
@@ -115,7 +105,7 @@ Task that required repeatedly executed during the render cyclicity of each frame
 	\decoRule
 \end{figure}
 
-
+In a world where your application is not doing much of anything, you should see a flat graph. From a performance perspective, this is actually an ideal scenario. The more time you are spending doing GC, the less time you will have to do other stuff. Fortunately, with a careful in dealing with objects, I got a quite flat runtime memory allocation graph \ref{fig:memory-performance}.
 
 \begin{figure}[H]
 	\caption{Memory Performance}
@@ -124,8 +114,6 @@ Task that required repeatedly executed during the render cyclicity of each frame
 	\includegraphics[width=\textwidth, keepaspectratio]{Figures/memory-performance.png}
 	\decoRule
 \end{figure}
-
-
 
 %****************************************************************
 \subsection{Placemarks Intersection}
