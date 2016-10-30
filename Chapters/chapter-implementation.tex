@@ -290,7 +290,7 @@ The vertex generation for \code{Placemark} is a recurring process of subdividing
 \decoRule
 \end{figure}
 
-Rounding the icosphere by subdividing a face to an arbitrary level of resolution \ref{tab:rounding-icosphere}. One face can be subdivided into four by connecting each edge's midpoint, then push the midpoints to the surface of the sphere \ref{fig:icosphere-refinement}.
+Rounding the icosphere by subdividing a face to an arbitrary level of resolution \ref{tab:icosphere-level}. Each face can be subdivided into four by connecting each edge's midpoint, then push the midpoints to the surface of the sphere \ref{fig:icosphere-refinement}.
 
 \begin{figure}[H]
 \caption{Icosphere refinement}
@@ -299,24 +299,6 @@ Rounding the icosphere by subdividing a face to an arbitrary level of resolution
 \includegraphics[width=\textwidth, keepaspectratio]{Figures/icosphere-refinement.png}
 \decoRule
 \end{figure}
-
-\begin{table}[H]
-\caption{Rounding Icosphere}
-\label{tab:rounding-icosphere}
-\centering
-\begin{tabular}{l l l l}
-\toprule
-\tabhead{Recursion Level} & \tabhead{Vertex Count} & \tabhead{Face Count} & \tabhead{Edge Count}\\
-\midrule
-0 & 12 & 20 & 30\\
-1 & 42 & 80 & 120\\
-2 & 162 & 320 & 480\\
-3 & 642 & 1280 & 1920\\
-\bottomrule
-\end{tabular}
-\end{table}
-
-Rounding icosphere is not only increasing the vertex number but also adjusting vertex indexes. As we can see from the Diagram \ref{fig:icosphere-vertex-index}, the refinement of each face has three steps.
 
 First, get the midpoint of each edge.
 
@@ -338,7 +320,7 @@ Second, push midpoints to the surface of the unit sphere(1).
 \end{array}
 \]
 
-Third, remove \code{$\triangle$ABC} in the vertex indexes list, add \code{$\triangle$ADE}, \code{$\triangle$DBF}, \code{$\triangle$EFC}, and \code{$\triangle$DEF}.
+Third, Also, adjustment of triangle's index array is required. Remove \code{$\triangle$ABC} in the vertex indexes list, add new \code{$\triangle$ADE}, \code{$\triangle$DBF}, \code{$\triangle$EFC}, and \code{$\triangle$DEF}.
 
 \begin{figure}[H]
 \caption{Icosphere vertex index}
