@@ -17,16 +17,18 @@ Anytime the frame drips about the $16$ milliseconds barrier, and the users are g
 \decoRule
 \end{figure}
 
-Therefore, a performance testing is important for avoiding nasty GC events. Each GC event that developer can avoid, the application has more time per frame to do interesting things. In order to find out where in the code objects are being created but not released, created and not used, or created new when the developer could have been reusing them from existing objects. Android Studio provides a series of performance testing tools, such as Memory Monitor, Allocation Tracker, Heap Viewer, and the Systrace (it is an Android system trace tool helps developers analyze how the execution of the application fits into the many running systems on an Android device \cite{google.systrace.2016}).
-
-In this case, according to the runtime, the performance analysis is divided into two parts: acyclic process and cyclic process. Task that required repeatedly executed during the render cyclicity of each frame is the factors influencing the runtime performance. In this chapter, the performance came from Android phone $Nexus 6P$.
+Therefore, a performance testing is important for avoiding nasty GC events. Each GC event that developer can avoid, the application has more time per frame to do interesting things. In order to find out where in the code objects are being created but not released, created and not used, or created new when the developer could have been reusing them from existing objects. Android Studio provides a series of performance testing tools, such as Memory Monitor, Allocation Tracker, Heap Viewer, and the Systrace (it is an Android system trace tool helps developers analyze how the execution of the application fits into the many running systems on an Android device \cite{google.systrace.2016}). According to the runtime, the performance analysis is divided into two parts: acyclic process and cyclic process (performance data came from Android phone $Nexus 6P$.).
 
 %****************************************************************
 \section{Acyclic}
 
 %****************************************************************
-In order to avoid UI being block, all of acyclic process in the application are handled in the new threads. In this section, I present the performance of geometric vertices' generation for \code{Placemark} (Icosphere) and \code{Earth} (UV Sphere) which only executes one time (or not) when needed. The geometric data for Icosphere generation will be cached once it has been created before. This is useful to avoid duplicate creations for same geometric vertices. The same cache solution for image and text data from \code{Placemark} description URL.
+In order to avoid UI being block, all of acyclic process in the application are handled in the new threads. In this section, I present the performance of geometric vertices' generation for \code{Placemark} (Icosphere) and \code{Earth} (UV Sphere) which only executes one time (or not) when needed. The geometric data from Icosphere generation will be cached once it has been created. This is useful to avoid duplicate creations for same geometric vertices. In the \code{Placemark} description URL analysis, the same cache solution for image and text.
 
+%****************************************************************
+\subsection{Icosphere Generator}
+
+%****************************************************************
 Based on the varying roundness of the Icosphere, it could evolve into a sphere has different vertex count \ref{tab:icosphere-level}. In general, level $3$ Icosphere is enough for illustrating a sphere, and in the application the \code{Placemark} is created on level $1$ Icosphere.
 
 \begin{table}[H]
@@ -55,6 +57,10 @@ Based on the varying roundness of the Icosphere, it could evolve into a sphere h
 	\decoRule
 \end{figure}
 
+%****************************************************************
+\subsection{UV Sphere Generator}
+
+%****************************************************************
 The roundness of a UV Sphere depends on the partition level on both horizontal (ring) and vertical (segment) which denotes the axes of the 2D texture. The Earth is casually implemented as a $180 / 180$ UV Sphere in the application.
 
 \begin{figure}[H]
@@ -65,6 +71,10 @@ The roundness of a UV Sphere depends on the partition level on both horizontal (
 	\decoRule
 \end{figure}
 
+%****************************************************************
+\subsection{Geographic Data Initialization}
+
+%****************************************************************
 Figure \ref{fig:geographic-data-performance} is the performance of initializing geographic data, including parsing KML files, transformation coordinate system from LLA to ECEF for each \code{Placemark}, etc.
 
 \begin{figure}[H]
@@ -77,6 +87,13 @@ Figure \ref{fig:geographic-data-performance} is the performance of initializing 
 
 %****************************************************************
 \section{Cyclic}
+
+%****************************************************************
+Task that required repeatedly executed during the render cyclicity of each frame is the factors influencing the runtime performance.
+
+
+%****************************************************************
+\subsection{Memory Leak}
 
 %****************************************************************
 
@@ -110,6 +127,13 @@ Figure \ref{fig:geographic-data-performance} is the performance of initializing 
 
 
 
+%****************************************************************
+\subsection{Placemarks Intersection}
+
+%****************************************************************
+
+
+
 \begin{figure}[H]
 	\caption{Placemarks Intersection Performance}
 	\label{fig:placemarks-intersection-performance}
@@ -120,6 +144,14 @@ Figure \ref{fig:geographic-data-performance} is the performance of initializing 
 
 
 
+%****************************************************************
+\subsection{Placemarks Update}
+\label{section:placemarks-update}
+
+%****************************************************************
+
+
+
 \begin{figure}[H]
 	\caption{Placemarks Update Performance}
 	\label{fig:placemarks-update-performance}
@@ -127,6 +159,13 @@ Figure \ref{fig:geographic-data-performance} is the performance of initializing 
 	\includegraphics[width=\textwidth, keepaspectratio]{Figures/placemarks-update-performance.png}
 	\decoRule
 \end{figure}
+
+
+
+%****************************************************************
+\subsection{Placemarks Draw}
+
+%****************************************************************
 
 
 
