@@ -117,10 +117,10 @@ In a world where your application is not doing much of anything, you should see 
 
 %****************************************************************
 \subsection{Placemarks Intersection}
+\label{section-placemarks-intersection}
 
 %****************************************************************
-
-
+There was a significant performance improvement in per frame ray-placemark intersection detection. In order to avoid doing intersection test on all \code{Placemark} per frame, I implemented Octree space partition to ignore unnecessary detections (see Chart \ref{fig:placemarks-intersection-performance}).
 
 \begin{figure}[H]
 	\caption{Placemarks Intersection Performance}
@@ -129,8 +129,6 @@ In a world where your application is not doing much of anything, you should see 
 	\includegraphics[width=\textwidth, keepaspectratio]{Figures/placemarks-intersection-performance.png}
 	\decoRule
 \end{figure}
-
-
 
 %****************************************************************
 \subsection{Placemarks Update}
