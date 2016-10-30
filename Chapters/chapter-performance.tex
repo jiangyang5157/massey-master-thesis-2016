@@ -82,6 +82,34 @@ Figure \ref{fig:geographic-data-performance} is the performance of initializing 
 
 
 
+%The application has $55$ to $60$ FPS when the there is less than 250 \code{Placemark} exist in the scene. Although, the space partition that optimizes the intersection test has been significantly improved the performance. However, there is a performance limitation of current implementation due to the expensive render call in Android OpenGL ES API. It has a high priority and needs to be solved by calling the function once for all the same objects (\code{Placemark}).
+
+
+
+%in a world where you app is not doing much of anything, you should see a flat graph  just like this one. From a performance perspective , this is actually an ideal scenarion. As you app allocates and free memory, you will see  the allocative amount fluctuate in your graph at the same time. any time you allocated memory drops by a significant amount, thats a signal that GC event has occurred. These GC events arenot  generally a noticeable performance problem, however a lots of them occurring over and over and over again in a short period of time can actually lead to performance issues. the more time you are spending doing GC, the less time you will have to do other stuff.
+
+
+
+\begin{figure}[H]
+	\caption{Memory Monitor}
+	\label{fig:memory-monitor}
+	\centering
+	\includegraphics[width=\textwidth, keepaspectratio]{Figures/memory-monitor.png}
+	\decoRule
+\end{figure}
+
+
+
+\begin{figure}[H]
+	\caption{Memory Performance}
+	\label{fig:memory-performance}
+	\centering
+	\includegraphics[width=\textwidth, keepaspectratio]{Figures/memory-performance.png}
+	\decoRule
+\end{figure}
+
+
+
 \begin{figure}[H]
 	\caption{Placemarks Intersection Performance}
 	\label{fig:placemarks-intersection-performance}
@@ -119,11 +147,6 @@ Figure \ref{fig:geographic-data-performance} is the performance of initializing 
 	\includegraphics[width=\textwidth, keepaspectratio]{Figures/glDrawElements-performance.png}
 	\decoRule
 \end{figure}
-
-
-
-
-%The application has $55$ to $60$ FPS when the there is less than 250 \code{Placemark} exist in the scene. Although, the space partition that optimizes the intersection test has been significantly improved the performance. However, there is a performance limitation of current implementation due to the expensive render call in Android OpenGL ES API. It has a high priority and needs to be solved by calling the function once for all the same objects (\code{Placemark}).
 
 
 
