@@ -55,7 +55,7 @@ Based on the varying roundness of the Icosphere, it could evolve into a sphere h
 	\decoRule
 \end{figure}
 
-The roundness of a UV Sphere depends on the division level on both horizontal (ring) and vertical (segment) which denotes the axes of the 2D texture. The Earth is casually implemented as a $180 / 180$ UV Sphere in the application.
+The roundness of a UV Sphere depends on the partition level on both horizontal (ring) and vertical (segment) which denotes the axes of the 2D texture. The Earth is casually implemented as a $180 / 180$ UV Sphere in the application.
 
 \begin{figure}[H]
 	\caption{UV Sphere performance}
@@ -77,13 +77,39 @@ Figure \ref{fig:geographic-data-performance} is the performance of initializing 
 
 %****************************************************************
 \section{Cyclic}
-%marks intersection; opengl draw
-%ignore
+
 %****************************************************************
 
 
 
-The application has $55$ to $60$ FPS when the there is less than 250 \code{Placemark} exist in the scene. Although, the space partition that optimizes the intersection test has been significantly improved the performance. However, there is a performance limitation of current implementation due to the expensive render call in Android OpenGL ES API. It has a high priority and needs to be solved by calling the function once for all the same objects (\code{Placemark}).
+\begin{figure}[H]
+	\caption{Placemarks Intersection Performance}
+	\label{fig:placemarks-intersection-performance}
+	\centering
+	\includegraphics[width=\textwidth, keepaspectratio]{Figures/placemarks-intersection-performance.png}
+	\decoRule
+\end{figure}
+
+\begin{figure}[H]
+	\caption{Placemarks Draw Performance}
+	\label{fig:placemarks-draw-performance}
+	\centering
+	\includegraphics[width=\textwidth, keepaspectratio]{Figures/placemarks-draw-performance.png}
+	\decoRule
+\end{figure}
+
+\begin{figure}[H]
+	\caption{glDrawElements Performance}
+	\label{fig:glDrawElements-performance}
+	\centering
+	\includegraphics[width=\textwidth, keepaspectratio]{Figures/glDrawElements-performance.png}
+	\decoRule
+\end{figure}
+
+
+
+
+%The application has $55$ to $60$ FPS when the there is less than 250 \code{Placemark} exist in the scene. Although, the space partition that optimizes the intersection test has been significantly improved the performance. However, there is a performance limitation of current implementation due to the expensive render call in Android OpenGL ES API. It has a high priority and needs to be solved by calling the function once for all the same objects (\code{Placemark}).
 
 
 
