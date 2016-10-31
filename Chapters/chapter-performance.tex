@@ -89,13 +89,13 @@ Figure \ref{fig:geographic-data-performance} is the performance of initializing 
 \section{Cyclic}
 
 %****************************************************************
-Task that required repeatedly executed during the rendering cyclicity of each frame is the factors influencing the runtime performance. They are ray-model intersection detection, update models, and draw models. In this section, I present the result of memory leak analysis and crucial tasks that closely related to performance.
+Task that requires repeatedly executed during the rendering cyclicity of each frame is the factors influencing the runtime performance. They are ray-model intersection detection, update models, and draw models. In this section, I present the results of memory leak analysis and crucial tasks that closely related to performance.
 
 %****************************************************************
 \subsection{Memory Leak}
 
 %****************************************************************
-I am using Memory Monitor to evaluate memory leak. As the application allocates and free memory, we will see the allocative amount fluctuate in the graph at the same time. Any time the allocated memory drops by a significant amount, that is a signal that GC event has occurred (see \ref{fig:memory-monitor}). These GC events are not generally a noticeable performance problem, however a lots of them occurring over and over and over again in a short period of time can actually lead to performance issues. Additionally, it more or less created memory leaks, which are objects which the application is no longer using, but the garbage collector fails to recognize them as unused.
+I am using Memory Monitor to evaluate memory leak. As the application allocates and free memory, we will see the allocative amount fluctuate in the graph at the same time. Any time the allocated memory drops by a significant amount, that is a signal that GC event has occurred (see \ref{fig:memory-monitor}). These GC events are not generally a noticeable performance problem. However, lots of them occurring over and over and over again in a short period of time can lead to performance issues. Additionally, it more or less created memory leaks, which are objects which the application is no longer using, but the garbage collector fails to recognize them as unused.
 
 \begin{figure}[H]
 	\caption{Memory Monitor \cite{google.memory-monitor.2015}}
@@ -105,7 +105,7 @@ I am using Memory Monitor to evaluate memory leak. As the application allocates 
 	\decoRule
 \end{figure}
 
-In a world where your application is not doing much of anything, you should see a flat graph. From a performance perspective, this is actually an ideal scenario. The more time you are spending doing GC, the less time you will have to do other stuff. Fortunately, with a careful in dealing with objects, I got a quite flat runtime memory allocation graph \ref{fig:memory-performance}.
+In a world where your application is not doing much of anything, you should see a flat graph. This is an ideal scenario from a performance perspective. The more time is spending doing GC, the less time you will have to do other stuff. Fortunately, with a careful in dealing with objects, I got a quite flat runtime memory allocation graph \ref{fig:memory-performance}.
 
 \begin{figure}[H]
 	\caption{Memory Performance}
