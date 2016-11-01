@@ -109,7 +109,7 @@ Tasks that require continually repeated during the render loop is the factors in
 I am using Memory Monitor to evaluate memory leak. As the application allocates and free memory, we will see the allocative amount fluctuate in the graph at the same time. Any time the allocated memory drops by a significant amount, that is a signal that GC event has occurred (see \ref{fig:memory-monitor}). These GC events are not generally a noticeable performance problem. However, lots of them occurring over and over and over again in a short period of time can lead to performance issues. Additionally, it more or less created memory leaks, which are objects which the application is no longer using, but the garbage collector fails to recognize them as unused.
 
 \begin{figure}[H]
-	\caption{Memory Monitor \cite{google.memory-monitor.2015}}
+	\caption[Memory Monitor]{Memory Monitor \cite{google.memory-monitor.2015}}
 	\label{fig:memory-monitor}
 	\centering
 	\includegraphics[width=\textwidth, keepaspectratio]{Figures/memory-monitor.png}
