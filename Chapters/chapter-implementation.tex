@@ -36,11 +36,12 @@ The implementation is divided into two phases. First, working out the model matr
 \toprule
 \tabhead{What} & \tabhead{How} & \tabhead{Where}\\
 \midrule
-Model Matrix & translationMx * scaleM * rotationM * identityM(1) & CPU\\
+Model Matrix & translationM * scaleM * rotationM * identityM(1) & CPU\\
 Camera Matrix & Matrix.setLookAtM(positionV, lookAtV, upV) & CPU\\
 View Matrix & eye.getEyeView() * cameraM & CPU\\
 Perspective Matrix & eye.getPerspective(zNear, zFar) & CPU\\
-Projection Matrix & perspectiveM * viewM * modelM & GPU\\
+ModelView Matrix & viewM * modelM & GPU\\
+Projection Matrix & perspectiveM * modelViewM & GPU\\
 Vertex' & projectionM * vertex & GPU\\
 \bottomrule
 \end{tabular}
@@ -87,7 +88,7 @@ The file server processes the requests and delivers the result (the particular f
 \subsection{Patch}
 \label{section:patch}
 
-A Path is for the server to guarantee the latest data (if any) will be pushed to each client (Android smartphone). It server as a compressed ZIP file, and it contains one or more files that require client to update. Patch validation is happening whenever the app starts. First, the client sent requests for the patch file "\emph{http://xxx.xxx.xxx.xxx:8080/assets/static.zip}" from the file server. Before actual download the file, take the \code{lastModifiedTime} data of remote Patch from HTTP response headers, and compare it with the other \code{lastModifiedTime} data of local's Patch file. Only when the local's Patch is out of date, the client continues to download the remote Patch file and replacing any existing local files. For a special scenario when the app was just installed in the first time launch, also the network is disconnected. A built-in default Patch that included in the APK (Android app binary) will be uncompressed to avoid no available data. Diagram \ref{fig:patch-check} shows the simplified process.
+A Path is for the server to guarantee the latest data (if any) will be pushed to each client (Android smartphone). It server as a compressed ZIP file, and it contains one or more files for client to update. Patch validation is happening whenever the app starts. First, the client sent requests for the patch file $http://xxx.xxx.xxx.xxx:8080/assets/static.zip$ from the file server. Before actual download the file, take the \code{lastModifiedTime} data of remote Patch from HTTP response headers, and compare it with the other \code{lastModifiedTime} data of local's Patch file. Only when the local's Patch is out of date, the client continues to download the remote Patch file and replacing any existing local files. For a special scenario when the app was just installed in the first time launch, also the network is disconnected. A built-in default Patch that included in the APK (Android app binary) will be uncompressed to avoid no available data. Diagram \ref{fig:patch-check} shows the simplified process.
 
 \begin{figure}[H]
 \caption{Patch check}
@@ -286,7 +287,7 @@ The vertex generation for \code{Placemark} is a recurring process of subdividing
 \caption[Icosahedron rectangles]{Icosahedron rectangles \cite{wiki.icosahedron-rectangles.2006}}
 \label{fig:icosahedron-rectangles}
 \centering
-\includegraphics[width=0.7\textwidth, keepaspectratio]{Figures/icosahedron-rectangles.png}
+\includegraphics[width=0.5\textwidth, keepaspectratio]{Figures/icosahedron-rectangles.png}
 \decoRule
 \end{figure}
 
@@ -329,8 +330,6 @@ Third, Also, adjustment of triangle's index array is required. Remove \code{$\tr
 \includegraphics[width=\textwidth, keepaspectratio]{Figures/icosphere-vertex-index.png}
 \decoRule
 \end{figure}
-
-Finally, draw the \code{Placemark} that looks the same size regardless of the distance in perspective view.
 
 %****************************************************************
 \subsection{Geographic Coordinate System}
@@ -649,16 +648,12 @@ v_1 = v_0 + a \cdot dt\\
 %****************************************************************
 \section{Ray Intersection}
 
-In order to allow user interacts with virtual reality environment, the ability of intersection detection for ray-tracing is needed. In this way, it not only information can be easier present and understand, but also the user is able to interact (or select) objects in the 3D world.
-
-A ray can be described in an equation with known starting position, $\overrightarrow{R_0}$ and its direction $\overrightarrow{R_d}$:
+In order to allow user interacts with virtual reality environment, the ability of intersection detection for ray-tracing is needed. In this way, it not only information can be easier present and understand, but also the user is able to interact (or select) objects in the 3D world. A ray can be described in an equation with known starting position, $\overrightarrow{R_0}$ and its direction $\overrightarrow{R_d}$ (see Equation \ref{equ:ray-t}). In this section, I reveal the intersection detection for ray-sphere, ray-plane (3D rectangular) and ray-box.
 
 \begin{equation}
 \label{equ:ray-t}
 \overrightarrow{R(t)} = \overrightarrow{R_0} + \overrightarrow{R_d} \cdot t
 \end{equation}
-
-In this section, I separately reveal the intersection detection for basic elements. They are ray-sphere, ray-plane (3D rectangular), ray-box (2D and 3D).
 
 %****************************************************************
 \subsection{Ray-Sphere}

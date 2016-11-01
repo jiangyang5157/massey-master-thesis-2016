@@ -85,11 +85,22 @@ Figure \ref{fig:geographic-data-performance} is the performance of initializing 
 	\decoRule
 \end{figure}
 
+Although, the number could be large, but it is not executed in the UI thread. Additionally, the Earth does not require re-creation when user try to load another scene. Therefore it is not a performance problem.
+
 %****************************************************************
 \section{Cyclic}
 
 %****************************************************************
-Task that requires repeatedly executed during the rendering cyclicity of each frame is the factors influencing the runtime performance. They are ray-model intersection detection, update models, and draw models. In this section, I present the results of memory leak analysis and crucial tasks that closely related to performance.
+Tasks that require continually repeated during the render loop is the factors influencing the runtime performance. They are ray-model intersection detection, update and draw models \ref{fig:cyclic-task}. In this section, I present the tasks that closely related to performance and the memory leak analysis during the loop.
+ 
+\begin{figure}[H]
+	\caption{Cyclic Task}
+	\label{fig:cyclic-task}
+	\centering
+	\includegraphics[width=\textwidth, keepaspectratio]{Figures/cyclic-task.png}
+	\decoRule
+\end{figure}
+
 
 %****************************************************************
 \subsection{Memory Leak}
@@ -105,7 +116,7 @@ I am using Memory Monitor to evaluate memory leak. As the application allocates 
 	\decoRule
 \end{figure}
 
-In a world where your application is not doing much of anything, you should see a flat graph. This is an ideal scenario from a performance perspective. The more time is spending doing GC, the less time you will have to do other stuff. Fortunately, with a careful in dealing with objects, I got a quite flat runtime memory allocation graph \ref{fig:memory-performance}.
+In a world where the application is not doing much of anything, there will be a flat memory allocation graph. This is an ideal scenario from a performance perspective. The more time is spending doing GC, the less time for the application to do other stuff. Fortunately, with a careful in dealing with objects, I got a quite flat runtime memory allocation \ref{fig:memory-performance}.
 
 \begin{figure}[H]
 	\caption{Memory Performance}
@@ -120,7 +131,7 @@ In a world where your application is not doing much of anything, you should see 
 \label{section-placemarks-intersection}
 
 %****************************************************************
-There was a significant performance improvement in per frame ray-placemark intersection detection. In order to avoid doing intersection test on all \code{Placemark} per frame, I implemented Octree space partition to ignore unnecessary detections (see Chart \ref{fig:placemarks-intersection-performance}).
+There was a significant performance improvement in detecting ray-placemark intersection per frame. In order to avoid doing intersection test on all \code{Placemark} per frame, I implemented Octree space partition to ignore unnecessary detections (see Chart \ref{fig:placemarks-intersection-performance}).
 
 \begin{figure}[H]
 	\caption{Placemarks Intersection Performance}
@@ -130,13 +141,15 @@ There was a significant performance improvement in per frame ray-placemark inter
 	\decoRule
 \end{figure}
 
+After the optimization, the number is negligible even for $1000$ \code{Placemark} ( less than 2ms).
+
 %****************************************************************
 \subsection{Placemarks Update}
 \label{section:placemarks-update}
 
 %****************************************************************
 
-
+There was a incredible performance optimization for ray-placemark update process \ref{fig:placemarks-update-performance}. 
 
 \begin{figure}[H]
 	\caption{Placemarks Update Performance}
@@ -146,14 +159,56 @@ There was a significant performance improvement in per frame ray-placemark inter
 	\decoRule
 \end{figure}
 
+There are mainly $6$ type of calculations (see Table \ref{tab:opengl-compute-scope}):
+
+\begin{table}[H]
+	\caption{OpenGL compute scope}
+	\label{tab:opengl-compute-scope}
+	\centering
+	\begin{tabular}{l l l l}
+		\toprule
+		\tabhead{What} & \tabhead{How} & \tabhead{Scope}\\
+		\midrule
+		Model Matrix & translationM * scaleM * rotationM * identityM(1) & Object specific\\
+		Camera Matrix & Matrix.setLookAtM(positionV, lookAtV, upV) & Worldwide\\
+		View Matrix & eye.getEyeView() * cameraM & Eye specific\\
+		Perspective Matrix & eye.getPerspective(zNear, zFar) & Eye specific\\
+		ModelView Matrix & viewM * modelM & Object specific\\
+		Projection Matrix & perspectiveM * modelViewM & Object specific\\
+		Vertex' & projectionM * vertex & Vertex specific\\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+Before the optimization, based on the \code{viewM} and \code{perspectiveM} from each eye, computing the \code{modelM}, \code{modelViewM} and \code{projectionM} in CPU for each object per frame. Then pass the \code{modelViewM} and \code{projectionM} to GPU for further calculation, such as lighting and position (\code{Vertex'}). It creates huge performance problem, due to a large amount of computation can be omitted. There is no need to re-calculate an object's \code{modelM} per frame if the object has the same position, scale, and rotation. It is the same for \code{modelViewM} and \code{projectionM}. Therefore, after the optimization, application only re-calculate the \code{modelM} for objects which needed, and all objects pass \code{viewM} and \code{perspectiveM} to GPU for the rest of calculation. Although it increases the workload in GPU as well as duplicated calculation, it has improved performance for the application. Dealing with the duplicated calculation in GPU caused by the optimization has been postponed to future work, because it related to optimization of drawing massive \code{Placemark} which has been postponed as well (see the next Section \ref{section:placemarks-draw}).
+
+\begin{table}[H]
+	\caption{OpenGL compute optimization}
+	\label{tab:opengl-compute-optimization}
+	\centering
+	\begin{tabular}{l l l l}
+		\toprule
+		\tabhead{What} & \tabhead{Before} & \tabhead{After}\\
+		\midrule
+		Model Matrix & Each object (CPU) & Objects are needed (CPU)\\
+		Camera Matrix & When moving (CPU) &  When moving (CPU)\\
+		View Matrix & Each eye (CPU) & Each eye (CPU)\\
+		Perspective Matrix & Each eye (CPU) & Each eye (CPU)\\
+		ModelView Matrix & Each object (CPU) & Each Vertex (GPU)\\
+		Projection Matrix & Each object (CPU) & Each Vertex (GPU)\\
+		Vertex' & Each Vertex (GPU) & Each Vertex (GPU)\\
+		\bottomrule
+	\end{tabular}
+\end{table}
 
 
 %****************************************************************
 \subsection{Placemarks Draw}
+\label{section:placemarks-draw}
 
 %****************************************************************
 
-
+As we can see from Diagram \ref{fig:cyclic-task}, each frame requires objects to update and draw twice for both eye's viewports. Fortunately, the performance of ray-object intersection test and object update are satisfied. Therefore the application has almost $8$ milliseconds per frame for drawing each eye's viewport (See Diagram \ref{fig:16ms-per-frame}, anytime the frame takes more than $16$ milliseconds barrier, it will be noticed by the user). However, the performance of drawing \code{Placemark} has not been adequate, see Chart \ref{fig:placemarks-draw-performance}.
 
 \begin{figure}[H]
 	\caption{Placemarks Draw Performance}
@@ -163,7 +218,7 @@ There was a significant performance improvement in per frame ray-placemark inter
 	\decoRule
 \end{figure}
 
-
+The FPS drop under $60$, when the number of \code{Placemark} in the scene reach $250$. The reason is the number of calling \code{GLES20.glDrawElements} API. See the API performance in Chart \ref{fig:glDrawElements-performance}, it has a big range of span. It could reach $7.5$ milliseconds by just calling it $250$ times ($0.03 \times 250 = 7.5)$).
 
 \begin{figure}[H]
 	\caption{glDrawElements Performance}
@@ -173,6 +228,7 @@ There was a significant performance improvement in per frame ray-placemark inter
 	\decoRule
 \end{figure}
 
+The solution is straightforward reducing the times of calling \code{glDrawElements} to one call for all \code{Placemark}. Unfortunately, it has not been optimized yet due to a limited time. In general, using interleaved attributes will do the trick.
 
 
 %****************************************************************
