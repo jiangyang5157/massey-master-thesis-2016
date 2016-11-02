@@ -128,15 +128,9 @@ There are only some of KML features from KML schema \ref{fig:kml-schema} are be 
 
 Space partition often used for optimizing collision detection algorithms among polygonal models. These algorithms are often expensive operations and can significantly slow FPS down. Although there is no collision detection in this application yet, there is an intersection detection between the ray tracing (see \ref{section:ray}) and other objects. Space partition is contributed to reducing the ray-model intersection test load by skipping invalid objects that locate far away from current ray tracing area. It avoids doing an $n^2$ times intersection detection on all objects.
 
-A axis-aligned Octree is implemented for the space partition \ref{fig:octree-split}. It has a predefined constant positive integer to decide whether or not a new partitioning should happen. This number is important for the purpose of reducing intersection detections, and it indicates a minimum number of objects allowed exist in the same cell. In view of the object complexity (sphere) and the cell complexity (box), the number $5$ was adopted, and it got a significant performance improvement (see \ref{section-placemarks-intersection}). 
+A axis-aligned Octree is implemented for the space partition \ref{fig:octree-split}. It has a predefined constant positive integer to decide whether or not a new partitioning should happen. This number is important for the purpose of reducing intersection detections, and it indicates a minimum number of objects allowed exist in the same cell. In view of the object complexity (ray-placemark) and the cell complexity (ray-box), the number $5$ was adopted, and it got a significant performance improvement (see \ref{section-placemarks-intersection}).
 
-\begin{description}
-	\setlength{\parskip}{0pt}
-	\item[$\bullet$ Object Complexity] \code{Plackmarker} is doing ray-sphere detection (see \ref{section:ray-sphere})
-	\item[$\bullet$ Cell Complexity] Cell is doing ray-box detection (see \ref{section:ray-box})
-\end{description}
-
-If the number is positive infinity - whole space seen as a cell and no further space partition is required, this is not reduce anything but also increase to $n + 1$ times of detections ($n$ times for ray-model, $1$ times for ray-cell). If the number is $1$ - each cell only contains one object, this also not reduces the number of detection times, but increase to at least $2\,n$ times. Since the ray-box detection action is much cheaper then ray-sphere's, an appropriate value can eventually reduce the overall intersection detections.
+If the number is positive infinity, whole space as a cell and no further space partition is required, this is not reduce anything but also increase to $n + 1$ times of detections ($n$ times for ray-model, $1$ times for ray-cell). If the number is $1$, each cell only contains one object, this also not reduces the number of detection times. 
 
 \begin{figure}[H]
 \caption{Octree division}
@@ -146,11 +140,11 @@ If the number is positive infinity - whole space seen as a cell and no further s
 \decoRule
 \end{figure}
 
-See Diagram \ref{fig:octree-split}, the parent cell has eight indexes indicate the different relative position inside the parent cell. These indexes are important for the next time of division, where the objects in parent cell need to be relinked to a new cell. On the other words, a new object will be linked to the parent cell only if the existed objects is less than the predefined constant value. If not, the parent cell will be spatially divided into eight cells. Then, the existing objects will be unlinked from the parent cell and relink to a new cell.
+See Diagram \ref{fig:octree-division}, the parent cell has eight indexes indicate the different relative position inside the parent cell. These indexes are important for the next time of division, where the objects in parent cell need to be relinked to a new cell. On the other words, a new object will be linked to the parent cell only if the existed objects is less than the predefined constant value. If not, the parent cell will be spatially divided into eight cells. Then, the existing objects will be unlinked from the parent cell and relink to a new cell.
 
 The integer index is not chosen randomly. It is defined by its geometric meaning - three boolean value that indicates the three axis-relative delta value. Table \ref{tab:octree-octant} gives the relationship between the index and three boolean values.
 
-The three delta values of any position $P$ in a cell with known center $O$ are:
+The three delta values of any \code{Placemark} position $P$ in a cell with known box center $O$ are:
 
 \[
 \begin{array}{lr}
@@ -172,13 +166,13 @@ The relationship between the index and three boolean values as follow:
 	\toprule
 	\tabhead{Binary Index} & \tabhead{Octant} & \tabhead{Geometric Meaning}\\
 	\midrule
-	0x00000000 & T,\;T,\;T & dx > 0, dy > 0, dz > 0\\
-	0x00000001 & F,\;T,\;T & dx < 0, dy > 0, dz > 0\\
-	0x00000010 & T,\;F,\;T & dx > 0, dy < 0, dz > 0\\
-	0x00000011 & F,\;F,\;T & dx < 0, dy < 0, dz > 0\\
-	0x00000100 & T,\;T,\;F & dx > 0, dy > 0, dz < 0\\
-	0x00000101 & F,\;T,\;F & dx < 0, dy > 0, dz < 0\\
-	0x00000110 & T,\;F,\;F & dx > 0, dy < 0, dz > 0\\
+	0x00000000 & T,\;T,\;T & dx $\geqslant$ 0, dy $\geqslant$ 0, dz $\geqslant$ 0\\
+	0x00000001 & F,\;T,\;T & dx < 0, dy $\geqslant$ 0, dz $\geqslant$ 0\\
+	0x00000010 & T,\;F,\;T & dx $\geqslant$ 0, dy < 0, dz $\geqslant$ 0\\
+	0x00000011 & F,\;F,\;T & dx < 0, dy < 0, dz $\geqslant$ 0\\
+	0x00000100 & T,\;T,\;F & dx $\geqslant$ 0, dy $\geqslant$ 0, dz < 0\\
+	0x00000101 & F,\;T,\;F & dx < 0, dy $\geqslant$ 0, dz < 0\\
+	0x00000110 & T,\;F,\;F & dx $\geqslant$ 0, dy < 0, dz $\geqslant$ 0\\
 	0x00000111 & F,\;F,\;F & dx < 0, dy < 0, dz < 0\\
 	\bottomrule
 	\end{tabular}
@@ -194,10 +188,29 @@ The transformation from known Octant to index:
 
 \[
 \begin{array}{lr}
-\code{For Each oction[i]:}\\
+\code{For each oction[i]:}\\
 \;\;\;\;\;\;\;\;\code{index |= (1 < < i)}\\
 \end{array}
 \]
+
+When the \code{Placemark} is literally land on the axis, the associated cell does not conform to the fact. Because of the initialization of boolean \code{octant[]} value came from the delta values on three axes, the \code{Placemark} only has one associated cell. As we can see from \ref{fig:octree-associated-cell}, ray $R_1$ and $R_2$ should be both considered intersecting with the \code{Placemark}. But, ray $R_2$ will be invalid due to it did not intersect with the associated cell $0$.
+
+\[
+\begin{array}{lr}
+\code{For each axis:}\\
+\;\;\;\;\;\;\;\;\code{float delta = obj.center[i] - box.center[i]}\\
+\;\;\;\;\;\;\;\;\code{octant[i] = delta >= 0}\\
+\end{array}
+\]
+
+\begin{figure}[H]
+	\caption{Octree associated cell}
+	\label{fig:octree-associated-cell}
+	\centering
+	\includegraphics[width=\textwidth, keepaspectratio]{Figures/octree-associated-cell.png}
+	\decoRule
+\end{figure}
+
 
 %****************************************************************
 \section{Earth}
@@ -648,7 +661,7 @@ v_1 = v_0 + a \cdot dt\\
 %****************************************************************
 \section{Ray Intersection}
 
-In order to allow user interacts with virtual reality environment, the ability of intersection detection for ray-tracing is needed. In this way, it not only information can be easier present and understand, but also the user is able to interact (or select) objects in the 3D world. A ray can be described in an equation with known starting position, $\overrightarrow{R_0}$ and its direction $\overrightarrow{R_d}$ (see Equation \ref{equ:ray-t}). In this section, I reveal the intersection detection for ray-sphere, ray-plane (3D rectangular) and ray-box.
+A ray can be described in an equation with known starting position, $\overrightarrow{R_0}$ and its direction $\overrightarrow{R_d}$ (see Equation \ref{equ:ray-t}). In order to allow user interacts with virtual reality environment, the ability of intersection detection for ray-tracing is needed. In this way, it not only information can be easier present and understand, but also the user is able to interact (or select) objects in the 3D world. 
 
 \begin{equation}
 \label{equ:ray-t}
@@ -1073,5 +1086,26 @@ $\therefore$ Which is:
 \label{equ:ray-box-3d-intersection}
 \code{max}\;(t_{X_1},\enspace t_{Y_1},\enspace t_{Z_1}) < \code{min}\;(t_{X_2},\enspace t_{Y_2},\enspace t_{Z_2})
 \end{equation}
+
+%****************************************************************
+\subsection{Ray-Point}
+\label{section:ray-point}
+
+In order to maintain a same visual size on \code{Placemark}, application draw the \code{Placemark} looks the same size regardless of the distance in perspective view.
+
+\[
+\begin{array}{lr}
+\code{const float reciprocalScaleOnScreen = 0.01;}\\
+\code{float w = (mvp * vec4(0, 0, 0, 1)).w * reciprocalScaleOnScreen;}\\
+\code{vec4 position = vec4(a\_Position.xyz * w , 1);}\\
+\end{array}
+\]
+
+Therefore, ray-sphere intersection test for \code{Placemark} no longer works. In this section, I introduce ray-point intersection test for \code{Placemark} selection by checking if the ray is pointing at a particular direction with a tolerance of pitch and yaw.
+
+
+
+%****************************************************************
+
 
 %****************************************************************
