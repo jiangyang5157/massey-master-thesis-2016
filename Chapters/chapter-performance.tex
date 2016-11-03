@@ -170,9 +170,9 @@ There are mainly $6$ type of calculations (see Table \ref{tab:opengl-compute-sco
 		\tabhead{What} & \tabhead{How} & \tabhead{Scope}\\
 		\midrule
 		Model Matrix & translationM * scaleM * rotationM * identityM(1) & Object specific\\
-		Camera Matrix & Matrix.setLookAtM(positionV, lookAtV, upV) & Worldwide\\
-		View Matrix & eye.getEyeView() * cameraM & Eye specific\\
-		Perspective Matrix & eye.getPerspective(zNear, zFar) & Eye specific\\
+		Camera Matrix & lookAt(positionV, lookAtV, upV) & Worldwide\\
+		View Matrix & eye.viewM * cameraM & Eye specific\\
+		Perspective Matrix & eye.perspective(zNear, zFar) & Eye specific\\
 		ModelView Matrix & viewM * modelM & Object specific\\
 		Projection Matrix & perspectiveM * modelViewM & Object specific\\
 		Vertex' & projectionM * vertex & Vertex specific\\

@@ -37,9 +37,9 @@ The implementation is divided into two phases. First, working out the model matr
 \tabhead{What} & \tabhead{How} & \tabhead{Where}\\
 \midrule
 Model Matrix & translationM * scaleM * rotationM * identityM(1) & CPU\\
-Camera Matrix & Matrix.setLookAtM(positionV, lookAtV, upV) & CPU\\
-View Matrix & eye.getEyeView() * cameraM & CPU\\
-Perspective Matrix & eye.getPerspective(zNear, zFar) & CPU\\
+Camera Matrix & lookAt(positionV, lookAtV, upV) & CPU\\
+View Matrix & eye.viewM * cameraM & CPU\\
+Perspective Matrix & eye.perspective(zNear, zFar) & CPU\\
 ModelView Matrix & viewM * modelM & GPU\\
 Projection Matrix & perspectiveM * modelViewM & GPU\\
 Vertex' & projectionM * vertex & GPU\\
@@ -652,7 +652,7 @@ v_1 = v_0 + a \cdot dt\\
 \overrightarrow{V_0} &= \overrightarrow{V_0} \cdot \code{SpeedDamping}\\\\
 \overrightarrow{P_1} &= \overrightarrow{P_0} + \overrightarrow{V_0} \cdot dt\\\\
 \overrightarrow{V_1} &= \overrightarrow{V_0} + \overrightarrow{\code{HeadingDirection}} \cdot \code{Pulse} \cdot \code{DetectedStep}\\\\
-\code{SpeedDamping} &\in [0,\enspace1]\\
+\code{SpeedDamping} &\in [0,\enspace 1]\\
 \code{Pulse} &\in [0,\enspace \infty)\\
 \end{aligned}
 \end{array}
@@ -1101,9 +1101,50 @@ In order to maintain a same visual size on \code{Placemark}, application draw th
 \end{array}
 \]
 
-Therefore, ray-sphere intersection test for \code{Placemark} no longer works. In this section, I introduce ray-point intersection test for \code{Placemark} selection by checking if the ray is pointing at a particular direction with a tolerance of pitch and yaw.
+Therefore, ray-sphere intersection test for \code{Placemark} no longer works. In this section, I introduce ray-point intersection test for \code{Placemark} selection by checking if the ray is pointing at a particular direction in the camera space with a tolerance of pitch and yaw. 
 
+From the Table \ref{tab:opengl-compute}, the calculation for final projected vertex in camera space can be expressed as:
 
+\[
+\begin{array}{lr}
+\begin{aligned}
+&\code{viewM}\;&&\code{= eye.viewM * cameraM;}\\
+&\code{Vertex'}\;&&\code{= perspectiveM * viewM * modelM * position;}\\
+\end{aligned}
+\end{array}
+\]
+f
+But, the expression of position in the camera space for ray-point can be simplified as:
+
+\[
+\begin{array}{lr}
+\code{positionInCameraSpace = position - camera.position;}\\
+\code{Position' = head.viewM * modelM * positionInCameraSpace;}\\
+\end{array}
+\]
+
+Then, we can get the pitch and yaw value for intersection test:
+
+\[
+\begin{array}{lr}
+\begin{aligned}
+&\code{pitch}\;&&\code{= atan2(Position'[1], -Position'[2]);}\\
+&\code{yaw}\;&&\code{= atan2(Position'[0], -Position'[2]);}\\
+\end{aligned}
+\end{array}
+\]
+
+Finally, the ray intersect with the point only if:
+
+\begin{equation}
+\begin{array}{lr}
+\begin{aligned}
+\label{equ:ray-point-intersection}
+&\code{abs(pitch)}\;&&\in \code{[-TOLERANCE, TOLERANCE]}\\
+&\code{abs(yaw)}\;&&\in \code{[-TOLERANCE, TOLERANCE]}\\
+\end{aligned}
+\end{array}
+\end{equation}
 
 %****************************************************************
 
