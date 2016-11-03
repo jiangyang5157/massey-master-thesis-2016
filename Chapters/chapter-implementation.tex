@@ -1,8 +1,8 @@
 %****************************************************************
 % Chapter X
 %****************************************************************
-\label{chapter-implementation}
 \chapter{Implementation}
+\label{chapter-implementation}
 
 In this chapter, details of the major implementation are revealed. First, briefly introducing Google VR SDK setup and drawing with OpenGL ES. Then an explanation of the web server design. After that, the creation of 3D virtual scene is highlighted. Finally, the implementation for device movement and object intersection detection are  clarified.
 
@@ -51,7 +51,6 @@ Vertex' & projectionM * vertex & GPU\\
 \section{Web Server}
 
 See the example below, a simple file server on port \code{8080} to serve a directory on disk "\emph{/tmp}" under an alternate URL path "\emph{/files/}", using \code{StripPrefix} to modify the request URL's path before the \code{FileServer} sees it.
-
 \[
 \begin{array}{lr}
 \scriptsize{\code{http.Handle("/files/", http.StripPrefix("/files", http.FileServer(http.Dir("./tmp"))))}}\\
@@ -145,7 +144,6 @@ See Diagram \ref{fig:octree-division}, the parent cell has eight indexes indicat
 The integer index is not chosen randomly. It is defined by its geometric meaning - three boolean value that indicates the three axis-relative delta value. Table \ref{tab:octree-octant} gives the relationship between the index and three boolean values.
 
 The three delta values of any \code{Placemark} position $P$ in a cell with known box center $O$ are:
-
 \[
 \begin{array}{lr}
 \begin{aligned}
@@ -178,14 +176,12 @@ The relationship between the index and three boolean values as follow:
 	\end{tabular}
 \end{table}
 
-$\therefore$ The transformation from known index to three boolean values (Octant):
-
+$\therefore$ The transformation from known index to three boolean values (octant):
 \[
 \code{octant[] = (index \& 1, index \& 2, index \& 4)}
 \]
 
 The transformation from known Octant to index:
-
 \[
 \begin{array}{lr}
 \code{For each oction[i]:}\\
@@ -194,7 +190,6 @@ The transformation from known Octant to index:
 \]
 
 When the \code{Placemark} is literally land on the axis, the associated cell does not conform to the fact. Because of the initialization of boolean \code{octant[]} value came from the delta values on three axes, the \code{Placemark} only has one associated cell. As we can see from \ref{fig:octree-associated-cell}, ray $R_1$ and $R_2$ should be both considered intersecting with the \code{Placemark}. But, ray $R_2$ will be invalid due to it did not intersect with the associated cell $0$.
-
 \[
 \begin{array}{lr}
 \code{For each axis:}\\
@@ -210,7 +205,6 @@ When the \code{Placemark} is literally land on the axis, the associated cell doe
 	\includegraphics[width=\textwidth, keepaspectratio]{Figures/octree-associated-cell.png}
 	\decoRule
 \end{figure}
-
 
 %****************************************************************
 \section{Earth}
@@ -243,7 +237,6 @@ The total vertex count for a UV sphere is:
 \end{figure}
 
 If a vertex $P$ on the UV sphere belongs to ring $r$ and segment $s$:
-
 \[
 \begin{array}{lr}
 v = r \times  \dfrac{1}{\code{RingsCount} - 1}\\\\
@@ -263,7 +256,6 @@ z =  (\sin(\alpha) \times radius) \times \sin(\beta)\\
 \]
 
 The UV texturing (x,\;y) mapping for vertex $P$ is:
-
 \[
 \begin{array}{lr}
 x = u\\
@@ -315,7 +307,6 @@ Rounding the icosphere by subdividing a face to an arbitrary level of resolution
 \end{figure}
 
 First, get the midpoint of each edge.
-
 \[
 \begin{array}{lr}
 \overrightarrow{d} = \dfrac{\overrightarrow{A} + \overrightarrow{B}}{2}\\\\
@@ -325,7 +316,6 @@ First, get the midpoint of each edge.
 \]
 
 Second, push midpoints to the surface of the unit sphere(1).
-
 \[
 \begin{array}{lr}
 \overrightarrow{D} = \code{normalize}(\overrightarrow{d})\\
@@ -406,8 +396,7 @@ z &= (\dfrac{b^2}{a^2}\,\mathbf{N} + \mathbf{h})\,\sin(\varphi)\\
 \end{array}
 \]
 
-Where;
-
+Where,
 \[
 \begin{array}{lr}
 \begin{aligned}
@@ -421,7 +410,6 @@ Where;
 \]
 
 The final transformation from the ECEF to program graphic coordinates. This is relevant to how texture mapping and graphic system be implemented.
-
 \[
 \begin{array}{lr}
 \begin{aligned}
@@ -455,8 +443,7 @@ The raw description data of a \code{Placemark} decorated in KML file is a series
 
 Treat the raw description data as plain text if it does not have a URL included. The\;\code{Content-Type} from the response of URL request, defines what kind of byte data is coming over, such as \code{image/jpeg}, \code{application/json}, or \code{text/html}. I am using Jsoup (a Java library for working with real-world HTML \cite{joup.2016}) for extracting target data from the HTML source. The most efficient way to get an extracted explanation or description on the topic from a Wikipedia page is to take use of the Opensearch API \cite{wiki.api.2016}. Therefore, a transformation from Wikipedia URL to Opensearch URL is required for an expected JSON response with \code{extract} tag included.
 
-Given any valid Wikipedia page,
-
+Given any valid Wikipedia page:
 \[
 \begin{array}{lr}
 \begin{aligned}
@@ -467,8 +454,7 @@ Given any valid Wikipedia page,
 \end{array}
 \]
 
-Where \textbf{APIs} is:
-
+Where the \textbf{APIs} is:
 \[
 \begin{array}{lr}
 \begin{aligned}
@@ -484,8 +470,7 @@ Where \textbf{APIs} is:
 \end{array}
 \]
 
-For instance,
-
+For instance:
 \[
 \begin{array}{lr}
 \begin{aligned}
@@ -544,7 +529,6 @@ I place a ray pointer on the surface of the objects. It guarantees a clear displ
 \end{figure}
 
 The \code{gl\_PointCoord} in the Fragment Shader has a range from $0$ to $1$ regardless of the point size. Therefore, center the point for circular calculation by shifting with $0.5$ offset on both x-axis and y-axis:
-
 \[
 \begin{array}{lr}
 \begin{aligned}
@@ -555,7 +539,6 @@ The \code{gl\_PointCoord} in the Fragment Shader has a range from $0$ to $1$ reg
 \]
 
 It is clear that a transformation from point to ring can be performed by ignoring invalid pixels in the point:
-
 \[
 \begin{array}{lr}
 \begin{aligned}
@@ -616,7 +599,6 @@ R =
 The ability to move around in virtual reality is important to satisfy user's need. Most Android-powered devices have built-in sensors that measure motion, orientation, and various environmental conditions \cite{google.sensors.2016}. The motion sensors measure acceleration forces and rotational forces along three axes. They include accelerometers, gravity sensors, gyroscopes, and rotational vector sensors. 
 
 In general, the three physical axes (x, y, and z) data from Accelerometer sensor and Linear Acceleration sensor are useful to track and calculate device movement. Linear Acceleration is same as Accelerometer which measures the acceleration force in meter per second repeatedly, except the Linear Acceleration sensor is a synthetic sensor with gravity filtered out. 
-
 \[
 \begin{array}{lr}
 \begin{aligned}
@@ -630,7 +612,6 @@ x &= \int v \cdot dt\\
 However, there is a technical limitation. First of all, we take the accelerometer data and remove gravity that is called gravity compensation, whatever is left is linear movement. Then we have to integrate it once to get velocity, and integrated again to get the position, which is called double integral. If the first integral creates drift, the double integrals are nasty that they create horrible drift. In such noise, using acceleration data for navigation is not accurate, and it is hard to do any kind of linear movement \cite{google.sensor-fusion.2010}.
 
 Therefore, I introduce Step Detector sensor and pedometer algorithm pedestrian navigation - user move forward on the current heading direction. First of all, during each frame life cycle, speed damping is calculated by a percentage stable and stop the camera in a certain of time regardless of current velocity. This is simply for avoiding that camera taking too long to stop. Secondly, each detected step causes a constant velocity pulse in the heading direction, see Diagram \ref{fig:camera-movement}.
-
 \[
 \begin{array}{lr}
 p_1 = p_0 + v_0 \cdot dt\\
@@ -688,7 +669,6 @@ A point $P$ on the surface of sphere can be described in an equation:
 \end{equation}
 
 If the ray intersects with the sphere at any position $P$, it must match both equation \ref{equ:ray-t} and \ref{equ:sphere-surface}. Therefore the solution of $t$ from the cointegrate equation (as shown below) implies whether or not the ray will intersect with the sphere.
-
 \[
 \begin{aligned}
 (x_{R_0} + x_{R_d} \cdot t - x_c)^2 + (y_{R_0} + y_{R_d} \cdot t - y_c)^2 &+ (z_{R_0} + z_{R_d} \cdot t - z_c)^2 &&= r^2\\
@@ -720,9 +700,7 @@ t =
 
 A further step to get rid of formula complexity by taking in geometric vector calculation.
 
-
 $\because$\;\;\;\;Equation \ref{equ:sphere-surface} and equation \ref{equ:sphere-surface-quadratic-formula},
-
 \[
 \begin{array}{lr}
 a = x_{R_d}^2 + y_{R_d}^2 + z_{R_d}^2\\
@@ -732,7 +710,6 @@ c = (x_{R_0} - x_c)^2 + (y_{R_0} - y_c)^2 + (z_{R_0} - z_c)^2 - r^2\\
 \]
 
 $\And$\;\;\;\;Geometric vector equation for $\overrightarrow{R_d}$ (ray's direction) and $\overrightarrow{V_c\_R_0}$ (vector from center of the sphere points to the ray's starting position):
-
 \[
 \begin{array}{lr}
 \begin{aligned}
@@ -752,15 +729,13 @@ c = \overrightarrow{V_{c\_R_0}} \cdot \overrightarrow{V_{c\_R_0}} \cdot r^2\\
 \]
 
 $\And$\;\;\;\;Introducing $\alpha$ and $\beta$ to get rid of complexity for the equation \ref{equ:sphere-t-solution} of $t$:
-
 \[
 \begin{array}{lr}
 \dfrac{-b \pm \sqrt{b^2 - 4\,a\,c}}{2\,a} = -\alpha \pm \sqrt{\beta}\\
 \end{array}
 \]
 
-Where:
-
+Where,
 \[
 \begin{array}{lr}
 \begin{aligned}
@@ -771,7 +746,6 @@ Where:
 \]
 
 $\therefore$\;\;\;\;The solution formula for $t$ can also be optimized as below:
-
 \[
 t =
 \begin{cases}
@@ -782,7 +756,6 @@ t =
 \]
 
 $\therefore$\;\;\;\;Given the known value of $\overrightarrow{R_0}$, $\overrightarrow{R_d}$ and $\overrightarrow{V_c}$, it is able to solve the $t$. The intersection position at any valid $t$ can be obtained as follow:
-
 \[
 \overrightarrow{P} = \overrightarrow{R_0} + \overrightarrow{R_d} \cdot t
 \]
@@ -809,7 +782,6 @@ A point $P$ on the plane which means it perpendicular to the $\overrightarrow{N}
 \end{equation}
 
 $\therefore$\;\;\;\;The solution for the $t$ is:
-
 \[
 t =
 \begin{cases}
@@ -831,7 +803,6 @@ A_{B} = \dfrac{A \cdot B}{\norm{B}}\\
 \end{equation}
 
 $\therefore$\;\;\;\;The vector projection $\mu$ and $\nu$ of a valid $\overrightarrow{P}$ on both edges should greater than $0$ but smaller than the length of the edge.
-
 \[
 \begin{array}{lr}
 \mu = \dfrac{(\overrightarrow{P} - \overrightarrow{P_1}) \cdot (\overrightarrow{P_2} - \overrightarrow{P_1})}{\enspace\norm{\overrightarrow{P_2} - \overrightarrow{P_1}}}\\\\
@@ -842,7 +813,6 @@ $\therefore$\;\;\;\;The vector projection $\mu$ and $\nu$ of a valid $\overright
 \]
 
 Finally, transform them into a more optimized expression, and only if $\mu'$ and $\nu'$ satisfy the conditions below, the intersection position $\overrightarrow{P}$ is valid:
-
 \[
 \begin{array}{lr}
 \mu' = (\overrightarrow{P} - \overrightarrow{P_1}) \cdot (\overrightarrow{P_2} - \overrightarrow{P_1})\\
@@ -940,21 +910,15 @@ $\And$\;\;\;\;The relative distance in x-axis and y-axis direction:
 	\]
 \end{multicols}
 
-$\therefore$\;\;\;\;A valid intersection exist only if following equation satisfied:
-
+$\therefore$\;\;\;\;A valid intersection exist only if following equations are satisfied:
 \[
 \begin{array}{lr}
 \begin{aligned}
 t_{X_1} &< t_{X_2}\\
 t_{Y_1} &< t_{Y_2}\\
+\code{max}\;(t_{X_1},\enspace t_{Y_1}) &< \code{min}\;(t_{X_2},\enspace t_{Y_2})
 \end{aligned}
 \end{array}
-\]
-
-Which is:
-
-\[
-\code{max}\;(t_{X_1},\enspace t_{Y_1}) < \code{min}\;(t_{X_2},\enspace t_{Y_2})
 \]
 
 %****************************************************************
@@ -1068,31 +1032,23 @@ $\And$\;\;\;\;The relative distance in different axis direction:
 	\]
 \end{multicols}
 
-$\therefore$\;\;\;\;A valid intersection exist only if following equation satisfied:
-
+$\therefore$\;\;\;\;A valid intersection exist only if following equations are satisfied:
 \[
 \begin{array}{lr}
 \begin{aligned}
 t_{X_1} &< t_{X_2}\\
 t_{Y_1} &< t_{Y_2}\\
 t_{Z_1} &< t_{Z_2}\\
+\code{max}\;(t_{X_1},\enspace t_{Y_1},\enspace t_{Z_1}) &< \code{min}\;(t_{X_2},\enspace t_{Y_2},\enspace t_{Z_2})
 \end{aligned}
 \end{array}
 \]
-
-$\therefore$ Which is:
-
-\begin{equation}
-\label{equ:ray-box-3d-intersection}
-\code{max}\;(t_{X_1},\enspace t_{Y_1},\enspace t_{Z_1}) < \code{min}\;(t_{X_2},\enspace t_{Y_2},\enspace t_{Z_2})
-\end{equation}
 
 %****************************************************************
 \subsection{Ray-Point}
 \label{section:ray-point}
 
 In order to maintain a same visual size on \code{Placemark}, application draw the \code{Placemark} looks the same size regardless of the distance in perspective view.
-
 \[
 \begin{array}{lr}
 \code{const float reciprocalScaleOnScreen = 0.01;}\\
@@ -1103,19 +1059,17 @@ In order to maintain a same visual size on \code{Placemark}, application draw th
 
 Therefore, ray-sphere intersection test for \code{Placemark} no longer works. In this section, I introduce ray-point intersection test for \code{Placemark} selection by checking if the ray is pointing at a particular direction in the camera space with a tolerance of pitch and yaw. 
 
-From the Table \ref{tab:opengl-compute}, the calculation for final projected vertex in camera space can be expressed as:
-
+First, the final projected vertex in camera space (see Table \ref{tab:opengl-compute}) can be expressed as:
 \[
 \begin{array}{lr}
 \begin{aligned}
-&\code{viewM}\;&&\code{= eye.viewM * cameraM;}\\
-&\code{Vertex'}\;&&\code{= perspectiveM * viewM * modelM * position;}\\
+\code{viewM}\;&\code{= eye.viewM * cameraM;}\\
+\code{Vertex'}\;&\code{= perspectiveM * viewM * modelM * position;}\\
 \end{aligned}
 \end{array}
 \]
-f
-But, the expression of position in the camera space for ray-point can be simplified as:
 
+But, the expression of position in the camera space for ray-point intersection test is:
 \[
 \begin{array}{lr}
 \code{positionInCameraSpace = position - camera.position;}\\
@@ -1124,29 +1078,23 @@ But, the expression of position in the camera space for ray-point can be simplif
 \]
 
 Then, we can get the pitch and yaw value for intersection test:
-
 \[
 \begin{array}{lr}
 \begin{aligned}
-&\code{pitch}\;&&\code{= atan2(Position'[1], -Position'[2]);}\\
-&\code{yaw}\;&&\code{= atan2(Position'[0], -Position'[2]);}\\
+\code{pitch}\;&\code{= atan2(Position'[1], -Position'[2]);}\\
+\code{yaw}\;&\code{= atan2(Position'[0], -Position'[2]);}\\
+\code{abs(pitch)}\;&\in \code{[-TOLERANCE, TOLERANCE]}\\
+\code{abs(yaw)}\;&\in \code{[-TOLERANCE, TOLERANCE]}\\
 \end{aligned}
 \end{array}
 \]
 
-Finally, the ray intersect with the point only if:
-
-\begin{equation}
-\begin{array}{lr}
-\begin{aligned}
-\label{equ:ray-point-intersection}
-&\code{abs(pitch)}\;&&\in \code{[-TOLERANCE, TOLERANCE]}\\
-&\code{abs(yaw)}\;&&\in \code{[-TOLERANCE, TOLERANCE]}\\
-\end{aligned}
-\end{array}
-\end{equation}
-
-%****************************************************************
-
+\begin{figure}[H]
+	\caption{Ray-Point intersection}
+	\label{fig:ray-point-intersection}
+	\centering
+	\includegraphics[width=\textwidth, keepaspectratio]{Figures/ray-point-intersection.png}
+	\decoRule
+\end{figure}
 
 %****************************************************************

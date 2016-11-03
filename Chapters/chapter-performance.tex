@@ -1,8 +1,8 @@
 %****************************************************************
 % Chapter X
 %****************************************************************
-\label{chapter-performance}
 \chapter{Performance}
+\label{chapter-performance}
 
 %****************************************************************
 What is great about the Android runtime is that most of the stress of memory reclamation is done for developers. The system will track what developers are doing and when it sees that an object is not needed anymore, it will free it on their behalf. However, this does not exclude performance problems from happening here. When the amount of memory have allocated reaches an upper limit, a Garbage Collection (GC) event will be kicked off to free any resources that might not be needed any longer, freeing up space for future allocations. 
