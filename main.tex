@@ -57,6 +57,36 @@
 \usepackage{float}
 \usepackage{multicol}
 
+\usepackage{listings}
+
+\lstset{
+%backgroundcolor=\color{white},% choose the background color; you must add \usepackage{color} or \usepackage{xcolor}; should come as last argument
+basicstyle=\footnotesize, % the size of the fonts that are used for the code
+%breakatwhitespace=false, % sets if automatic breaks should only happen at whitespace
+%breaklines=true, % sets automatic line breaking
+%captionpos=b, % sets the caption-position to bottom
+%commentstyle=\color{mygreen}, % comment style
+%deletekeywords={...}, % if you want to delete keywords from the given language
+%escapeinside={\%*}{*)}, % if you want to add LaTeX within your code
+%extendedchars=true, % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+%frame=single, % adds a frame around the code
+%keepspaces=true,% keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+%keywordstyle=\color{blue}, % keyword style
+%language=Octave, % the language of the code
+%morekeywords={*,...}, % if you want to add more keywords to the set
+%numbers=left,% where to put the line-numbers; possible values are (none, left, right)
+%numbersep=5pt, % how far the line-numbers are from the code
+%numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+%rulecolor=\color{black}, % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+%showspaces=false, % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+%showstringspaces=false, % underline spaces within strings only
+%showtabs=false, % show tabs within strings adding particular underscores
+%stepnumber=2, % the step between two line-numbers. If it's 1, each line will be numbered
+%stringstyle=\color{mymauve}, % string literal style
+%tabsize=2, % sets default tabsize to 2 spaces
+%title=\lstname % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+
 \setlength{\parskip}{\baselineskip}%
 % Override line space
 \linespread{1.4}
@@ -138,7 +168,7 @@
 \begin{abstract}
 \addchaptertocentry{\abstractname} % Add the abstract to the table of contents
 
-Virtual reality technology has been proved to be beneficial to visualize geographic data. It can be broken down into the pseudo-3D display with 3D interaction and the immersible depth of vision of a real 3D experience. The former not only has been already studied for a long time in the domain of visualizing the earth and environmental sciences, but also got a favorable result in both theory and practice area. On the other hand, the latter is yet to be completely revealed. This paper makes a demonstrate of taking advantage of the Keyhole Markup Language (KML) \cite{google.kml.2016} as the geographic visualization markup language can not only benefit from the global geospatial group but contribute to all kind of communities. In consideration of the ranges any necessary sensors and the equipment costs, taking advantage of Google Cardboard \cite{google.cardboard.2016} and Android platform have proved to be well-suited for constructing the immersive virtual reality environment. This paper also revealed an immersive virtual reality based intuitive nature system that provides attractive and efficient methods for simultaneously visualizing geographic data from the different source. They are exposed by presenting the implementation of an application that includes both front (client) and back-end (web server) for geographic data visualization. 
+Virtual reality technology has been proved to be beneficial to visualize geographic data. It can be broken down into the pseudo-3D display with 3D interaction and the immersible depth of vision of a real 3D experience. The former not only has been already studied for a long time in the domain of visualizing the earth and environmental sciences, but also got a favorable result in both theory and practice area. On the other hand, the latter is yet to be completely revealed. This paper makes a demonstrate of taking advantage of the Keyhole Markup Language (KML) \cite{google.kml.2016} as the geographic visualization markup language can not only benefit from the global geospatial group but contribute to all kind of communities. In consideration of the ranges any necessary sensors and the equipment costs, taking advantage of Google Cardboard \cite{google.cardboard.2016} and Android platform have proved to be well-suited for constructing the immersive virtual reality environment. This paper also revealed an immersive virtual reality based intuitive nature system that provides attractive and efficient methods for simultaneously visualizing geographic data from the different source. They are exposed by presenting the implementation of an virtual reality application that includes both front (client) and back-end (web server) for geographic data visualization. 
 
 \end{abstract}
 
@@ -186,6 +216,8 @@ Virtual reality technology has been proved to be beneficial to visualize geograp
 %\begin{appendices}
 \include{Appendices/appendix-source}
 \include{Appendices/appendix-screenshots}
+\include{Appendices/appendix-kml-sample}
+\include{Appendices/appendix-obj-sample}
 %\end{appendices}
 
 %****************************************************************

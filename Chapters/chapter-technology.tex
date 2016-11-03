@@ -4,7 +4,7 @@
 \chapter{Technology}
 \label{chapter-technology}
 
-In this chapter, details of the related technologies are presented. They are Android smartphone, a low-cost way to experience immersive virtual reality environment; OpenGL ES in Android; KML for geographic visualization; Golang RESTful web server for managing data in the back-end.
+As an immersive virtual reality application, there are few things need to consider. A device can be utilized and efficiently perform development tasks, including graphic system and network support; A markup language for decorating geographic data. There are some major technologies listed in this chapter.
 
 %****************************************************************
 \section{Virtual Reality Device}
@@ -53,11 +53,9 @@ OpenGL ES 3.2 (September 2016) & Android 7.0 (API level 24) and higher\\
 %****************************************************************
 \section{Geographic Visualization Markup Language}
 
-I was looking for a simple markup language for geographic data visualization. It should be not only able to represent a geographic data in the virtual reality, but also be beneficial to publish and consume data in interoperable formats without the needs of technical assistance. 
+The Keyhole Markup Language (KML) can be combined with other supporting files such as imagery in a zip archive, producing a KMZ file. KML offers features for expressing geographic annotation and visualization. The annotations of KML features are not designed as machine-readable XML, but a human readable plain text or simple HTML. KML has Network links supported (\code{NetworkLink} is a KML facility of many \ref{fig:kml-schema}), which gives the power to serve content from a local or remote location. It generally used to distribute data to large numbers of clients. In another word, if the data requires an update, it has to be changed at the source location (remote server) and all users receive the updated data automatically.
 
-The Keyhole Markup Language (KML) can be combined with other supporting files such as imagery in a zip archive, producing a KMZ file. KML offers features for expressing geographic annotation and visualization. The annotations of KML features are not designed as machine-readable XML, but a human readable plain text or simple HTML. The \code{Networklink} facility in KML contributes to a real-time data which is important in the environmental sciences. It allows all or part of the dataset to be automatically refreshed by the URL, to ensure the user always sees the latest information.
-
-More importantly than the satisfaction of needs in the application, it supported by many virtual globes and other GIS systems. Therefore the KML already becoming a de facto standard \cite{blower.sharing-visualizing.2007} that can be manipulated in other softwares if required. 
+As the markup language, more important than the satisfaction of needs is that the KML has been supported by many virtual globes and other GIS systems. It is becoming a de facto standard \cite{blower.sharing-visualizing.2007} that can be manipulated in other software if required.
 
 \begin{figure}[H]
 \caption[KML schema]{KML schema \cite{google.kml.2016}}
@@ -71,10 +69,10 @@ More importantly than the satisfaction of needs in the application, it supported
 \section{Network}
 \label{section:network}
 
-Real-time data are very important in the environmental sciences \cite{blower.sharing-visualizing.2007}. One of the key strengths of virtual reality applications are not only easy-to-use, and intuitive nature, but also the ability to efficiently incorporate new data.  Therefore, a web server is needed. A RESTful web server to support communication with the client, and a remote file server to synchronize data are included in the application.
+Real-time data are very important in the environmental sciences \cite{blower.sharing-visualizing.2007}. The key strengths of virtual reality applications are not only easy-to-use and intuitive nature, but also the ability to efficiently incorporate new data. Therefore, a web server is needed. A RESTful web server to support communication with the client, and a remote file server to synchronize data are included in the application.
 
-Go (often referred to as golang \cite{google.golang.2016}) is an open source programming language, and it is compiled, concurrent, garbage-collected, statically typed language developed at Google in late 2007. It was conceived as an answer to some of the problems they were seeing and developing software infrastructure \cite{google.talk-golang.2012}. Surprisingly, the rise of Go was growing so fast that each month the contributors outside Go team itself are already more than the contributors inside the Go team. Additionally, Golang is well suited for developing RESTful API’s. Its net/http standard library provides a set of key methods for interacting via the HTTP protocol. For the above reasons, the Golang is selected in this paper for developing the server. 
+Go (often referred to as golang \cite{google.golang.2016}) is an open source programming language, and it is compiled, concurrent, garbage-collected, statically typed language developed at Google in late 2007. It was conceived as an answer to some of the problems they were seeing and developing software infrastructure \cite{google.talk-golang.2012}. Surprisingly, the rise of Go was growing so fast that each month the contributors outside Go team itself are already more than the contributors inside the Go team. Additionally, Golang is well suited for developing RESTful API’s. Its \code{net/http} standard library provides a set of key methods for interacting via the HTTP protocol. For the above reasons, the Golang was selected for developing the server. 
 
-On the client side (Android platform), Volley is being used for transmitting network data (Volley is an open sourced HTTP library that makes networking for Android apps easier and most importantly, faster \cite{google.volley.2016}). Furthermore, Jsoup (Java HTML Parser \cite{joup.2016}) is being introduced for analyzing HTML format response.
+On the client side (Android platform), Volley is being used for transmitting network data. It is an open sourced HTTP library that makes networking for Android apps easier and most importantly, faster \cite{google.volley.2016}. Also, application is taking use of Jsoup (Java HTML Parser \cite{joup.2016}) for analyzing HTML format response.
 
 %****************************************************************

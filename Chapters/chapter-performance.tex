@@ -128,7 +128,7 @@ In a world where the application is not doing much of anything, there will be a 
 
 %****************************************************************
 \subsection{Placemarks Intersection}
-\label{section-placemarks-intersection}
+\label{section:placemarks-intersection}
 
 %****************************************************************
 There was a significant performance improvement in detecting ray-placemark intersection per frame. In order to avoid doing intersection test on all \code{Placemark} per frame, I implemented Octree space partition to ignore unnecessary detections (see Chart \ref{fig:placemarks-intersection-performance}).
@@ -218,8 +218,6 @@ As we can see from Diagram \ref{fig:cyclic-task}, each frame requires objects to
 	\decoRule
 \end{figure}
 
-The FPS drop under $60$, when the number of \code{Placemark} in the scene reach $250$. The reason is the number of calling \code{GLES20.glDrawElements} API. See the API performance in Chart \ref{fig:glDrawElements-performance}, it has a big range of span. It could reach $7.5$ milliseconds by just calling it $250$ times ($0.03 \times 250 = 7.5)$).
-
 \begin{figure}[H]
 	\caption{glDrawElements Performance}
 	\label{fig:glDrawElements-performance}
@@ -227,6 +225,8 @@ The FPS drop under $60$, when the number of \code{Placemark} in the scene reach 
 	\includegraphics[width=\textwidth, keepaspectratio]{Figures/glDrawElements-performance.png}
 	\decoRule
 \end{figure}
+
+The FPS drop under $60$, when the number of \code{Placemark} in the scene reach $250$. The reason is the number of calling \code{GLES20.glDrawElements} API. See the API performance in Chart \ref{fig:glDrawElements-performance}, it has a big range of span. It could reach $7.5$ milliseconds by just calling it $250$ times ($0.03 \times 250$).
 
 The solution is straightforward reducing the times of calling \code{glDrawElements} to one call for all \code{Placemark}. Unfortunately, it has not been optimized yet due to a limited time. In general, using interleaved attributes will do the trick.
 

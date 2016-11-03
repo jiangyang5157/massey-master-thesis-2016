@@ -178,7 +178,7 @@
 
 %----------------------------------------------------------------------------------------
 
-\newcommand{\checktoopen}{% New command to move content to the next page which prints to the next odd page if twosided mode is active  
+\newcommand{\checktoopen}{% New command to move content to the next page which prints to the next odd page if twosided mode is active
 \if@openright\cleardoublepage\else\clearpage\fi
 \ifdef{\phantomsection}{\phantomsection}{}% The \phantomsection command is necessary for hyperref to jump to the correct page
 }
@@ -246,7 +246,6 @@
 incompatible\MessageBreak with this class}{The pagesyles are defined 
 using package `scrlayer-scrpage', please consult the\MessageBreak 
 KOMA-script documentation for details.}]{fancyhdr}
-
 
 \newcommand{\blank@p@gestyle}{empty}
 \newcommand{\blankpagestyle}[1]{\def\blank@p@gestyle{#1}}
@@ -336,8 +335,8 @@ KOMA-script documentation for details.}]{fancyhdr}
 	\end{center}
 }
 {
-  %\vfil\vfil\vfil\null %#yj.modified.del
-  {\bf Keywords:} \keywordnames % #yj.modified.add
+	%\vfil\vfil\vfil\null %#yj.modified.del
+	{\bf Keywords:} \keywordnames % #yj.modified.add
 }
 
 %----------------------------------------------------------------------------------------
@@ -417,20 +416,20 @@ KOMA-script documentation for details.}]{fancyhdr}
 \AfterPackage{biblatex}{ % Load the hyperref package after the biblatex package for compatibility 
 \RequirePackage{hyperref} % Required for customising links and the PDF
 \hypersetup{pdfpagemode={UseOutlines},
-bookmarksopen=true,
-bookmarksopenlevel=0,
-hypertexnames=false,
-colorlinks=true, % Set to false to disable coloring links
-urlcolor=black, % The color of hyperlinks (URLs)
-citecolor=black, % The color of citations
-linkcolor=black, % The color of references to document elements (sections, figures, etc)
-pdfstartview={FitV},
-unicode,
-breaklinks=true,
+	bookmarksopen=true,
+	bookmarksopenlevel=0,
+	hypertexnames=false,
+	colorlinks=true, % Set to false to disable coloring links
+	urlcolor=black, % The color of hyperlinks (URLs)
+	citecolor=black, % The color of citations
+	linkcolor=black, % The color of references to document elements (sections, figures, etc)
+	pdfstartview={FitV},
+	unicode,
+	breaklinks=true,
 }
 
 \pdfstringdefDisableCommands{% If there is an explicit linebreak in a section heading (or anything printed to the pdf-bookmarks), it is replaced by a space
-   \let\\\space%
+\let\\\space%
 }
 }
 }{%nothing

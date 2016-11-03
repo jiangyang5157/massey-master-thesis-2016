@@ -4,12 +4,12 @@
 \chapter{Implementation}
 \label{chapter-implementation}
 
-In this chapter, details of the major implementation are revealed. First, briefly introducing Google VR SDK setup and drawing with OpenGL ES. Then an explanation of the web server design. After that, the creation of 3D virtual scene is highlighted. Finally, the implementation for device movement and object intersection detection are  clarified.
+In this chapter, details of the major implementation are revealed. First, briefly introducing Google VR SDK setup and Android OpenGL ES support. Then an explanation of the web server design. After that, is the creation of 3D scene and the implementation of device movement. Finally, the ray-model intersection detection is highlighted.
 
 %****************************************************************
 \section{Google VR SDK}
 
-The Google VR SDK repository is free and accessible from\href{https://github.com/googlevr/gvr-android-sdk}{\emph{https://github.com/googlevr/gvr-android-sdk}}, where we can get access to any necessary libraries and examples. The SDK libraries locate in the libraries directory of the repository as \emph{.aar} files \cite{google.aar-format.2016}. This project has two dependencies on \code{base} and \code{common} Google VR SDK modules.
+The Google VR SDK repository is free and accessible from \href{https://github.com/googlevr/gvr-android-sdk}{\emph{https://github.com/googlevr/gvr-android-sdk}}, where we can get access to any necessary libraries and examples. The SDK libraries locate in the libraries directory of the repository as \emph{.aar} files \cite{google.aar-format.2016}. This project has two dependencies on \code{base} and \code{common} Google VR SDK modules.
 
 %****************************************************************
 \section{OpenGL ES}
@@ -26,7 +26,7 @@ OpenGL assumes a square coordinate system, by default, happily draws those coord
 
 Therefore, OpenGL projection modes and camera views have to be applied to the OpenGL rendering pipeline for coordinates transformation, so the graphic objects have the expected proportions on any display. The projection matrix will recalculate the coordinates of graphics objects, and the camera view matrix will create a transformation that renders objects from a specific eye position.
 
-The implementation is divided into two phases. First, working out the model matrix, view matrix, and perspective matrix in CPU (Android programming in this case). Secondly pass them to GPU for the rest of calculation (OpenGL Shading Language Programming, i.e. GLSL or GLslang), such as explicit projection matrix, coordinates transformation, lighting, or more particular calculation (see \ref{section:ray}). The GLSL shaders themselves are a set of strings that passed to the hardware driver for compiling within an application using the OpenGL API's entry points \cite{wiki.glsl.2016}. By sharing the workload on CPU and GPU turns out significantly improved the performance, see Chapter Performance \ref{section:placemarks-update}.
+The implementation is divided into two phases. Firstly, working out the model matrix, view matrix, and perspective matrix in CPU (Android programming). Secondly, passing them to GPU for the rest of calculation (OpenGL Shading Language Programming, i.e. GLSL or GLslang), such as projected vertex, lighting, or coordinates transformation to different shape. The GLSL shaders themselves are a set of strings that passed to the hardware driver for compiling within an application using the OpenGL API's entry points \cite{wiki.glsl.2016}.
 
 \begin{table}[H]
 \caption{OpenGL compute}
@@ -50,7 +50,7 @@ Vertex' & projectionM * vertex & GPU\\
 %****************************************************************
 \section{Web Server}
 
-See the example below, a simple file server on port \code{8080} to serve a directory on disk "\emph{/tmp}" under an alternate URL path "\emph{/files/}", using \code{StripPrefix} to modify the request URL's path before the \code{FileServer} sees it.
+Setup a file server by Golang is efficient and convenient. See the following example: a simple file server on port \code{8080} to serve a directory on disk "\code{/tmp}" under an alternate URL path "\code{/files/}", using \code{StripPrefix} to modify the request URL's path before the \code{FileServer} sees it.
 \[
 \begin{array}{lr}
 \scriptsize{\code{http.Handle("/files/", http.StripPrefix("/files", http.FileServer(http.Dir("./tmp"))))}}\\
@@ -58,12 +58,12 @@ See the example below, a simple file server on port \code{8080} to serve a direc
 \end{array}
 \]
 
-For RESTful APIs setup, I introduce a free framework Go-Json-Rest \cite{antoine.go-json-rest.2016}, it is a thin layer designed by KISS principle (Keep it simple, stupid) and on top of native net/http package that helps building RESTful JSON APIs even easier.
+For RESTful API support \footcite{At this stage, the RESTful API has not been actually used, the only setup for the purpose of testing.}, I introduce a free framework Go-Json-Rest \cite{antoine.go-json-rest.2016}, it is a thin layer designed by KISS principle (Keep it simple, stupid) and on top of native \code{net/http} package that helps building RESTful JSON APIs even easier.
 
 %****************************************************************
 \subsection{Assets}
 
-The file server processes the requests and delivers the result (the particular file) in a standard web format back to the client. Table \ref{tab:assets-structure} indicates the folder structure served by the server.
+The file server processes the requests and delivers the particular file back to the client. Table \ref{tab:assets-structure} list the folder structure served by the server.
 
 \begin{table}[H]
 \caption{Assets structure}
@@ -87,7 +87,7 @@ The file server processes the requests and delivers the result (the particular f
 \subsection{Patch}
 \label{section:patch}
 
-A Path is for the server to guarantee the latest data (if any) will be pushed to each client (Android smartphone). It server as a compressed ZIP file, and it contains one or more files for client to update. Patch validation is happening whenever the app starts. First, the client sent requests for the patch file $http://xxx.xxx.xxx.xxx:8080/assets/static.zip$ from the file server. Before actual download the file, take the \code{lastModifiedTime} data of remote Patch from HTTP response headers, and compare it with the other \code{lastModifiedTime} data of local's Patch file. Only when the local's Patch is out of date, the client continues to download the remote Patch file and replacing any existing local files. For a special scenario when the app was just installed in the first time launch, also the network is disconnected. A built-in default Patch that included in the APK (Android app binary) will be uncompressed to avoid no available data. Diagram \ref{fig:patch-check} shows the simplified process.
+Patch is for the server to guarantee the latest data (if any) will be pushed to all client applications. It server as a compressed ZIP file, and it contains one or more files for client to update. Patch validation is happening whenever the app starts. First, client sent request to file server for retrieving the patch file $http://xxx.xxx.xxx.xxx:8080/assets/static.zip$. Before actual download the file, take the \code{lastModifiedTime} data of remote Patch from HTTP response headers, and compare it with the other \code{lastModifiedTime} data of local's Patch file. Only when the local's Patch is out of date, the client continues to download the remote Patch file and replacing any existing local files. For a special scenario when the app was just installed in the first time launch, also the network is disconnected. A built-in default Patch that included in the APK (Android Application binary) will be uncompressed to avoid no available data. Diagram \ref{fig:patch-check} illustrates the simplified process.
 
 \begin{figure}[H]
 \caption{Patch check}
@@ -105,13 +105,13 @@ The Keyhole Markup Language (KML) is contributed to the application as the geogr
 
 As you can see from Table \ref{tab:assets-structure}, there are two assets folders contains KML files - "\emph{/assets/static/layer}" and "\emph{/assets/static/kml}". These files are literally the same, but existing in different concepts for achieving the purpose of categorizing. By making use of \code{Networklink} facility, an individual KML file can contains one or more other KML files by given URLs. Therefore, folder "\emph{/assets/static/layer}" intends to be the scene topic (KML file) storage that visible and selectable to the user, and any inside topic could include one or more topics that exist in folder "\emph{/assets/static/kml}".
 
-It has many advantages to dividing the space with certain patterns during the space creation. Such as, runtime graphical analysis and optimization, intersection and collision detection.
+Space partition divides the space with certain patterns. It has many advantages, such as runtime graphical analysis, optimized intersection and collision detection.
 
 %****************************************************************
 \subsection{Geographic Visualization Markup Language}
 \label{section:kml}
 
-There are only some of KML features from KML schema \ref{fig:kml-schema} are be used in this application. They are \code{Container}, \code{Style}, \code{Placemark}, and \code{NetworkLink}. The KML parser I am using is not coded from scratch, and it is based on the open-source library \code{android-maps-utils} \cite{google.code-kml.2016} but with certain modification and extension: getting rid of \code{GoogleMap} dependency; extending \code{NetworkLink} facility support that was one of the unsupported features in the library.
+Only some of KML features from KML schema \ref{fig:kml-schema} are be used in the application. They are \code{Container}, \code{Style}, \code{Placemark}, and \code{NetworkLink}. The KML parser I am using is not coded from scratch, and it is based on the open-source library \code{android-maps-utils} \cite{google.code-kml.2016} but with certain modification and extension: getting rid of \code{GoogleMap} dependency; extending \code{NetworkLink} facility support which is one of the unsupported features in the library. Details of KML syntax can be found in its reference \cite{google.kml.2016}.
 
 \begin{figure}[H]
 \caption{kML parser simple}
@@ -127,7 +127,7 @@ There are only some of KML features from KML schema \ref{fig:kml-schema} are be 
 
 Space partition often used for optimizing collision detection algorithms among polygonal models. These algorithms are often expensive operations and can significantly slow FPS down. Although there is no collision detection in this application yet, there is an intersection detection between the ray tracing (see \ref{section:ray}) and other objects. Space partition is contributed to reducing the ray-model intersection test load by skipping invalid objects that locate far away from current ray tracing area. It avoids doing an $n^2$ times intersection detection on all objects.
 
-A axis-aligned Octree is implemented for the space partition \ref{fig:octree-split}. It has a predefined constant positive integer to decide whether or not a new partitioning should happen. This number is important for the purpose of reducing intersection detections, and it indicates a minimum number of objects allowed exist in the same cell. In view of the object complexity (ray-placemark) and the cell complexity (ray-box), the number $5$ was adopted, and it got a significant performance improvement (see \ref{section-placemarks-intersection}).
+A axis-aligned Octree is implemented for the space partition \ref{fig:octree-division}. It has a predefined constant positive integer to decide whether or not a new partitioning should happen. This number is important for the purpose of reducing intersection detections, and it indicates a minimum number of objects allowed exist in the same cell. In view of the object complexity (ray-placemark) and the cell complexity (ray-box), the number $5$ was adopted, and it got a significant performance improvement (see \ref{section:placemarks-intersection}).
 
 If the number is positive infinity, whole space as a cell and no further space partition is required, this is not reduce anything but also increase to $n + 1$ times of detections ($n$ times for ray-model, $1$ times for ray-cell). If the number is $1$, each cell only contains one object, this also not reduces the number of detection times. 
 
@@ -181,7 +181,7 @@ $\therefore$ The transformation from known index to three boolean values (octant
 \code{octant[] = (index \& 1, index \& 2, index \& 4)}
 \]
 
-The transformation from known Octant to index:
+The transformation from a known octant to index:
 \[
 \begin{array}{lr}
 \code{For each oction[i]:}\\
@@ -189,7 +189,7 @@ The transformation from known Octant to index:
 \end{array}
 \]
 
-When the \code{Placemark} is literally land on the axis, the associated cell does not conform to the fact. Because of the initialization of boolean \code{octant[]} value came from the delta values on three axes, the \code{Placemark} only has one associated cell. As we can see from \ref{fig:octree-associated-cell}, ray $R_1$ and $R_2$ should be both considered intersecting with the \code{Placemark}. But, ray $R_2$ will be invalid due to it did not intersect with the associated cell $0$.
+When the \code{Placemark} is literally land on the axis, the associated cell does not conform to the fact. The initialization of boolean \code{octant[]} value is based on three axes' delta values. However, the implementation is designed to make a \code{Placemark} only has one associated cell. As we can see from \ref{fig:octree-associated-cell}, ray $R_1$ and $R_2$ are both intersecting with the \code{Placemark}, but the intersection from ray $R_2$ will be considered as invalid due to it did not intersect with the associated cell $0$ first.
 \[
 \begin{array}{lr}
 \code{For each axis:}\\
@@ -286,7 +286,7 @@ Given an ordering of each triangle's vertices, a triangle can appear to have a c
 %****************************************************************
 \section{Placemark}
 
-The vertex generation for \code{Placemark} is a recurring process of subdividing icosphere. Figure \ref{fig:icosahedron-rectangles} is an icosahedron, the corners of three orthogonal rectangles are the initial vertices for \code{Placemark}.
+Vertex generation for \code{Placemark} is a recurring process of subdividing icosphere. Figure \ref{fig:icosahedron-rectangles} is an icosahedron, the corners of three orthogonal rectangles are the initial vertices for \code{Placemark}.
 
 \begin{figure}[H]
 \caption[Icosahedron rectangles]{Icosahedron rectangles \cite{wiki.icosahedron-rectangles.2006}}
@@ -423,7 +423,7 @@ The final transformation from the ECEF to program graphic coordinates. This is r
 %****************************************************************
 \subsection{Description}
 
-The raw description data of a \code{Placemark} decorated in KML file is a series of characters that could include any URL. Therefore, an analysis of the description is required before transforming for display. In this application, it currently supports following information display.
+Raw description data of a \code{Placemark} is a series of characters decorated in the KML file, including any URL substring. Therefore, an analysis of the description is required before it transforms to be display. In the application, following data conversion has been implemented:
 
 \begin{description}
 \setlength{\parskip}{0pt}
@@ -441,7 +441,7 @@ The raw description data of a \code{Placemark} decorated in KML file is a series
 \decoRule
 \end{figure}
 
-Treat the raw description data as plain text if it does not have a URL included. The\;\code{Content-Type} from the response of URL request, defines what kind of byte data is coming over, such as \code{image/jpeg}, \code{application/json}, or \code{text/html}. I am using Jsoup (a Java library for working with real-world HTML \cite{joup.2016}) for extracting target data from the HTML source. The most efficient way to get an extracted explanation or description on the topic from a Wikipedia page is to take use of the Opensearch API \cite{wiki.api.2016}. Therefore, a transformation from Wikipedia URL to Opensearch URL is required for an expected JSON response with \code{extract} tag included.
+Treat the raw data as plain text if it does not have a URL included. The\;\code{Content-Type} from the response of URL request, defines what kind of byte data is coming over, such as \code{image/jpeg}, \code{application/json}, or \code{text/html}. I am using Jsoup (a Java library for working with real-world HTML \cite{joup.2016}) for extracting target data from the HTML source. The most efficient way to get an extracted explanation or description on the topic from a Wikipedia page is to take use of the Opensearch API \cite{wiki.api.2016}. Therefore, a transformation from Wikipedia URL to Opensearch URL is required for an expected JSON response with \code{extract} tag included.
 
 Given any valid Wikipedia page:
 \[
@@ -449,12 +449,12 @@ Given any valid Wikipedia page:
 \begin{aligned}
 \text{Replace}\;&\code{.wikipedia.org/wiki/}\\
 &\Downarrow\\
-\text{To}\;&\code{.wikipedia.org/w/api.php?}\textbf{APIs}\\
+\text{To}\;&\code{.wikipedia.org/w/api.php?}\mathbf{APIs}\\
 \end{aligned}
 \end{array}
 \]
 
-Where the \textbf{APIs} is:
+Where the APIs are:
 \[
 \begin{array}{lr}
 \begin{aligned}
@@ -518,7 +518,7 @@ A sight indicator is displayed in the center of sight for tracking the user's ey
 \subsection{Ray Pointer}
 \label{section:ray-pointer}
 
-I place a ray pointer on the surface of the objects. It guarantees a clear display on both ray pointer and the target that user is staring at. It is drawn as \code{GL\_POINTS}, but rounding to a ring shape (see Figure \ref{fig:ray-point2ring}) in Fragment Shader \cite{wiki.fragment-shader.2016} - programmable Shader stage.
+Placing a ray pointer on the surface of the objects guarantees a clear display on both ray pointer and the target that user is staring at. It is drawn as \code{GL\_POINTS} type, but round to a ring shape (see Figure \ref{fig:ray-point2ring}) in the Fragment shader \cite{wiki.fragment-shader.2016}.
 
 \begin{figure}[H]
 \caption{Ray point to ring}
@@ -532,6 +532,7 @@ The \code{gl\_PointCoord} in the Fragment Shader has a range from $0$ to $1$ reg
 \[
 \begin{array}{lr}
 \begin{aligned}
+&\textbf{@FragmentShader}\\
 &\code{// transform coord from range [0, 1] to [-0.5, 0.5]}\\
 &\code{vec2 coord = gl\_PointCoord - vec2(0.5);}\\
 \end{aligned}
@@ -542,6 +543,7 @@ It is clear that a transformation from point to ring can be performed by ignorin
 \[
 \begin{array}{lr}
 \begin{aligned}
+&\textbf{@FragmentShader}\\
 &\code{float length = length(coord); // distance from the center}\\
 &\code{bool belongsToPointer = pointerDown < length \&\& length < pointerUp;}\\
 \end{aligned}
@@ -565,6 +567,7 @@ A ray spinner is an indicator gives a user feedback when the user is staring at 
 \[
 \begin{array}{lr}
 \begin{aligned}
+&\textbf{@FragmentShader}\\
 &\code{bool belongsToSpinner = spinnerDown < length \&\& length < spinnerUp;}\\
 &\code{float theta = atan (-coord.x, coord.y); //  (-PI, PI)}\\
 &\code{belongsToSpinner = belongsToSpinner \&\& theta < u\_Spinner;}\\
@@ -1051,6 +1054,7 @@ t_{Z_1} &< t_{Z_2}\\
 In order to maintain a same visual size on \code{Placemark}, application draw the \code{Placemark} looks the same size regardless of the distance in perspective view.
 \[
 \begin{array}{lr}
+\textbf{@VertexShader}\\
 \code{const float reciprocalScaleOnScreen = 0.01;}\\
 \code{float w = (mvp * vec4(0, 0, 0, 1)).w * reciprocalScaleOnScreen;}\\
 \code{vec4 position = vec4(a\_Position.xyz * w , 1);}\\
