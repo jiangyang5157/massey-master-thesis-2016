@@ -51,12 +51,11 @@ Vertex' & projectionM * vertex & GPU\\
 \section{Web Server}
 
 Setup a file server by Golang is efficient and convenient. See the following example: a simple file server on port \code{8080} to serve a directory on disk "\code{/tmp}" under an alternate URL path "\code{/files/}", using \code{StripPrefix} to modify the request URL's path before the \code{FileServer} sees it.
-\[
-\begin{array}{lr}
-\scriptsize{\code{http.Handle("/files/", http.StripPrefix("/files", http.FileServer(http.Dir("./tmp"))))}}\\
-\scriptsize{\code{http.ListenAndServe(":8080"), nil)}}\\
-\end{array}
-\]
+
+\begin{lstlisting}[language=Golang]
+http.Handle("/files/", http.StripPrefix("/files", http.FileServer(http.Dir("./tmp"))));
+http.ListenAndServe(":8080"), nil);
+\end{lstlisting}
 
 For RESTful API support \footcite{At this stage, the RESTful API has not been actually used, the only setup for the purpose of testing.}, I introduce a free framework Go-Json-Rest \cite{antoine.go-json-rest.2016}, it is a thin layer designed by KISS principle (Keep it simple, stupid) and on top of native \code{net/http} package that helps building RESTful JSON APIs even easier.
 
@@ -141,9 +140,7 @@ If the number is positive infinity, whole space as a cell and no further space p
 
 See Diagram \ref{fig:octree-division}, the parent cell has eight indexes indicate the different relative position inside the parent cell. These indexes are important for the next time of division, where the objects in parent cell need to be relinked to a new cell. On the other words, a new object will be linked to the parent cell only if the existed objects is less than the predefined constant value. If not, the parent cell will be spatially divided into eight cells. Then, the existing objects will be unlinked from the parent cell and relink to a new cell.
 
-The integer index is not chosen randomly. It is defined by its geometric meaning - three boolean value that indicates the three axis-relative delta value. Table \ref{tab:octree-octant} gives the relationship between the index and three boolean values.
-
-The three delta values of any \code{Placemark} position $P$ in a cell with known box center $O$ are:
+The integer index is not chosen randomly. It is defined by its geometric meaning, three boolean value that indicates the three axis-relative delta value.
 \[
 \begin{array}{lr}
 \begin{aligned}
@@ -153,8 +150,6 @@ dz &= P_z - O_z\\
 \end{aligned}
 \end{array}
 \]
-
-The relationship between the index and three boolean values as follow:
 
 \begin{table}[H]
 \caption{Octree Octant}
@@ -176,27 +171,42 @@ The relationship between the index and three boolean values as follow:
 	\end{tabular}
 \end{table}
 
-$\therefore$ The transformation from known index to three boolean values (octant):
-\[
-\code{octant[] = (index \& 1, index \& 2, index \& 4)}
-\]
+$\therefore$ The conversion between among delta, index and octant:
 
-The transformation from a known octant to index:
-\[
-\begin{array}{lr}
-\code{For each oction[i]:}\\
-\;\;\;\;\;\;\;\;\code{index |= (1 < < i)}\\
-\end{array}
-\]
+\begin{lstlisting}[language=Android]
+private boolean[] getOctant(OcTreeObject obj){
+	boolean[] octant = new boolean[3];
+	for (int i = 0; i < 3; i++) {
+		float delta = obj.center[i] - this.center[i];
+		octant[i] = delta >= 0;
+	}
+	return octant;
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Android]
+private boolean[] getOctant(int index) {
+	return new boolean[]{
+			(index & 1) == 0, // 0, 2, 4, 6
+			(index & 2) == 0, // 0, 1, 4, 5
+			(index & 4) == 0, // 0, 1, 2, 3
+	};
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Android]
+private int getIndex(boolean[] octant) {
+	int ret = 0;
+	for (int i = 0; i < 3; i++) {
+		if (!octant[i]) {
+			ret |= (1 << i);
+		}
+	}
+	return ret;
+}
+\end{lstlisting}
 
 When the \code{Placemark} is literally land on the axis, the associated cell does not conform to the fact. The initialization of boolean \code{octant[]} value is based on three axes' delta values. However, the implementation is designed to make a \code{Placemark} only has one associated cell. As we can see from \ref{fig:octree-associated-cell}, ray $R_1$ and $R_2$ are both intersecting with the \code{Placemark}, but the intersection from ray $R_2$ will be considered as invalid due to it did not intersect with the associated cell $0$ first.
-\[
-\begin{array}{lr}
-\code{For each axis:}\\
-\;\;\;\;\;\;\;\;\code{float delta = obj.center[i] - box.center[i]}\\
-\;\;\;\;\;\;\;\;\code{octant[i] = delta >= 0}\\
-\end{array}
-\]
 
 \begin{figure}[H]
 	\caption{Octree associated cell}
@@ -249,9 +259,9 @@ u = s \times  \dfrac{1}{\code{SegmentsCount} - 1}\\\\
 $\therefore$ The vertex P (x,\;y,\;z) can be calculated:
 \[
 \begin{array}{lr}
-x = (\sin(\alpha) \times radius) \times \cos(\beta)\\
-y = \cos(\alpha) \times radius\\
-z =  (\sin(\alpha) \times radius) \times \sin(\beta)\\
+x = (\sin(\alpha) \times \code{radius}) \times \cos(\beta)\\
+y = \cos(\alpha) \times \code{radius}\\
+z =  (\sin(\alpha) \times \code{radius}) \times \sin(\beta)\\
 \end{array}
 \]
 
@@ -318,8 +328,8 @@ First, get the midpoint of each edge.
 Second, push midpoints to the surface of the unit sphere(1).
 \[
 \begin{array}{lr}
-\overrightarrow{D} = \code{normalize}(\overrightarrow{d})\\
-\overrightarrow{E} = \code{normalize}(\overrightarrow{e})\\
+\overrightarrow{D} = \code{normalize}(\overrightarrow{d})\\\\
+\overrightarrow{E} = \code{normalize}(\overrightarrow{e})\\\\
 \overrightarrow{F} = \code{normalize}(\overrightarrow{f})\\
 \end{array}
 \]
@@ -529,26 +539,18 @@ Placing a ray pointer on the surface of the objects guarantees a clear display o
 \end{figure}
 
 The \code{gl\_PointCoord} in the Fragment Shader has a range from $0$ to $1$ regardless of the point size. Therefore, center the point for circular calculation by shifting with $0.5$ offset on both x-axis and y-axis:
-\[
-\begin{array}{lr}
-\begin{aligned}
-&\textbf{@FragmentShader}\\
-&\code{// transform coord from range [0, 1] to [-0.5, 0.5]}\\
-&\code{vec2 coord = gl\_PointCoord - vec2(0.5);}\\
-\end{aligned}
-\end{array}
-\]
+
+\begin{lstlisting}[language=Glsl]
+// transform coord from range [0, 1] to [-0.5, 0.5]
+vec2 coord = gl_PointCoord - vec2(0.5);
+\end{lstlisting}
 
 It is clear that a transformation from point to ring can be performed by ignoring invalid pixels in the point:
-\[
-\begin{array}{lr}
-\begin{aligned}
-&\textbf{@FragmentShader}\\
-&\code{float length = length(coord); // distance from the center}\\
-&\code{bool belongsToPointer = pointerDown < length \&\& length < pointerUp;}\\
-\end{aligned}
-\end{array}
-\]
+
+\begin{lstlisting}[language=Glsl]
+float length = length(coord); // distance from the center
+bool belongsToPointer = pointerDown < length && length < pointerUp;
+\end{lstlisting}
 
 %****************************************************************
 \subsection{Ray Spinner}
@@ -564,16 +566,11 @@ A ray spinner is an indicator gives a user feedback when the user is staring at 
 \decoRule
 \end{figure}
 
-\[
-\begin{array}{lr}
-\begin{aligned}
-&\textbf{@FragmentShader}\\
-&\code{bool belongsToSpinner = spinnerDown < length \&\& length < spinnerUp;}\\
-&\code{float theta = atan (-coord.x, coord.y); //  (-PI, PI)}\\
-&\code{belongsToSpinner = belongsToSpinner \&\& theta < u\_Spinner;}\\
-\end{aligned}
-\end{array}
-\]
+\begin{lstlisting}[language=Glsl]
+bool belongsToSpinner = spinnerDown < length && length < spinnerUp;
+float theta = atan (-coord.x, coord.y); // (-PI, PI)
+belongsToSpinner = belongsToSpinner && theta < u_Spinner;
+\end{lstlisting}
 
 The \code{u\_Spinner} is a dynamical radian which came from CPU, and it has a range from $-\pi$ to $\pi$. The \code{genType atan(genType y, genType x)} returns the angle whose trigonometric arc tangent is $\dfrac{y}{x}$. The signs of \code{y} and \code{x} are used to determine the quadrant that the angle lies in. The value returned by \code{atan} is in the range from $-\pi$ to $\pi$.
 
@@ -819,7 +816,7 @@ Finally, transform them into a more optimized expression, and only if $\mu'$ and
 \[
 \begin{array}{lr}
 \mu' = (\overrightarrow{P} - \overrightarrow{P_1}) \cdot (\overrightarrow{P_2} - \overrightarrow{P_1})\\
-\nu' = (\overrightarrow{P} - \overrightarrow{P_1}) \cdot (\overrightarrow{P_3} - \overrightarrow{P_1})\\
+\nu' = (\overrightarrow{P} - \overrightarrow{P_1}) \cdot (\overrightarrow{P_3} - \overrightarrow{P_1})\\\\
 \mu' \in [0,\enspace (\overrightarrow{P_2} - \overrightarrow{P_1}) \cdot (\overrightarrow{P_2} - \overrightarrow{P_1})]\\
 \nu' \in [0,\enspace (\overrightarrow{P_3} - \overrightarrow{P_1}) \cdot (\overrightarrow{P_3} - \overrightarrow{P_1})]\\
 \end{array}
@@ -1052,14 +1049,12 @@ t_{Z_1} &< t_{Z_2}\\
 \label{section:ray-point}
 
 In order to maintain a same visual size on \code{Placemark}, application draw the \code{Placemark} looks the same size regardless of the distance in perspective view.
-\[
-\begin{array}{lr}
-\textbf{@VertexShader}\\
-\code{const float reciprocalScaleOnScreen = 0.01;}\\
-\code{float w = (mvp * vec4(0, 0, 0, 1)).w * reciprocalScaleOnScreen;}\\
-\code{vec4 position = vec4(a\_Position.xyz * w , 1);}\\
-\end{array}
-\]
+
+\begin{lstlisting}[language=Glsl]
+const float reciprocalScaleOnScreen = 0.01;
+float w = (mvp * vec4(0, 0, 0, 1)).w * reciprocalScaleOnScreen;
+vec4 position = vec4(a_Position.xyz * w , 1);
+\end{lstlisting}
 
 Therefore, ray-sphere intersection test for \code{Placemark} no longer works. In this section, I introduce ray-point intersection test for \code{Placemark} selection by checking if the ray is pointing at a particular direction in the camera space with a tolerance of pitch and yaw. 
 

@@ -20,7 +20,7 @@ Anytime the frame drips about the $16$ milliseconds barrier, and the users are g
 Therefore, a performance testing is important for avoiding nasty GC events. Each GC event that developer can avoid, the application has more time per frame to do interesting things. In order to find out where in the code objects are being created but not released, created and not used, or created new when the developer could have been reusing them from existing objects. Android Studio provides a series of performance testing tools, such as Memory Monitor, Allocation Tracker, Heap Viewer, and the Systrace (it is an Android system trace tool helps developers analyze how the execution of the application fits into the many running systems on an Android device \cite{google.systrace.2016}). According to the runtime, the performance analysis is divided into two parts: acyclic process and cyclic process (performance data came from Android phone $Nexus 6P$.).
 
 %****************************************************************
-\section{Acyclic}
+\section{Initialization}
 
 %****************************************************************
 In order to avoid UI being block, all of acyclic process in the application are handled in the new threads. In this section, I present the performance of geometric vertices' generation for \code{Placemark} (Icosphere) and \code{Earth} (UV Sphere) which only executes one time (or not) when needed. The geometric data from Icosphere generation will be cached once it has been created. This is useful to avoid duplicate creations for same geometric vertices. In the \code{Placemark} description URL analysis, the same cache solution for image and text.
@@ -88,7 +88,7 @@ Figure \ref{fig:geographic-data-performance} is the performance of initializing 
 Although, the number could be large, but it is not executed in the UI thread. Additionally, the Earth does not require re-creation when user try to load another scene. Therefore it is not a performance problem.
 
 %****************************************************************
-\section{Cyclic}
+\section{Runtime}
 
 %****************************************************************
 Tasks that require continually repeated during the render loop is the factors influencing the runtime performance. They are ray-model intersection detection, update and draw models \ref{fig:cyclic-task}. In this section, I present the tasks that closely related to performance and the memory leak analysis during the loop.

@@ -56,35 +56,130 @@
 \usepackage{amssymb}
 \usepackage{float}
 \usepackage{multicol}
-
 \usepackage{listings}
+\usepackage[dvipsnames]{xcolor}
+
+\lstdefinelanguage{Obj}{
+	identifierstyle=\color{Black}\ttfamily\small,
+	commentstyle=\color{Gray}\ttfamily\small,
+	comment=[l]{\#},
+	keywords={
+		v,
+		vn,
+		f
+	},
+	keywordstyle=\color{Blue}\ttfamily\small\bfseries,
+	sensitive=true
+}
+
+\lstdefinelanguage{Kml}{
+	identifierstyle=\color{Black}\ttfamily\small,
+	commentstyle=\color{Gray}\ttfamily\small,
+	morecomment=[s]{<!--}{-->},
+	keywords={
+		http,
+		https},
+	keywordstyle=\color{Blue}\ttfamily\small\bfseries,
+	morestring=[b]",
+	stringstyle=\color{Green}\ttfamily\small,
+ 	sensitive=true
+}
+
+\lstdefinelanguage{Glsl}{
+	identifierstyle=\color{Black}\ttfamily\small,
+	commentstyle=\color{Gray}\ttfamily\small,
+	comment=[l]{//},
+	morecomment=[s]{/*}{*/},
+	keywords={
+		vec2,
+		vec3,
+		vec4,
+		void,
+		float,
+		bool
+	},
+	keywordstyle=\color{Blue}\ttfamily\small\bfseries,
+	ndkeywords={
+		uniform,
+		in,
+		out,
+		const
+	},
+	ndkeywordstyle=\color{orange}\bfseries,
+	morestring=[b]",
+	stringstyle=\color{Green}\ttfamily\small,
+	sensitive=true
+}
+
+\lstdefinelanguage{Golang}{
+	identifierstyle=\color{Black}\ttfamily\small,
+	commentstyle=\color{Gray}\ttfamily\small,
+	comment=[l]{//},
+	morecomment=[s]{/*}{*/},
+	keywords={
+		nil,
+		Handle,
+		StripPrefix,
+		FileServer,
+		ListenAndServe
+	},
+	keywordstyle=\color{Blue}\ttfamily\small\bfseries,
+	morestring=[b]",
+	stringstyle=\color{Green}\ttfamily\small,
+	sensitive=true
+}
+
+\lstdefinelanguage{Android}{
+	identifierstyle=\color{Black}\ttfamily\small,
+	commentstyle=\color{Gray}\ttfamily\small,
+	comment=[l]{//},
+	morecomment=[s]{/*}{*/},
+	keywords={
+		int,
+		boolean,
+		float,
+		double,
+		long,
+		for,
+		if,
+		else
+	},
+	keywordstyle=\color{Blue}\ttfamily\small\bfseries,
+	ndkeywords={
+		return,
+		new,
+		private,
+		protected,
+		public,
+		abstract,
+		static,
+		final,
+		extends,
+		implements
+	},
+	ndkeywordstyle=\color{orange}\bfseries,
+	morestring=[b]",
+	stringstyle=\color{Green}\ttfamily\small,
+	sensitive=true
+}
 
 \lstset{
-%backgroundcolor=\color{white},% choose the background color; you must add \usepackage{color} or \usepackage{xcolor}; should come as last argument
-basicstyle=\footnotesize, % the size of the fonts that are used for the code
-%breakatwhitespace=false, % sets if automatic breaks should only happen at whitespace
-%breaklines=true, % sets automatic line breaking
-%captionpos=b, % sets the caption-position to bottom
-%commentstyle=\color{mygreen}, % comment style
-%deletekeywords={...}, % if you want to delete keywords from the given language
-%escapeinside={\%*}{*)}, % if you want to add LaTeX within your code
-%extendedchars=true, % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
-%frame=single, % adds a frame around the code
-%keepspaces=true,% keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
-%keywordstyle=\color{blue}, % keyword style
-%language=Octave, % the language of the code
-%morekeywords={*,...}, % if you want to add more keywords to the set
+%title=\lstname, % show the filename of files included with \lstinputlisting; also try caption instead of title
+%backgroundcolor=\color{white},
+%frame=single, % adds a frame around the code: none, single, lines
+%frame=trbl, % draw a frame at the top, right, left and bottom of the listing
+%frameround=tttt, % make the frame round at all four corners
+%framesep=4pt, % quarter circle size of the round corners
+captionpos=b, % Position of the Caption (t for top, b for bottom)
+extendedchars=true, % Allows 256 instead of 128 ASCII characters
+columns=fixed, % make all characters equal width
+keepspaces=true, % does not ignore spaces to fit width, convert tabs to spaces
+tabsize=2, % number of spaces indented when discovering a tab
+showstringspaces=false, % lets spaces in strings appear as real spaces
+breaklines=true, % sets automatic line breaking
+%numberstyle=\tiny\ttfamily
 %numbers=left,% where to put the line-numbers; possible values are (none, left, right)
-%numbersep=5pt, % how far the line-numbers are from the code
-%numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
-%rulecolor=\color{black}, % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
-%showspaces=false, % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
-%showstringspaces=false, % underline spaces within strings only
-%showtabs=false, % show tabs within strings adding particular underscores
-%stepnumber=2, % the step between two line-numbers. If it's 1, each line will be numbered
-%stringstyle=\color{mymauve}, % string literal style
-%tabsize=2, % sets default tabsize to 2 spaces
-%title=\lstname % show the filename of files included with \lstinputlisting; also try caption instead of title
+%numbersep=10pt, % how far the line-numbers are from the code
 }
 
 \setlength{\parskip}{\baselineskip}%
@@ -175,6 +270,7 @@ Virtual reality technology has been proved to be beneficial to visualize geograp
 %****************************************************************
 %	LIST OF CONTENTS
 %****************************************************************
+\setcounter{tocdepth}{2} % Exclude subsubsection in Contents
 \tableofcontents % Prints the main table of contents
 
 %****************************************************************
