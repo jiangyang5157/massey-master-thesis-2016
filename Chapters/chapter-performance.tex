@@ -7,7 +7,7 @@
 %****************************************************************
 What is great about the Android runtime is that most of the stress of memory reclamation is done for developers. The system will track what developers are doing and when it sees that an object is not needed anymore, it will free it on their behalf. However, this does not exclude performance problems from happening here. When the amount of memory have allocated reaches an upper limit, a Garbage Collection (GC) event will be kicked off to free any resources that might not be needed any longer, freeing up space for future allocations. 
 
-Anytime the frame drips about the $16$ milliseconds barrier, and the users are going to start to notice. Therefore, any code that forces allocated memory to spike above this threshold can cause problems. For instance, memory can become tighter, if the developer is allocating and freeing a large number of objects in a short period of time, the temporary objects again kicking off GC event. 
+Anytime the frame drips about the $16$ms barrier, and the users are going to start to notice. Therefore, any code that forces allocated memory to spike above this threshold can cause problems. For instance, memory can become tighter, if the developer is allocating and freeing a large number of objects in a short period of time, the temporary objects again kicking off GC event. 
 
 \begin{figure}[H]
 \caption{16ms Per Frame}
@@ -17,7 +17,7 @@ Anytime the frame drips about the $16$ milliseconds barrier, and the users are g
 \decoRule
 \end{figure}
 
-Therefore, a performance testing is important for avoiding nasty GC events. Each GC event that developer can avoid, the application has more time per frame to do interesting things. In order to find out where in the code objects are being created but not released, created and not used, or created new when the developer could have been reusing them from existing objects. Android Studio provides a series of performance testing tools, such as Memory Monitor, Allocation Tracker, Heap Viewer, and the Systrace (it is an Android system trace tool helps developers analyze how the execution of the application fits into the many running systems on an Android device \cite{google.systrace.2016}). According to the runtime, the performance analysis is divided into two parts: acyclic process and cyclic process (performance data came from Android phone $Nexus 6P$.).
+Therefore, a performance testing is important for avoiding nasty GC events. Each GC event that developer can avoid, the application has more time per frame to do interesting things. In order to find out where in the code objects are being created but not released, created and not used, or created new when the developer could have been reusing them from existing objects. Android Studio provides a series of performance testing tools, such as Memory Monitor, Allocation Tracker, Heap Viewer, and the Systrace (it is an Android system trace tool helps developers analyze how the execution of the application fits into the many running systems on an Android device \cite{google.systrace.2016}). According to the runtime, the performance analysis is divided into two parts: acyclic process and cyclic process (performance data came from Android phone $Nexus\;6P$ \footcite{CPU: 2.0GHz octa-core, 64-bit ARM Cortex-A57 & ARM Cortex-A53, 8 cores; GPU: Adreno 430}).
 
 %****************************************************************
 \section{Initialization}
@@ -29,25 +29,7 @@ In order to avoid UI being block, all of acyclic process in the application are 
 \subsection{Icosphere Generator}
 
 %****************************************************************
-Based on the varying roundness of the Icosphere, it could evolve into a sphere has different vertex count \ref{tab:icosphere-level}. In general, level $3$ Icosphere is enough for illustrating a sphere, and in the application the \code{Placemark} is created on level $1$ Icosphere.
-
-\begin{table}[H]
-	\caption{Icosphere Level}
-	\label{tab:icosphere-level}
-	\centering
-	\begin{tabular}{l l}
-		\toprule
-		\tabhead{Recursion Level} & \tabhead{Vertex Count}\\
-		\midrule
-		0 & 12\\
-		1 & 42\\
-		2 & 162\\
-		3 & 642\\
-		4 & 2562\\
-		5 & 10242\\
-		\bottomrule
-	\end{tabular}
-\end{table}
+Based on the varying roundness of the Icosphere, it could evolve into spheres have different vertex count. In general, level $3$ Icosphere is enough for illustrating a sphere, and in the application the \code{Placemark} is created on level $1$ Icosphere. As we can see from Chart \ref{fig:icosphere-performance} and Table \ref{tab:icosphere-level}, even for a particular reason that requires a level $5$ Icosphere, less than $300$ms is acceptable as an one time execution.
 
 \begin{figure}[H]
 	\caption{Icosphere performance}
@@ -56,6 +38,24 @@ Based on the varying roundness of the Icosphere, it could evolve into a sphere h
 	\includegraphics[width=\textwidth, keepaspectratio]{Figures/icosphere-performance.png}
 	\decoRule
 \end{figure}
+
+\begin{table}[H]
+\caption{Icosphere Level}
+\label{tab:icosphere-level}
+\centering
+\begin{tabular}{l l l l}
+	\toprule
+	\tabhead{Recursion Level} & \tabhead{Vertex Count} & \tabhead{Mean Value (ms)} & \tabhead{Stand Deviation (ms)}\\
+	\midrule
+	0 & 12 & 0.049 & 0.014 \\
+	1 & 42 & 0.257 & 0.490 \\
+	2 & 162 & 0.722 & 0.250 \\
+	3 & 642 & 3.296 & 0.707 \\
+	4 & 2562 & 19.988 & 3.050 \\
+	5 & 10242 & 148.927 & 18.422 \\
+	\bottomrule
+\end{tabular}
+\end{table}
 
 %****************************************************************
 \subsection{UV Sphere Generator}
@@ -207,16 +207,7 @@ Before the optimization, based on the \code{viewM} and \code{perspectiveM} from 
 \label{section:placemarks-draw}
 
 %****************************************************************
-
-As we can see from Diagram \ref{fig:cyclic-task}, each frame requires objects to update and draw twice for both eye's viewports. Fortunately, the performance of ray-object intersection test and object update are satisfied. Therefore the application has almost $8$ milliseconds per frame for drawing each eye's viewport (See Diagram \ref{fig:16ms-per-frame}, anytime the frame takes more than $16$ milliseconds barrier, it will be noticed by the user). However, the performance of drawing \code{Placemark} has not been adequate, see Chart \ref{fig:placemarks-draw-performance}.
-
-\begin{figure}[H]
-	\caption{Placemarks Draw Performance}
-	\label{fig:placemarks-draw-performance}
-	\centering
-	\includegraphics[width=\textwidth, keepaspectratio]{Figures/placemarks-draw-performance.png}
-	\decoRule
-\end{figure}
+The performance of draw all \code{Placemark} has not been adequate, due to the number of times calling \code{glDrawElements} API, which is an expensive call and it is called during each \code{Placemark} draw process. Anytime the frame takes more than $16$ms barrier, and the user will notice it. Because the two eye's viewports are both need to be updated and re-draw, therefore the update and draw process only has $8$ms in total to do what needs to be done. Although the performance of ray-object intersection and \code{Placemark} update are satisfied, but the performance issues in draw process are significant. The $0.048$ms average time-consuming and $0.046$ms stand deviation indicate that it not only has an unstable value but also it could reach $8$ms by just call the API $170$ times (See Chart \ref{fig:glDrawElements-performance}).
 
 \begin{figure}[H]
 	\caption{glDrawElements Performance}
@@ -226,9 +217,6 @@ As we can see from Diagram \ref{fig:cyclic-task}, each frame requires objects to
 	\decoRule
 \end{figure}
 
-The FPS drop under $60$, when the number of \code{Placemark} in the scene reach $250$. The reason is the number of calling \code{GLES20.glDrawElements} API. See the API performance in Chart \ref{fig:glDrawElements-performance}, it has a big range of span. It could reach $7.5$ milliseconds by just calling it $250$ times ($0.03 \times 250$).
-
-The solution is straightforward reducing the times of calling \code{glDrawElements} to one call for all \code{Placemark}. Unfortunately, it has not been optimized yet due to a limited time. In general, using interleaved attributes will do the trick.
-
+The solution is straightforward using one \code{glDrawElements} call for all \code{Placemark}. Unfortunately, it has not been optimized yet due to a limited time. In general, using interleaved attributes will do the trick.
 
 %****************************************************************
