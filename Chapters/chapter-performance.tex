@@ -29,7 +29,7 @@ In order to avoid UI being block, all of acyclic process in the application are 
 \subsection{Icosphere Generator}
 
 %****************************************************************
-Based on the varying roundness of the Icosphere, it could evolve into spheres have different vertex count. In general, level $3$ Icosphere is enough for illustrating a sphere, and in the application the \code{Placemark} is created on level $1$ Icosphere. As we can see the performance testing result from Table \ref{tab:icosphere-generation-performance} ($40$ data sets), even for a particular reason that requires a level $5$ Icosphere, less than $300$ms is acceptable as an one time execution.
+Based on the varying roundness of the Icosphere, it could evolve into spheres have different vertex count. In general, level $3$ Icosphere is enough for illustrating a sphere, and in the application the \code{Placemark} is created on level $1$ Icosphere. As we can see the performance testing result from Table \ref{tab:icosphere-generation-performance} ($40$ data sets each), even for a particular reason that requires a level $5$ Icosphere, less than $300$ms is acceptable as an one time execution.
 
 \begin{table}[H]
 	\caption{Icosphere generation performance}
@@ -69,7 +69,7 @@ Based on the varying roundness of the Icosphere, it could evolve into spheres ha
 \subsection{UV Sphere Generator}
 
 %****************************************************************
-The roundness of a UV Sphere depends on the partition level on both horizontal (ring) and vertical (segment) which denotes the axes of the 2D texture. The Earth is casually implemented as a $180 / 180$ UV Sphere in the application. Table \ref{tab:uv-sphere-generation-performance} shows the testing result from $40$ data sets.
+The roundness of a UV Sphere depends on the partition level on both horizontal (ring) and vertical (segment) which denotes the axes of the 2D texture. The Earth is casually implemented as a $180 / 180$ UV Sphere in the application. Table \ref{tab:uv-sphere-generation-performance} shows the testing result from $40$ data sets each.
 
 \begin{table}[H]
 	\caption{UV Sphere generation performance}
@@ -90,10 +90,18 @@ The roundness of a UV Sphere depends on the partition level on both horizontal (
 \end{table}
 
 \begin{figure}[H]
+	\caption{UV Sphere performance sets}
+	\label{fig:uv-sphere-performance-sets}
+	\centering
+	\includegraphics[width=0.9\textwidth, keepaspectratio]{Figures/uv-sphere-performance-sets.png}
+	\decoRule
+\end{figure}
+
+\begin{figure}[H]
 	\caption{UV Sphere performance loglog}
 	\label{fig:uv-sphere-performance-loglog}
 	\centering
-	\includegraphics[width=\textwidth, keepaspectratio]{Figures/uv-sphere-performance-loglog.png}
+	\includegraphics[width=0.9\textwidth, keepaspectratio]{Figures/uv-sphere-performance-loglog.png}
 	\decoRule
 \end{figure}
 
@@ -103,7 +111,7 @@ By comparison to Icosphere, UV sphere generation has better performance when app
 	\caption{UV Sphere and Icosphere}
 	\label{fig:uv-sphere-and-icosphere}
 	\centering
-	\includegraphics[width=\textwidth, keepaspectratio]{Figures/uv-sphere-and-icosphere.png}
+	\includegraphics[width=0.9\textwidth, keepaspectratio]{Figures/uv-sphere-and-icosphere.png}
 	\decoRule
 \end{figure}
 
@@ -111,17 +119,41 @@ By comparison to Icosphere, UV sphere generation has better performance when app
 \subsection{Geographic Data Initialization}
 
 %****************************************************************
-Figure \ref{fig:geographic-data-performance} is the performance of initializing geographic data, including parsing KML files, transformation coordinate system from LLA to ECEF for each \code{Placemark}, etc.
+Figure \ref{fig:geographic-data-performance} is the performance of initializing geographic data, including parsing KML files, transformation coordinate system from LLA to ECEF for each \code{Placemark}, etc. The number of time-comsuming has linear increase with the size of \code{Placemark}, see following testing result from $10$ data sets each. 
+
+\begin{table}[H]
+	\caption{UV Sphere generation performance}
+	\label{tab:uv-sphere-generation-performance}
+	\centering
+	\begin{tabular}{l l l}
+		\toprule
+		\tabhead{Placemark Count} & \tabhead{Mean Value (ms)} & \tabhead{Stand Deviation (ms)}\\
+		\midrule
+		10 & 29.965 & 3.235 \\
+		20 & 53.441 & 3.551 \\
+		40 & 119.092 & 5.128 \\
+		80 & 229.839 & 13.266 \\
+		160 & 446.349 & 25.377 \\
+		320 & 882.641 & 32.351 \\
+		\bottomrule
+	\end{tabular}
+\end{table}
 
 \begin{figure}[H]
-	\caption{Geographic data performance}
-	\label{fig:geographic-data-performance}
+	\caption{Geographic data performance sets}
+	\label{fig:geographic-data-performance-sets.png}
 	\centering
-	\includegraphics[width=\textwidth, keepaspectratio]{Figures/geographic-data-performance.png}
+	\includegraphics[width=0.9\textwidth, keepaspectratio]{Figures/geographic-data-performance-sets.png}
 	\decoRule
 \end{figure}
 
-Although, the number could be large, but it is not executed in the UI thread. Additionally, the Earth does not require re-creation when user try to load another scene. Therefore it is not a performance problem.
+\begin{figure}[H]
+	\caption{Geographic data performance loglog}
+	\label{fig:geographic-data-performance-loglog}
+	\centering
+	\includegraphics[width=0.9\textwidth, keepaspectratio]{Figures/geographic-data-performance-loglog.png}
+	\decoRule
+\end{figure}
 
 %****************************************************************
 \section{Runtime}
@@ -249,7 +281,7 @@ The performance of draw all \code{Placemark} has not been adequate, due to the n
 	\caption{glDrawElements performance}
 	\label{fig:glDrawElements-performance}
 	\centering
-	\includegraphics[width=\textwidth, keepaspectratio]{Figures/glDrawElements-performance.png}
+	\includegraphics[width=0.9\textwidth, keepaspectratio]{Figures/glDrawElements-performance.png}
 	\decoRule
 \end{figure}
 
