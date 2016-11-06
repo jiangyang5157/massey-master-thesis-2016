@@ -29,33 +29,41 @@ In order to avoid UI being block, all of acyclic process in the application are 
 \subsection{Icosphere Generator}
 
 %****************************************************************
-Based on the varying roundness of the Icosphere, it could evolve into spheres have different vertex count. In general, level $3$ Icosphere is enough for illustrating a sphere, and in the application the \code{Placemark} is created on level $1$ Icosphere. As we can see from Chart \ref{fig:icosphere-performance} and Table \ref{tab:icosphere-level}, even for a particular reason that requires a level $5$ Icosphere, less than $300$ms is acceptable as an one time execution.
+Based on the varying roundness of the Icosphere, it could evolve into spheres have different vertex count. In general, level $3$ Icosphere is enough for illustrating a sphere, and in the application the \code{Placemark} is created on level $1$ Icosphere. As we can see from Table \ref{tab:icosphere-level}, even for a particular reason that requires a level $5$ Icosphere, less than $300$ms is acceptable as an one time execution.
+
+\begin{table}[H]
+	\caption{Icosphere Level}
+	\label{tab:icosphere-level}
+	\centering
+	\begin{tabular}{l l l l}
+		\toprule
+		\tabhead{Recursion Level} & \tabhead{Vertex Count} & \tabhead{Mean Value (ms)} & \tabhead{Stand Deviation (ms)}\\
+		\midrule
+		0 & 12 & 0.049 & 0.014 \\
+		1 & 42 & 0.257 & 0.490 \\
+		2 & 162 & 0.722 & 0.250 \\
+		3 & 642 & 3.296 & 0.707 \\
+		4 & 2562 & 19.988 & 3.050 \\
+		5 & 10242 & 148.927 & 18.422 \\
+		\bottomrule
+	\end{tabular}
+\end{table}
 
 \begin{figure}[H]
-	\caption{Icosphere performance}
-	\label{fig:icosphere-performance}
+	\caption{Icosphere performance sets}
+	\label{fig:icosphere-performance-sets}
 	\centering
-	\includegraphics[width=\textwidth, keepaspectratio]{Figures/icosphere-performance.png}
+	\includegraphics[width=0.9\textwidth, keepaspectratio]{Figures/icosphere-performance-sets.png}
 	\decoRule
 \end{figure}
 
-\begin{table}[H]
-\caption{Icosphere Level}
-\label{tab:icosphere-level}
-\centering
-\begin{tabular}{l l l l}
-	\toprule
-	\tabhead{Recursion Level} & \tabhead{Vertex Count} & \tabhead{Mean Value (ms)} & \tabhead{Stand Deviation (ms)}\\
-	\midrule
-	0 & 12 & 0.049 & 0.014 \\
-	1 & 42 & 0.257 & 0.490 \\
-	2 & 162 & 0.722 & 0.250 \\
-	3 & 642 & 3.296 & 0.707 \\
-	4 & 2562 & 19.988 & 3.050 \\
-	5 & 10242 & 148.927 & 18.422 \\
-	\bottomrule
-\end{tabular}
-\end{table}
+\begin{figure}[H]
+	\caption{Icosphere performance loglog}
+	\label{fig:icosphere-performance-loglog}
+	\centering
+	\includegraphics[width=0.9\textwidth, keepaspectratio]{Figures/icosphere-performance-loglog.png}
+	\decoRule
+\end{figure}
 
 %****************************************************************
 \subsection{UV Sphere Generator}
@@ -63,11 +71,39 @@ Based on the varying roundness of the Icosphere, it could evolve into spheres ha
 %****************************************************************
 The roundness of a UV Sphere depends on the partition level on both horizontal (ring) and vertical (segment) which denotes the axes of the 2D texture. The Earth is casually implemented as a $180 / 180$ UV Sphere in the application.
 
-\begin{figure}[H]
-	\caption{UV Sphere performance}
-	\label{fig:uv-sphere-performance}
+\begin{table}[H]
+	\caption{UV Sphere Level}
+	\label{tab:uv-sphere-level}
 	\centering
-	\includegraphics[width=\textwidth, keepaspectratio]{Figures/uv-sphere-performance.png}
+	\begin{tabular}{l l l l}
+		\toprule
+		\tabhead{Partition Level} & \tabhead{Vertex Count} & \tabhead{Mean Value (ms)} & \tabhead{Stand Deviation (ms)}\\
+		\midrule
+		5:5 & 25 & 0.100 & 0.033 \\
+		10:10 & 100 & 0.201 & 0.072 \\
+		20:20 & 400 & 0.322 & 0.100 \\
+		40:40 & 1600 & 2.098 & 0.699 \\
+		80:80 & 6400 & 5.431 & 1.153 \\
+		160:160 & 25600 & 17.050 & 2.084 \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+	\caption{UV Sphere performance loglog}
+	\label{fig:uv-sphere-performance-loglog}
+	\centering
+	\includegraphics[width=\textwidth, keepaspectratio]{Figures/uv-sphere-performance-loglog.png}
+	\decoRule
+\end{figure}
+
+By comparison to Icosphere, UV sphere generation has better performance when application requires a very smooth, detailed surface.
+
+\begin{figure}[H]
+	\caption{UV Sphere and Icosphere}
+	\label{fig:uv-sphere-and-icosphere}
+	\centering
+	\includegraphics[width=\textwidth, keepaspectratio]{Figures/uv-sphere-and-icosphere.png}
 	\decoRule
 \end{figure}
 
