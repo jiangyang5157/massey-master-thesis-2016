@@ -249,8 +249,8 @@ The total vertex count for a UV sphere is:
 If a vertex $P$ on the UV sphere belongs to ring $r$ and segment $s$:
 \[
 \begin{array}{lr}
-v = r \times  \dfrac{1}{\code{RingsCount} - 1}\\\\
-u = s \times  \dfrac{1}{\code{SegmentsCount} - 1}\\\\
+v = r \times \dfrac{1}{\code{RingsCount} - 1}\\\\
+u = s \times \dfrac{1}{\code{SegmentsCount} - 1}\\\\
 \measuredangle \alpha = v \times \pi\\
 \measuredangle \beta = u \times 2\,\pi\\
 \end{array}
@@ -261,7 +261,7 @@ $\therefore$ The vertex P (x,\;y,\;z) can be calculated:
 \begin{array}{lr}
 x = (\sin(\alpha) \times \code{radius}) \times \cos(\beta)\\
 y = \cos(\alpha) \times \code{radius}\\
-z =  (\sin(\alpha) \times \code{radius}) \times \sin(\beta)\\
+z = (\sin(\alpha) \times \code{radius}) \times \sin(\beta)\\
 \end{array}
 \]
 
@@ -359,7 +359,7 @@ However, the LLA coordinates cannot be directly used from a program. Therefore, 
 \decoRule
 \end{figure}
 
-The ECEF coordinates are expressed in a reference system that is tended to be associated with geodetic mapping representations. In a system that practically requires high precision,  an accurate method to approximate the Earth’s shape is required. There have been researches on the elliptical earth since the 1980s. Nowadays, The new World Geodetic System was called WGS 84 which is currently being used by the Global Positioning System (GPS). It is geocentric and globally consistent within $\pm{1}$m. The WGS 84 has a series of parameters (table \ref{tab:wgs-84-parameters}) that define the shape of the ellipsoid (the Earth), they include a semi-major axis ($a$), a semi-minor axis ($b$) \ref{fig:ellipsoid-parameters}, its first eccentricity ($e_1$) and its second eccentricity ($e_2$).
+The ECEF coordinates are expressed in a reference system that is tended to be associated with geodetic mapping representations. In a system that practically requires high precision, an accurate method to approximate the Earth’s shape is required. There have been researches on the elliptical earth since the 1980s. Nowadays, The new World Geodetic System was called WGS 84 which is currently being used by the Global Positioning System (GPS). It is geocentric and globally consistent within $\pm{1}$m. The WGS 84 has a series of parameters (table \ref{tab:wgs-84-parameters}) that define the shape of the ellipsoid (the Earth), they include a semi-major axis ($a$), a semi-minor axis ($b$) \ref{fig:ellipsoid-parameters}, its first eccentricity ($e_1$) and its second eccentricity ($e_2$).
 
 \begin{figure}[H]
 \caption{Ellipsoid parameters}
@@ -845,7 +845,7 @@ Given known $R_0$ (ray's starting position),\enspace$R_d$ (ray's direction),\ens
 	\setlength{\parskip}{0pt}
 	\item[$\bullet$ Vertical Area] Vertical route area between the left edge and right edge (include the area beyond the box)
 	\item[$\bullet$ Horizontal Area] Horizontal route area between the top edge and bottom edge (include the area beyond the box)
-	\item[$\bullet$ $\mathbf{X}_1$] The distance from $R_0$ to the "in" point of Vertical Area in the x-axis direction.   
+	\item[$\bullet$ $\mathbf{X}_1$] The distance from $R_0$ to the "in" point of Vertical Area in the x-axis direction. 
 	\item[$\bullet$ $\mathbf{X}_2$] The distance from $R_0$ to the "out" point of Vertical Area in the x-axis direction. 
 	\item[$\bullet$ $\mathbf{Y}_1$] The distance from $R_0$ to the "in" point of Horizontal Area in the y-axis direction.
 	\item[$\bullet$ $\mathbf{Y}_2$] The distance from $R_0$ to the "out" point of Horizontal Area in the y-axis direction. 
@@ -939,7 +939,7 @@ Given known $R_0$ (ray's starting position),\enspace$R_d$ (ray's direction),\ens
 	\item[$\bullet$ Vertical Area] Vertical route area within the scope of left-face, right-face, back-face and front face (include the area beyond the box)
 	\item[$\bullet$ Horizontal Area] Horizontal route area within the scope of top-face, bottom-face, back-face and front face (include the area beyond the box)
 	\item[$\bullet$ Z-depth Area] Z-depth route area within the scope of top-face, bottom-face, left-face and right face (include the area beyond the box)
-	\item[$\bullet$ $\mathbf{X}_1$] The distance from $R_0$ to the "in" point of Vertical Area in the x-axis direction.   
+	\item[$\bullet$ $\mathbf{X}_1$] The distance from $R_0$ to the "in" point of Vertical Area in the x-axis direction. 
 	\item[$\bullet$ $\mathbf{X}_2$] The distance from $R_0$ to the "out" point of Vertical Area in the x-axis direction. 
 	\item[$\bullet$ $\mathbf{Y}_1$] The distance from $R_0$ to the "in" point of Horizontal Area in the y-axis direction.
 	\item[$\bullet$ $\mathbf{Y}_2$] The distance from $R_0$ to the "out" point of Horizontal Area in the y-axis direction. 

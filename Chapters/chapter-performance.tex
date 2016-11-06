@@ -4,7 +4,6 @@
 \chapter{Performance}
 \label{chapter-performance}
 
-%****************************************************************
 What is great about the Android runtime is that most of the stress of memory reclamation is done for developers. The system will track what developers are doing and when it sees that an object is not needed anymore, it will free it on their behalf. However, this does not exclude performance problems from happening here. When the amount of memory have allocated reaches an upper limit, a Garbage Collection (GC) event will be kicked off to free any resources that might not be needed any longer, freeing up space for future allocations. 
 
 Anytime the frame drips about the $16$ms barrier, and the users are going to start to notice. Therefore, any code that forces allocated memory to spike above this threshold can cause problems. For instance, memory can become tighter, if the developer is allocating and freeing a large number of objects in a short period of time, the temporary objects again kicking off GC event. 
@@ -22,13 +21,11 @@ Therefore, a performance testing is important for avoiding nasty GC events. Each
 %****************************************************************
 \section{Initialization}
 
-%****************************************************************
 In order to avoid UI being block, all of acyclic process in the application are handled in the new threads. In this section, I present the performance of geometric vertices' generation for \code{Placemark} (Icosphere) and \code{Earth} (UV Sphere) which only executes one time (or not) when needed. The geometric data from Icosphere generation will be cached once it has been created. This is useful to avoid duplicate creations for same geometric vertices. In the \code{Placemark} description URL analysis, the same cache solution for image and text.
 
 %****************************************************************
 \subsection{Icosphere Generator}
 
-%****************************************************************
 Based on the varying roundness of the Icosphere, it could evolve into spheres have different vertex count. In general, level $3$ Icosphere is enough for illustrating a sphere, and in the application the \code{Placemark} is created on level $1$ Icosphere. As we can see the performance testing result from Table \ref{tab:icosphere-generation-performance} ($40$ data sets each), even for a particular reason that requires a level $5$ Icosphere, less than $300$ms is acceptable as an one time execution.
 
 \begin{table}[H]
@@ -68,7 +65,6 @@ Based on the varying roundness of the Icosphere, it could evolve into spheres ha
 %****************************************************************
 \subsection{UV Sphere Generator}
 
-%****************************************************************
 The roundness of a UV Sphere depends on the partition level on both horizontal (ring) and vertical (segment) which denotes the axes of the 2D texture. The Earth is casually implemented as a $180 / 180$ UV Sphere in the application. Table \ref{tab:uv-sphere-generation-performance} shows the testing result from $40$ data sets each.
 
 \begin{table}[H]
@@ -108,17 +104,16 @@ The roundness of a UV Sphere depends on the partition level on both horizontal (
 By comparison to Icosphere, UV sphere generation has better performance when application requires a very smooth, detailed surface.
 
 \begin{figure}[H]
-	\caption{UV Sphere and Icosphere}
-	\label{fig:uv-sphere-and-icosphere}
+	\caption{Icosphere and UV Sphere}
+	\label{fig:icosphere-and-uv-sphere}
 	\centering
-	\includegraphics[width=0.9\textwidth, keepaspectratio]{Figures/uv-sphere-and-icosphere.png}
+	\includegraphics[width=0.9\textwidth, keepaspectratio]{Figures/icosphere-and-uv-sphere.png}
 	\decoRule
 \end{figure}
 
 %****************************************************************
 \subsection{Geographic Data Initialization}
 
-%****************************************************************
 Figure \ref{fig:geographic-data-performance} is the performance of initializing geographic data, including parsing KML files, transformation coordinate system from LLA to ECEF for each \code{Placemark}, etc. The number of time-comsuming has linear increase with the size of \code{Placemark}, see following testing result from $10$ data sets each. 
 
 \begin{table}[H]
@@ -158,7 +153,6 @@ Figure \ref{fig:geographic-data-performance} is the performance of initializing 
 %****************************************************************
 \section{Runtime}
 
-%****************************************************************
 Tasks that require continually repeated during the render loop is the factors influencing the runtime performance. They are ray-model intersection detection, update and draw models \ref{fig:runtime-task}. In this section, I present the tasks that closely related to performance and the memory leak analysis during the loop.
  
 \begin{figure}[H]
@@ -173,7 +167,6 @@ Tasks that require continually repeated during the render loop is the factors in
 %****************************************************************
 \subsection{Memory Leak}
 
-%****************************************************************
 I am using Memory Monitor to evaluate memory leak. As the application allocates and free memory, we will see the allocative amount fluctuate in the graph at the same time. Any time the allocated memory drops by a significant amount, that is a signal that GC event has occurred (see \ref{fig:memory-monitor}). These GC events are not generally a noticeable performance problem. However, lots of them occurring over and over and over again in a short period of time can lead to performance issues. Additionally, it more or less created memory leaks, which are objects which the application is no longer using, but the garbage collector fails to recognize them as unused.
 
 \begin{figure}[H]
@@ -198,32 +191,61 @@ In a world where the application is not doing much of anything, there will be a 
 \subsection{Placemarks Intersection}
 \label{section:placemarks-intersection}
 
-%****************************************************************
-There was a significant performance improvement in detecting ray-placemark intersection per frame. In order to avoid doing intersection test on all \code{Placemark} per frame, I implemented Octree space partition to ignore unnecessary detections (see Chart \ref{fig:placemarks-intersection-performance}).
+There was a significant performance improvement in detecting ray-placemark intersection per frame. In order to avoid doing intersection test on all \code{Placemark} per frame, I implemented Octree space partition to ignore unnecessary detections (see Chart \ref{fig:placemark-intersection-compare}).
 
 \begin{figure}[H]
-	\caption{Placemarks intersection performance}
-	\label{fig:placemarks-intersection-performance}
+	\caption{Placemark intersection performance - Before}
+	\label{fig:placemark-intersection-performance-before}
 	\centering
-	\includegraphics[width=\textwidth, keepaspectratio]{Figures/placemarks-intersection-performance.png}
+	\includegraphics[width=0.9\textwidth, keepaspectratio]{Figures/placemark-intersection-performance-before.png}
 	\decoRule
 \end{figure}
 
-After the optimization, the number is negligible even for $1000$ \code{Placemark} ( less than 2ms).
+\begin{figure}[H]
+	\caption{Placemark intersection performance - After}
+	\label{fig:placemark-intersection-performance-after}
+	\centering
+	\includegraphics[width=0.9\textwidth, keepaspectratio]{Figures/placemark-intersection-performance-after.png}
+	\decoRule
+\end{figure}
+
+\begin{figure}[H]
+	\caption{Placemark intersection compare}
+	\label{fig:placemark-intersection-compare}
+	\centering
+	\includegraphics[width=0.9\textwidth, keepaspectratio]{Figures/placemark-intersection-compare.png}
+	\decoRule
+\end{figure}
+
+After the optimization, the number is negligible even for $1000$ \code{Placemark} (less than 2ms).
 
 %****************************************************************
 \subsection{Placemarks Update}
 \label{section:placemarks-update}
 
-%****************************************************************
-
-There was a incredible performance optimization for ray-placemark update process \ref{fig:placemarks-update-performance}. 
+There was a incredible performance optimization for ray-placemark update process \ref{fig:placemark-update-compare}. 
 
 \begin{figure}[H]
-	\caption{Placemarks update performance}
-	\label{fig:placemarks-update-performance}
+	\caption{Placemark update performance - Before}
+	\label{fig:placemark-update-performance-before}
 	\centering
-	\includegraphics[width=\textwidth, keepaspectratio]{Figures/placemarks-update-performance.png}
+	\includegraphics[width=0.9\textwidth, keepaspectratio]{Figures/placemark-update-performance-before.png}
+	\decoRule
+\end{figure}
+
+\begin{figure}[H]
+	\caption{Placemark update performance - After}
+	\label{fig:placemark-update-performance-after}
+	\centering
+	\includegraphics[width=0.9\textwidth, keepaspectratio]{Figures/placemark-update-performance-after.png}
+	\decoRule
+\end{figure}
+
+\begin{figure}[H]
+	\caption{Placemark update compare}
+	\label{fig:placemark-update-compare}
+	\centering
+	\includegraphics[width=0.9\textwidth, keepaspectratio]{Figures/placemark-update-compare.png}
 	\decoRule
 \end{figure}
 
@@ -259,7 +281,7 @@ Before the optimization, based on the \code{viewM} and \code{perspectiveM} from 
 		\tabhead{What} & \tabhead{Before} & \tabhead{After}\\
 		\midrule
 		Model Matrix & Each object (CPU) & Objects are needed (CPU)\\
-		Camera Matrix & When moving (CPU) &  When moving (CPU)\\
+		Camera Matrix & When moving (CPU) & When moving (CPU)\\
 		View Matrix & Each eye (CPU) & Each eye (CPU)\\
 		Perspective Matrix & Each eye (CPU) & Each eye (CPU)\\
 		ModelView Matrix & Each object (CPU) & Each Vertex (GPU)\\
@@ -269,12 +291,10 @@ Before the optimization, based on the \code{viewM} and \code{perspectiveM} from 
 	\end{tabular}
 \end{table}
 
-
 %****************************************************************
 \subsection{Placemarks Draw}
 \label{section:placemarks-draw}
 
-%****************************************************************
 The performance of draw all \code{Placemark} has not been adequate, due to the number of times calling \code{glDrawElements} API, which is an expensive call and it is called during each \code{Placemark} draw process. Anytime the frame takes more than $16$ms barrier, and the user will notice it. Because the two eye's viewports are both need to be updated and re-draw, therefore the update and draw process only has $8$ms in total to do what needs to be done. Although the performance of ray-object intersection and \code{Placemark} update are satisfied, but the performance issues in draw process are significant. The $0.048$ms average time-consuming and $0.046$ms stand deviation indicate that it not only has an unstable value but also it could reach $8$ms by just call the API $170$ times (See Chart \ref{fig:glDrawElements-performance}).
 
 \begin{figure}[H]
