@@ -10,7 +10,7 @@ What is great about the Android runtime is that most of the stress of memory rec
 Anytime the frame drips about the $16$ms barrier, and the users are going to start to notice. Therefore, any code that forces allocated memory to spike above this threshold can cause problems. For instance, memory can become tighter, if the developer is allocating and freeing a large number of objects in a short period of time, the temporary objects again kicking off GC event. 
 
 \begin{figure}[H]
-\caption{16ms Per Frame}
+\caption{16ms per frame}
 \label{fig:16ms-per-frame}
 \centering
 \includegraphics[width=\textwidth, keepaspectratio]{Figures/16ms-per-frame.png}
@@ -29,11 +29,11 @@ In order to avoid UI being block, all of acyclic process in the application are 
 \subsection{Icosphere Generator}
 
 %****************************************************************
-Based on the varying roundness of the Icosphere, it could evolve into spheres have different vertex count. In general, level $3$ Icosphere is enough for illustrating a sphere, and in the application the \code{Placemark} is created on level $1$ Icosphere. As we can see from Table \ref{tab:icosphere-level}, even for a particular reason that requires a level $5$ Icosphere, less than $300$ms is acceptable as an one time execution.
+Based on the varying roundness of the Icosphere, it could evolve into spheres have different vertex count. In general, level $3$ Icosphere is enough for illustrating a sphere, and in the application the \code{Placemark} is created on level $1$ Icosphere. As we can see the performance testing result from Table \ref{tab:icosphere-generation-performance} ($40$ data sets), even for a particular reason that requires a level $5$ Icosphere, less than $300$ms is acceptable as an one time execution.
 
 \begin{table}[H]
-	\caption{Icosphere Level}
-	\label{tab:icosphere-level}
+	\caption{Icosphere generation performance}
+	\label{tab:icosphere-generation-performance}
 	\centering
 	\begin{tabular}{l l l l}
 		\toprule
@@ -69,11 +69,11 @@ Based on the varying roundness of the Icosphere, it could evolve into spheres ha
 \subsection{UV Sphere Generator}
 
 %****************************************************************
-The roundness of a UV Sphere depends on the partition level on both horizontal (ring) and vertical (segment) which denotes the axes of the 2D texture. The Earth is casually implemented as a $180 / 180$ UV Sphere in the application.
+The roundness of a UV Sphere depends on the partition level on both horizontal (ring) and vertical (segment) which denotes the axes of the 2D texture. The Earth is casually implemented as a $180 / 180$ UV Sphere in the application. Table \ref{tab:uv-sphere-generation-performance} shows the testing result from $40$ data sets.
 
 \begin{table}[H]
-	\caption{UV Sphere Level}
-	\label{tab:uv-sphere-level}
+	\caption{UV Sphere generation performance}
+	\label{tab:uv-sphere-generation-performance}
 	\centering
 	\begin{tabular}{l l l l}
 		\toprule
@@ -114,7 +114,7 @@ By comparison to Icosphere, UV sphere generation has better performance when app
 Figure \ref{fig:geographic-data-performance} is the performance of initializing geographic data, including parsing KML files, transformation coordinate system from LLA to ECEF for each \code{Placemark}, etc.
 
 \begin{figure}[H]
-	\caption{Geographic Data Performance}
+	\caption{Geographic data performance}
 	\label{fig:geographic-data-performance}
 	\centering
 	\includegraphics[width=\textwidth, keepaspectratio]{Figures/geographic-data-performance.png}
@@ -127,13 +127,13 @@ Although, the number could be large, but it is not executed in the UI thread. Ad
 \section{Runtime}
 
 %****************************************************************
-Tasks that require continually repeated during the render loop is the factors influencing the runtime performance. They are ray-model intersection detection, update and draw models \ref{fig:cyclic-task}. In this section, I present the tasks that closely related to performance and the memory leak analysis during the loop.
+Tasks that require continually repeated during the render loop is the factors influencing the runtime performance. They are ray-model intersection detection, update and draw models \ref{fig:runtime-task}. In this section, I present the tasks that closely related to performance and the memory leak analysis during the loop.
  
 \begin{figure}[H]
-	\caption{Cyclic Task}
-	\label{fig:cyclic-task}
+	\caption{Runtime task}
+	\label{fig:runtime-task}
 	\centering
-	\includegraphics[width=\textwidth, keepaspectratio]{Figures/cyclic-task.png}
+	\includegraphics[width=\textwidth, keepaspectratio]{Figures/runtime-task.png}
 	\decoRule
 \end{figure}
 
@@ -145,7 +145,7 @@ Tasks that require continually repeated during the render loop is the factors in
 I am using Memory Monitor to evaluate memory leak. As the application allocates and free memory, we will see the allocative amount fluctuate in the graph at the same time. Any time the allocated memory drops by a significant amount, that is a signal that GC event has occurred (see \ref{fig:memory-monitor}). These GC events are not generally a noticeable performance problem. However, lots of them occurring over and over and over again in a short period of time can lead to performance issues. Additionally, it more or less created memory leaks, which are objects which the application is no longer using, but the garbage collector fails to recognize them as unused.
 
 \begin{figure}[H]
-	\caption[Memory Monitor]{Memory Monitor \cite{google.memory-monitor.2015}}
+	\caption[Memory monitor]{Memory Monitor \cite{google.memory-monitor.2015}}
 	\label{fig:memory-monitor}
 	\centering
 	\includegraphics[width=\textwidth, keepaspectratio]{Figures/memory-monitor.png}
@@ -155,7 +155,7 @@ I am using Memory Monitor to evaluate memory leak. As the application allocates 
 In a world where the application is not doing much of anything, there will be a flat memory allocation graph. This is an ideal scenario from a performance perspective. The more time is spending doing GC, the less time for the application to do other stuff. Fortunately, with a careful in dealing with objects, I got a quite flat runtime memory allocation \ref{fig:memory-performance}.
 
 \begin{figure}[H]
-	\caption{Memory Performance}
+	\caption{Memory performance}
 	\label{fig:memory-performance}
 	\centering
 	\includegraphics[width=\textwidth, keepaspectratio]{Figures/memory-performance.png}
@@ -170,7 +170,7 @@ In a world where the application is not doing much of anything, there will be a 
 There was a significant performance improvement in detecting ray-placemark intersection per frame. In order to avoid doing intersection test on all \code{Placemark} per frame, I implemented Octree space partition to ignore unnecessary detections (see Chart \ref{fig:placemarks-intersection-performance}).
 
 \begin{figure}[H]
-	\caption{Placemarks Intersection Performance}
+	\caption{Placemarks intersection performance}
 	\label{fig:placemarks-intersection-performance}
 	\centering
 	\includegraphics[width=\textwidth, keepaspectratio]{Figures/placemarks-intersection-performance.png}
@@ -188,7 +188,7 @@ After the optimization, the number is negligible even for $1000$ \code{Placemark
 There was a incredible performance optimization for ray-placemark update process \ref{fig:placemarks-update-performance}. 
 
 \begin{figure}[H]
-	\caption{Placemarks Update Performance}
+	\caption{Placemarks update performance}
 	\label{fig:placemarks-update-performance}
 	\centering
 	\includegraphics[width=\textwidth, keepaspectratio]{Figures/placemarks-update-performance.png}
@@ -246,7 +246,7 @@ Before the optimization, based on the \code{viewM} and \code{perspectiveM} from 
 The performance of draw all \code{Placemark} has not been adequate, due to the number of times calling \code{glDrawElements} API, which is an expensive call and it is called during each \code{Placemark} draw process. Anytime the frame takes more than $16$ms barrier, and the user will notice it. Because the two eye's viewports are both need to be updated and re-draw, therefore the update and draw process only has $8$ms in total to do what needs to be done. Although the performance of ray-object intersection and \code{Placemark} update are satisfied, but the performance issues in draw process are significant. The $0.048$ms average time-consuming and $0.046$ms stand deviation indicate that it not only has an unstable value but also it could reach $8$ms by just call the API $170$ times (See Chart \ref{fig:glDrawElements-performance}).
 
 \begin{figure}[H]
-	\caption{glDrawElements Performance}
+	\caption{glDrawElements performance}
 	\label{fig:glDrawElements-performance}
 	\centering
 	\includegraphics[width=\textwidth, keepaspectratio]{Figures/glDrawElements-performance.png}
