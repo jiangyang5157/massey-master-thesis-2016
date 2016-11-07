@@ -305,6 +305,14 @@ The performance of draw all \code{Placemark} has not been adequate, due to the n
 	\decoRule
 \end{figure}
 
+\begin{figure}[H]
+	\caption{glDrawElements performance normal distribution}
+	\label{fig:glDrawElements-performance-normal-distribution}
+	\centering
+	\includegraphics[width=0.9\textwidth, keepaspectratio]{Figures/glDrawElements-performance-normal-distribution.png}
+	\decoRule
+\end{figure}
+
 The solution is straightforward using one \code{glDrawElements} call for all \code{Placemark}. Unfortunately, it has not been optimized yet due to a limited time. In general, using interleaved attributes will do the trick.
 
 %****************************************************************
