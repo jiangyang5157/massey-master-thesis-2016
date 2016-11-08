@@ -191,7 +191,7 @@ In a world where the application is not doing much of anything, there will be a 
 \subsection{Placemarks Intersection}
 \label{section:placemarks-intersection}
 
-In order to avoid doing ray intersection test on all \code{Placemark} per frame, I implemented octree based space partition to ignore unnecessary detections. There was a significant performance improvement, see performance comparison on Chart \ref{fig:placemark-intersection-performance}. Also as we can from Figure \ref{fig:placemark-intersection-performance-before} and \ref{fig:placemark-intersection-performance-after}, after the optimization, the number of \code{Placemark} is no long relevant. It takes less than $1$ms for hundreds \code{Placemark}.
+In order to avoid doing ray intersection test on all \code{Placemark} per frame, I implemented octree based space partition to ignore unnecessary detections. There was a significant performance improvement, see performance comparison on Chart \ref{fig:placemark-intersection-performance}. Also as we can from Chart \ref{fig:placemark-intersection-performance-before} and Chart \ref{fig:placemark-intersection-performance-after}, after the optimization, the number of \code{Placemark} is no long relevant. It takes less than $1$ms for hundreds \code{Placemark}.
 
 \begin{figure}[H]
 	\caption{Placemark intersection performance - Before}
@@ -311,6 +311,6 @@ There has not been an adequate performance for the process of drawing \code{Plac
 	\decoRule
 \end{figure}
 
-This is unacceptable, but the solution is straightforward using one \code{glDrawElements} call for a same kind of models, in particularly \code{Placemark}. Unfortunately, it has not been optimized yet, and it has been postponed to future work due to a limited time. In general, using Interleaved attribute array will do the trick. The optimization also has the great opportunity to improve the duplicated calculation in GPU caused by the current optimization of model update \ref{section:placemarks-update}.
+This is unacceptable, but the solution is straightforward using one \code{glDrawElements} call for a same kind of models, in particularly \code{Placemark}. Unfortunately, it has not been optimized yet, and it has been postponed to future work due to a limited time. In general, using Interleaved attribute array will do the trick. The optimization also has the great opportunity to improve the duplicated calculation in GPU caused by the current optimization of model update (see section \ref{section:placemarks-update}).
 
 %****************************************************************
