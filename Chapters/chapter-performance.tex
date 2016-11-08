@@ -21,7 +21,7 @@ Therefore, a performance testing is important for avoiding nasty GC events. Each
 %****************************************************************
 \section{Initialization}
 
-In order to avoid UI being block, initialization processes in the application are handled in the asynchronous thread. In this section, I present the performance of geometric vertices' generation for \code{Placemark} (Icosphere) and \code{Earth} (UV Sphere) which only executes one time (or not) when needed. The geometric data from Icosphere generation will be cached once it has been created. This is useful to avoid duplicate creations for same geometric vertices.
+In order to avoid UI being block, initialization processes in the application are handled in the asynchronous thread. In this section, I present the performance of geometric vertices' generation for \code{Placemark} (Icosphere) and \code{Earth} (UV sphere) which only executes one time (or not) when needed. The geometric data from Icosphere generation will be cached once it has been created. This is useful to avoid duplicate creations for same geometric vertices.
 
 %****************************************************************
 \subsection{Icosphere Generator}
@@ -65,10 +65,10 @@ Based on the varying roundness of the Icosphere, it could evolve into spheres ha
 %****************************************************************
 \subsection{UV Sphere Generator}
 
-The roundness of a UV Sphere depends on the partition level on both horizontal (ring) and vertical (segment) which denotes the axes of the 2D texture. The Earth is casually implemented as a $180:180$ UV Sphere in the application. Table \ref{tab:uv-sphere-generation-performance} shows the testing result from $40$ data sets each.
+The roundness of a UV sphere depends on the partition level on both horizontal (ring) and vertical (segment) which denotes the axes of the 2D texture. The Earth is casually implemented as a "$180:180$" UV sphere in the application. Table \ref{tab:uv-sphere-generation-performance} shows the testing result from $40$ data sets each.
 
 \begin{table}[H]
-	\caption{UV Sphere generation performance}
+	\caption{UV sphere generation performance}
 	\label{tab:uv-sphere-generation-performance}
 	\centering
 	\begin{tabular}{l l l l}
@@ -86,7 +86,7 @@ The roundness of a UV Sphere depends on the partition level on both horizontal (
 \end{table}
 
 \begin{figure}[H]
-	\caption{UV Sphere performance sets}
+	\caption{UV sphere performance sets}
 	\label{fig:uv-sphere-performance-sets}
 	\centering
 	\includegraphics[width=0.9\textwidth, keepaspectratio]{Figures/uv-sphere-performance-sets.png}
@@ -94,17 +94,17 @@ The roundness of a UV Sphere depends on the partition level on both horizontal (
 \end{figure}
 
 \begin{figure}[H]
-	\caption{UV Sphere performance loglog}
+	\caption{UV sphere performance loglog}
 	\label{fig:uv-sphere-performance-loglog}
 	\centering
 	\includegraphics[width=0.9\textwidth, keepaspectratio]{Figures/uv-sphere-performance-loglog.png}
 	\decoRule
 \end{figure}
 
-By comparison, to rounding Icosphere by Java program, UV sphere generation has better performance when the application requires a very smooth, detailed surface. In the program, UV sphere vertex is not cached after created. Because it does not make much sense to cache such data for a $n:m$ where the $n$ (rings) and $m$ (segments) could be any positive number. On the other side, Icosphere is created by a given level which defines the vertices.
+By comparison, to rounding Icosphere by Java program, UV sphere generation has better performance when the application requires a very smooth, detailed surface. In the program, UV sphere vertex is not cached after created. Because it does not make much sense to cache such data for a "$n:m$" UV sphere, where the $n$ (rings) and $m$ (segments) could be any positive number. On the other side, Icosphere is created by a given level which defines the vertices.
 
 \begin{figure}[H]
-	\caption{Sphere Generation}
+	\caption{Sphere generation}
 	\label{fig:icosphere-and-uv-sphere}
 	\centering
 	\includegraphics[width=0.9\textwidth, keepaspectratio]{Figures/icosphere-and-uv-sphere.png}
@@ -153,7 +153,7 @@ Table \ref{tab:geographic-data-performance} is the performance ($10$ data sets) 
 %****************************************************************
 \section{Runtime}
 
-Tasks that require continually repeated during the render loop is the factors influencing the runtime performance. They are ray-model intersection detection, update and draw models \ref{fig:runtime-task}. In this section, I present memory leak analysis during the loop, as well as the tasks that closely related to performance.
+Tasks that require continually repeated during the render loop is the factors influencing the runtime performance. They are ray-model intersection detection, update models and draw models. In this section, I present memory leak analysis during the loop, as well as the tasks that closely related to performance.
  
 \begin{figure}[H]
 	\caption{Runtime task}
@@ -221,8 +221,8 @@ In order to avoid doing ray intersection test on all \code{Placemark} per frame,
 \subsection{Placemarks Update}
 \label{section:placemarks-update}
 
-There was an improvement on model frame update. From doing everything to only doing necessary update. As expected, it ensures a better performance and saves the time for doing other interesting things in the frame. As we can see from following charts, not only the number of models is no long relevant, but also performance is reduced under $5$ms.
-
+There was an improvement on model frame update. From doing everything to only doing necessary update. As expected, it ensures a better performance and saves the time for doing other interesting things in the frame. As we can see from following charts, not only it has minimal effect on the number of models, but also performance is reduced under $5$ms.
+ 
 \begin{figure}[H]
 	\caption{Placemark update performance - Before}
 	\label{fig:placemark-update-performance-before}
@@ -293,7 +293,7 @@ Before the improvement, based on the \code{viewM} and \code{perspectiveM} from e
 \subsection{Placemarks Draw}
 \label{section:placemarks-draw}
 
-There has not been an adequate performance for the process of drawing \code{Placemark}. Due to the number of times calling \code{glDrawElements} API, which is an expensive call and it is called for each \code{Placemark} per frame. As we know, anytime the frame takes more than $16$ms barrier, and the user will be noticed. The two eye's viewports are both need to be updated and re-draw, therefore the update and draw process only has $8$ms in total to do what needs to be done. Although the performance of ray-object intersection and \code{Placemark} update are satisfied, and saved almost the $8$ms for drawing, but the performance issues in draw process are significant. Simply for the \code{glDrawElements} call, it has $0.048$ms average time-consuming and $0.046$ms stand deviation which indicate that it does not only have an unstable value but also it could reach $8$ms by just call the API $170$ times.
+There has not been an adequate performance for the process of drawing \code{Placemark}. Due to the number of times calling \code{glDrawElements} API, which is an expensive call and it is called for each \code{Placemark} per frame. As we know, anytime the frame takes more than $16$ms barrier, and the user will be noticed. The two eye's viewports are both need to be updated and re-draw, therefore the update and draw process only has $8$ms in total to do what needs to be done. Although the performance of ray-object intersection and \code{Placemark} update are satisfied, and saved almost the $8$ms for drawing, but the performance issues in draw process are significant. Simply for the \code{glDrawElements} call, it has $0.048$ms average time-consuming and $0.046$ms stand deviation which indicate that it does not only has an unstable value but also it could reach $8$ms by just call the API $170$ times.
 
 \begin{figure}[H]
 	\caption{glDrawElements performance}

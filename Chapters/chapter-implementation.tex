@@ -220,7 +220,7 @@ When the \code{Placemark} is literally land on the axis, the associated cell doe
 \section{Earth}
 \label{section:earth}
 
-UV Sphere often used in the situation where requires a very smooth, symmetrical surface. In this application, the Earth model is created as the UV sphere. Similar to latitude and longitude lines of the Earth, it uses rings and segments (near the poles, the vertical segments converge on the poles). Therefore, the UV texturing for 2D earth image mapping to the 3D sphere's surface can be conveniently calculated during its vertex creation process.
+UV sphere often used in the situation where requires a very smooth, symmetrical surface. In this application, the Earth model is created as the UV sphere. Similar to latitude and longitude lines of the Earth, it uses rings and segments (near the poles, the vertical segments converge on the poles). Therefore, the UV texturing for 2D earth image mapping to the 3D sphere's surface can be conveniently calculated during its vertex creation process.
 
 \begin{figure}[H]
 \caption{UV sphere mapping}
@@ -1060,7 +1060,15 @@ vec4 position = vec4(a_Position.xyz * w , 1);
 
 Therefore, ray-sphere intersection test for \code{Placemark} no longer works. In this section, I introduce ray-point intersection test for \code{Placemark} selection by checking if the ray is pointing at a particular direction in the camera space with a tolerance of pitch and yaw. 
 
-First, the final projected vertex in camera space (see Table \ref{tab:opengl-compute}) can be expressed as:
+\begin{figure}[H]
+	\caption{Ray-Point intersection}
+	\label{fig:ray-point-intersection}
+	\centering
+	\includegraphics[width=\textwidth, keepaspectratio]{Figures/ray-point-intersection.png}
+	\decoRule
+\end{figure}
+
+As we know, the final model projected vertex in camera space (see Table \ref{tab:opengl-compute}) can be expressed as:
 \[
 \begin{array}{lr}
 \begin{aligned}
@@ -1070,7 +1078,7 @@ First, the final projected vertex in camera space (see Table \ref{tab:opengl-com
 \end{array}
 \]
 
-But, the expression of position in the camera space for ray-point intersection test is:
+And, the expression of position in the camera space for ray-point intersection test has different position coordinates, \code{viewM}, and it does not need to be multiplied by \code{perspectiveM}:
 \[
 \begin{array}{lr}
 \code{positionInCameraSpace = position - camera.position;}\\
@@ -1089,13 +1097,5 @@ Then, we can get the pitch and yaw value for intersection test:
 \end{aligned}
 \end{array}
 \]
-
-\begin{figure}[H]
-	\caption{Ray-Point intersection}
-	\label{fig:ray-point-intersection}
-	\centering
-	\includegraphics[width=\textwidth, keepaspectratio]{Figures/ray-point-intersection.png}
-	\decoRule
-\end{figure}
 
 %****************************************************************
