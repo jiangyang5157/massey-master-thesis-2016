@@ -218,6 +218,7 @@ When the \code{Placemark} is literally land on the axis, the associated cell doe
 
 %****************************************************************
 \section{Earth}
+\label{section:earth}
 
 UV Sphere often used in the situation where requires a very smooth, symmetrical surface. In this application, the Earth model is created as the UV sphere. Similar to latitude and longitude lines of the Earth, it uses rings and segments (near the poles, the vertical segments converge on the poles). Therefore, the UV texturing for 2D earth image mapping to the 3D sphere's surface can be conveniently calculated during its vertex creation process.
 
@@ -306,7 +307,7 @@ Vertex generation for \code{Placemark} is a recurring process of subdividing ico
 \decoRule
 \end{figure}
 
-Rounding the icosphere by subdividing a face to an arbitrary level of resolution \ref{tab:icosphere-level}. Each face can be subdivided into four by connecting each edge's midpoint, then push the midpoints to the surface of the sphere \ref{fig:icosphere-refinement}.
+Rounding the icosphere by subdividing a face to an arbitrary level of resolution \ref{tab:icosphere-generation-performance}. Each face can be subdivided into four by connecting each edge's midpoint, then push the midpoints to the surface of the sphere \ref{fig:icosphere-refinement}.
 
 \begin{figure}[H]
 \caption{Icosphere refinement}
@@ -419,7 +420,8 @@ Where,
 \end{array}
 \]
 
-The final transformation from the ECEF to program graphic coordinates. This is relevant to how texture mapping and graphic system be implemented.
+The final transformation from the ECEF to graphic program coordinates is relevant to how texture mapping and visual coordinate system implemented. Usually, $0$ latitude and $0$ longitude in the world map would locate at the center of the image. Also, according to the generated texture mapping coordinates (see section \ref{section:earth}), our transformation as below:
+
 \[
 \begin{array}{lr}
 \begin{aligned}
@@ -451,7 +453,7 @@ Raw description data of a \code{Placemark} is a series of characters decorated i
 \decoRule
 \end{figure}
 
-Treat the raw data as plain text if it does not have a URL included. The\;\code{Content-Type} from the response of URL request, defines what kind of byte data is coming over, such as \code{image/jpeg}, \code{application/json}, or \code{text/html}. I am using Jsoup (a Java library for working with real-world HTML \cite{joup.2016}) for extracting target data from the HTML source. The most efficient way to get an extracted explanation or description on the topic from a Wikipedia page is to take use of the Opensearch API \cite{wiki.api.2016}. Therefore, a transformation from Wikipedia URL to Opensearch URL is required for an expected JSON response with \code{extract} tag included.
+Treat the raw data as plain text if it does not have a URL included. The\;\code{Content-Type} from the response of URL request, defines what kind of byte data is coming over, such as \code{image/jpeg}, \code{application/json}, or \code{text/html}. I am using Jsoup (a Java library for working with real-world HTML \cite{joup.2016}) for extracting target data from the HTML source. The most efficient way to get an extracted explanation or description on the topic from a Wikipedia page is to take use of the Opensearch API \cite{wiki.api.2016}. Therefore, a transformation from Wikipedia URL to Opensearch URL is required for an expected JSON response with \code{extract} tag included. Once the data received, it will be cache out to reduce the next same request.
 
 Given any valid Wikipedia page:
 \[

@@ -21,12 +21,12 @@ Therefore, a performance testing is important for avoiding nasty GC events. Each
 %****************************************************************
 \section{Initialization}
 
-In order to avoid UI being block, all of acyclic process in the application are handled in the new threads. In this section, I present the performance of geometric vertices' generation for \code{Placemark} (Icosphere) and \code{Earth} (UV Sphere) which only executes one time (or not) when needed. The geometric data from Icosphere generation will be cached once it has been created. This is useful to avoid duplicate creations for same geometric vertices. In the \code{Placemark} description URL analysis, the same cache solution for image and text.
+In order to avoid UI being block, initialization processes in the application are handled in the asynchronous thread. In this section, I present the performance of geometric vertices' generation for \code{Placemark} (Icosphere) and \code{Earth} (UV Sphere) which only executes one time (or not) when needed. The geometric data from Icosphere generation will be cached once it has been created. This is useful to avoid duplicate creations for same geometric vertices.
 
 %****************************************************************
 \subsection{Icosphere Generator}
 
-Based on the varying roundness of the Icosphere, it could evolve into spheres have different vertex count. In general, level $3$ Icosphere is enough for illustrating a sphere, and in the application the \code{Placemark} is created on level $1$ Icosphere. As we can see the performance testing result from Table \ref{tab:icosphere-generation-performance} ($40$ data sets each), even for a particular reason that requires a level $5$ Icosphere, less than $300$ms is acceptable as an one time execution.
+Based on the varying roundness of the Icosphere, it could evolve into spheres have different vertex count (). In general, level $3$ Icosphere is enough for illustrating a sphere, and in the application the \code{Placemark} is created on level $1$ Icosphere. See the performance testing result from $40$ data sets each (Table \ref{tab:icosphere-generation-performance}), even for a particular reason that requires a level $5$ Icosphere, less than $300$ms is acceptable as an one time asynchronous task.
 
 \begin{table}[H]
 	\caption{Icosphere generation performance}
@@ -65,7 +65,7 @@ Based on the varying roundness of the Icosphere, it could evolve into spheres ha
 %****************************************************************
 \subsection{UV Sphere Generator}
 
-The roundness of a UV Sphere depends on the partition level on both horizontal (ring) and vertical (segment) which denotes the axes of the 2D texture. The Earth is casually implemented as a $180 / 180$ UV Sphere in the application. Table \ref{tab:uv-sphere-generation-performance} shows the testing result from $40$ data sets each.
+The roundness of a UV Sphere depends on the partition level on both horizontal (ring) and vertical (segment) which denotes the axes of the 2D texture. The Earth is casually implemented as a $180:180$ UV Sphere in the application. Table \ref{tab:uv-sphere-generation-performance} shows the testing result from $40$ data sets each.
 
 \begin{table}[H]
 	\caption{UV Sphere generation performance}
@@ -101,10 +101,10 @@ The roundness of a UV Sphere depends on the partition level on both horizontal (
 	\decoRule
 \end{figure}
 
-By comparison to Icosphere, UV sphere generation has better performance when application requires a very smooth, detailed surface.
+By comparison, to rounding Icosphere by Java program, UV sphere generation has better performance when the application requires a very smooth, detailed surface. In the program, UV sphere vertex is not cached after created. Because it does not make much sense to cache such data for a $n:m$ where the $n$ (rings) and $m$ (segments) could be any positive number. On the other side, Icosphere is created by a given level which defines the vertices.
 
 \begin{figure}[H]
-	\caption{Icosphere and UV Sphere}
+	\caption{Sphere Generation}
 	\label{fig:icosphere-and-uv-sphere}
 	\centering
 	\includegraphics[width=0.9\textwidth, keepaspectratio]{Figures/icosphere-and-uv-sphere.png}
@@ -114,11 +114,11 @@ By comparison to Icosphere, UV sphere generation has better performance when app
 %****************************************************************
 \subsection{Geographic Data Initialization}
 
-Figure \ref{fig:geographic-data-performance} is the performance of initializing geographic data, including parsing KML files, transformation coordinate system from LLA to ECEF for each \code{Placemark}, etc. The number of time-comsuming has linear increase with the size of \code{Placemark}, see following testing result from $10$ data sets each. 
+Table \ref{tab:geographic-data-performance} is the performance ($10$ data sets) of initializing geographic data, including parsing KML files, transformation coordinate system from LLA to ECEF, space partition, etc. The number of time-consuming has linear increase with the size of \code{Placemark}, see following testing result from $10$ data sets each. There are reasons I did not separate this processes into many. First, the space partition and KML parsing process will be slightly changed on certain scenarios. They are dependent on how crowded the coordinates are. For instance, if $8$ \code{Placemark} locate in the same place or small area which requires multiple times space-division (limitation of how many models can be contained in one space cell). However, if the $8$ coordinates happen to separately locate at different corners area which only requires one time space division ($1$ space cell divides into $8$ space cells). Moreover, it depends on how many KML links (URL points to another KML file, and another again), are they have force update from server property. I have a limited time on creating such proper data for testing.
 
 \begin{table}[H]
-	\caption{UV Sphere generation performance}
-	\label{tab:uv-sphere-generation-performance}
+	\caption{Geographic data performance}
+	\label{tab:geographic-data-performance}
 	\centering
 	\begin{tabular}{l l l}
 		\toprule
@@ -136,7 +136,7 @@ Figure \ref{fig:geographic-data-performance} is the performance of initializing 
 
 \begin{figure}[H]
 	\caption{Geographic data performance sets}
-	\label{fig:geographic-data-performance-sets.png}
+	\label{fig:geographic-data-performance-sets}
 	\centering
 	\includegraphics[width=0.9\textwidth, keepaspectratio]{Figures/geographic-data-performance-sets.png}
 	\decoRule
@@ -153,7 +153,7 @@ Figure \ref{fig:geographic-data-performance} is the performance of initializing 
 %****************************************************************
 \section{Runtime}
 
-Tasks that require continually repeated during the render loop is the factors influencing the runtime performance. They are ray-model intersection detection, update and draw models \ref{fig:runtime-task}. In this section, I present the tasks that closely related to performance and the memory leak analysis during the loop.
+Tasks that require continually repeated during the render loop is the factors influencing the runtime performance. They are ray-model intersection detection, update and draw models \ref{fig:runtime-task}. In this section, I present memory leak analysis during the loop, as well as the tasks that closely related to performance.
  
 \begin{figure}[H]
 	\caption{Runtime task}
@@ -191,7 +191,7 @@ In a world where the application is not doing much of anything, there will be a 
 \subsection{Placemarks Intersection}
 \label{section:placemarks-intersection}
 
-There was a significant performance improvement in detecting ray-placemark intersection per frame. In order to avoid doing intersection test on all \code{Placemark} per frame, I implemented Octree space partition to ignore unnecessary detections (see Chart \ref{fig:placemark-intersection-compare}).
+In order to avoid doing ray intersection test on all \code{Placemark} per frame, I implemented octree based space partition to ignore unnecessary detections. There was a significant performance improvement, see performance comparison on Chart \ref{fig:placemark-intersection-performance}. Also as we can from Figure \ref{fig:placemark-intersection-performance-before} and \ref{fig:placemark-intersection-performance-after}, after the optimization, the number of \code{Placemark} is no long relevant. It takes less than $1$ms for hundreds \code{Placemark}.
 
 \begin{figure}[H]
 	\caption{Placemark intersection performance - Before}
@@ -210,20 +210,18 @@ There was a significant performance improvement in detecting ray-placemark inter
 \end{figure}
 
 \begin{figure}[H]
-	\caption{Placemark intersection compare}
-	\label{fig:placemark-intersection-compare}
+	\caption{Placemark intersection performance}
+	\label{fig:placemark-intersection-performance}
 	\centering
-	\includegraphics[width=0.9\textwidth, keepaspectratio]{Figures/placemark-intersection-compare.png}
+	\includegraphics[width=0.9\textwidth, keepaspectratio]{Figures/placemark-intersection-performance.png}
 	\decoRule
 \end{figure}
-
-After the optimization, the number is negligible even for $1000$ \code{Placemark} (less than 2ms).
 
 %****************************************************************
 \subsection{Placemarks Update}
 \label{section:placemarks-update}
 
-There was a incredible performance optimization for ray-placemark update process \ref{fig:placemark-update-compare}. 
+There was an improvement on model frame update. From doing everything to only doing necessary update. As expected, it ensures a better performance and saves the time for doing other interesting things in the frame. As we can see from following charts, not only the number of models is no long relevant, but also performance is reduced under $5$ms.
 
 \begin{figure}[H]
 	\caption{Placemark update performance - Before}
@@ -242,14 +240,14 @@ There was a incredible performance optimization for ray-placemark update process
 \end{figure}
 
 \begin{figure}[H]
-	\caption{Placemark update compare}
-	\label{fig:placemark-update-compare}
+	\caption{Placemark update performance}
+	\label{fig:placemark-update-performance}
 	\centering
-	\includegraphics[width=0.9\textwidth, keepaspectratio]{Figures/placemark-update-compare.png}
+	\includegraphics[width=0.9\textwidth, keepaspectratio]{Figures/placemark-update-performance.png}
 	\decoRule
 \end{figure}
 
-There are mainly $6$ type of calculations (see Table \ref{tab:opengl-compute-scope}):
+There are mainly $6$ calculations may happens during the frame:
 
 \begin{table}[H]
 	\caption{OpenGL compute scope}
@@ -270,7 +268,7 @@ There are mainly $6$ type of calculations (see Table \ref{tab:opengl-compute-sco
 	\end{tabular}
 \end{table}
 
-Before the optimization, based on the \code{viewM} and \code{perspectiveM} from each eye, computing the \code{modelM}, \code{modelViewM} and \code{projectionM} in CPU for each object per frame. Then pass the \code{modelViewM} and \code{projectionM} to GPU for further calculation, such as lighting and position (\code{Vertex'}). It creates huge performance problem, due to a large amount of computation can be omitted. There is no need to re-calculate an object's \code{modelM} per frame if the object has the same position, scale, and rotation. It is the same for \code{modelViewM} and \code{projectionM}. Therefore, after the optimization, application only re-calculate the \code{modelM} for objects which needed, and all objects pass \code{viewM} and \code{perspectiveM} to GPU for the rest of calculation. Although it increases the workload in GPU as well as duplicated calculation, it has improved performance for the application. Dealing with the duplicated calculation in GPU caused by the optimization has been postponed to future work, because it related to optimization of drawing massive \code{Placemark} which has been postponed as well (see the next Section \ref{section:placemarks-draw}).
+Before the improvement, based on the \code{viewM} and \code{perspectiveM} from each eye, computing the \code{modelM}, \code{modelViewM} and \code{projectionM} in CPU for each object per frame. Then pass the \code{modelViewM} and \code{projectionM} to GPU for further calculation, such as lighting and position (\code{Vertex'}). It may create huge performance risk due to a large amount of computation can be omitted. There is no need to re-calculate an object's \code{modelM} per frame if the object has the same position, scale, and rotation. Therefore, application only re-calculate the \code{modelM} for necessary objects, and objects pass the \code{modelM}, \code{viewM} and \code{perspectiveM} to GPU for the rest of calculation. Although it increases the workload in GPU as well as duplicated calculation, but performance is improved in compare with before.
 
 \begin{table}[H]
 	\caption{OpenGL compute optimization}
@@ -295,7 +293,7 @@ Before the optimization, based on the \code{viewM} and \code{perspectiveM} from 
 \subsection{Placemarks Draw}
 \label{section:placemarks-draw}
 
-The performance of draw all \code{Placemark} has not been adequate, due to the number of times calling \code{glDrawElements} API, which is an expensive call and it is called during each \code{Placemark} draw process. Anytime the frame takes more than $16$ms barrier, and the user will notice it. Because the two eye's viewports are both need to be updated and re-draw, therefore the update and draw process only has $8$ms in total to do what needs to be done. Although the performance of ray-object intersection and \code{Placemark} update are satisfied, but the performance issues in draw process are significant. The $0.048$ms average time-consuming and $0.046$ms stand deviation indicate that it not only has an unstable value but also it could reach $8$ms by just call the API $170$ times (See Chart \ref{fig:glDrawElements-performance}).
+There has not been an adequate performance for the process of drawing \code{Placemark}. Due to the number of times calling \code{glDrawElements} API, which is an expensive call and it is called for each \code{Placemark} per frame. As we know, anytime the frame takes more than $16$ms barrier, and the user will be noticed. The two eye's viewports are both need to be updated and re-draw, therefore the update and draw process only has $8$ms in total to do what needs to be done. Although the performance of ray-object intersection and \code{Placemark} update are satisfied, and saved almost the $8$ms for drawing, but the performance issues in draw process are significant. Simply for the \code{glDrawElements} call, it has $0.048$ms average time-consuming and $0.046$ms stand deviation which indicate that it does not only have an unstable value but also it could reach $8$ms by just call the API $170$ times.
 
 \begin{figure}[H]
 	\caption{glDrawElements performance}
@@ -313,6 +311,6 @@ The performance of draw all \code{Placemark} has not been adequate, due to the n
 	\decoRule
 \end{figure}
 
-The solution is straightforward using one \code{glDrawElements} call for all \code{Placemark}. Unfortunately, it has not been optimized yet due to a limited time. In general, using interleaved attributes will do the trick.
+This is unacceptable, but the solution is straightforward using one \code{glDrawElements} call for a same kind of models, in particularly \code{Placemark}. Unfortunately, it has not been optimized yet, and it has been postponed to future work due to a limited time. In general, using Interleaved attribute array will do the trick. The optimization also has the great opportunity to improve the duplicated calculation in GPU caused by the current optimization of model update \ref{section:placemarks-update}.
 
 %****************************************************************
